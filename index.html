@@ -66,15 +66,60 @@
     cursor: pointer;
     box-shadow: 3px 3px 0 #3d2005;
     transition: transform .08s, box-shadow .08s;
-    margin-bottom: 2rem;
+    margin-bottom: .5rem;
   }
   .btn-rekomendacja:active {
     transform: translate(2px,2px);
     box-shadow: 1px 1px 0 #3d2005;
   }
-  .btn-rekomendacja.played {
-    opacity: .65;
-    cursor: default;
+
+  /* ── PASEK POSTĘPU REKOMENDACJI ── */
+  .rek-player {
+    display: none;
+    margin-bottom: 1.5rem;
+  }
+  .rek-progress-wrap {
+    position: relative;
+    height: 10px;
+    background: rgba(61,32,5,.25);
+    border-radius: 99px;
+    cursor: pointer;
+    margin-bottom: .45rem;
+    overflow: hidden;
+  }
+  .rek-progress-fill {
+    height: 100%;
+    width: 0%;
+    background: #c8a050;
+    border-radius: 99px;
+    pointer-events: none;
+    transition: width .25s linear;
+  }
+  .rek-controls {
+    display: flex;
+    align-items: center;
+    gap: .6rem;
+  }
+  .rek-btn-stop {
+    font-family: inherit;
+    font-size: .78rem;
+    letter-spacing: .08rem;
+    text-transform: uppercase;
+    background: #3d2005;
+    color: #f5e8c8;
+    border: 1px solid #1a0c00;
+    border-radius: 3px;
+    padding: .3rem .75rem;
+    cursor: pointer;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .rek-btn-stop:hover { background: #1a0c00; }
+  .rek-time {
+    font-size: .8rem;
+    color: #5c3710;
+    opacity: .8;
+    margin-left: auto;
   }
 
   /* ── MAIN IMAGE ── */
@@ -137,14 +182,6 @@
     background: rgba(255,240,200,.75);
     outline: none;
   }
-  .quiz-info {
-    display: block;
-    margin-top: .3rem;
-    font-size: .78rem;
-    color: #7a5520;
-    letter-spacing: .02rem;
-    opacity: .85;
-  }
 
   .quiz-loading {
     color: #6b4a1b;
@@ -199,6 +236,16 @@
     🎙 Rekomendacja
   </button>
 
+  <div class="rek-player" id="rekPlayer">
+    <div class="rek-progress-wrap" id="rekProgressWrap" onclick="rekSeek(event)">
+      <div class="rek-progress-fill" id="rekFill"></div>
+    </div>
+    <div class="rek-controls">
+      <button class="rek-btn-stop" onclick="stopRek()">⏹ Zatrzymaj</button>
+      <span class="rek-time" id="rekTime">0:00 / 0:00</span>
+    </div>
+  </div>
+
   <!-- MAIN IMAGE -->
   <img class="main-image" src="images/main.png" alt="Szkoła Porucznika Columbo">
 
@@ -232,12 +279,49 @@
 <script src="manifest.js"></script>
 
 <script>
-  /* Rekomendacja – play once */
+  /* Rekomendacja */
+  const audioRek   = document.getElementById('audioRek');
+  const rekPlayer  = document.getElementById('rekPlayer');
+  const rekFill    = document.getElementById('rekFill');
+  const rekTime    = document.getElementById('rekTime');
+  const rekWrap    = document.getElementById('rekProgressWrap');
+
+  function fmt(s) {
+    const m = Math.floor(s / 60), ss = Math.floor(s % 60);
+    return m + ':' + String(ss).padStart(2, '0');
+  }
+
   function playRek() {
-    const btn = document.getElementById('btnRek');
-    if (btn.classList.contains('played')) return;
-    btn.classList.add('played');
-    document.getElementById('audioRek').play().catch(() => {});
+    audioRek.play().catch(() => {});
+    document.getElementById('btnRek').textContent = '🎙 Rekomendacja (odtwarzam…)';
+    rekPlayer.style.display = 'block';
+  }
+
+  audioRek.addEventListener('timeupdate', () => {
+    if (!audioRek.duration) return;
+    const pct = (audioRek.currentTime / audioRek.duration) * 100;
+    rekFill.style.width = pct + '%';
+    rekTime.textContent = fmt(audioRek.currentTime) + ' / ' + fmt(audioRek.duration);
+  });
+
+  audioRek.addEventListener('ended', () => {
+    rekPlayer.style.display = 'none';
+    document.getElementById('btnRek').textContent = '🎙 Rekomendacja';
+  });
+
+  function stopRek() {
+    audioRek.pause();
+    audioRek.currentTime = 0;
+    rekPlayer.style.display = 'none';
+    rekFill.style.width = '0%';
+    document.getElementById('btnRek').textContent = '🎙 Rekomendacja';
+  }
+
+  function rekSeek(e) {
+    if (!audioRek.duration) return;
+    const rect = rekWrap.getBoundingClientRect();
+    const pct  = (e.clientX - rect.left) / rect.width;
+    audioRek.currentTime = pct * audioRek.duration;
   }
 
   /* Wczytaj listę spraw ze zmiennej SPRAWY (z manifest.js) */
@@ -248,7 +332,7 @@
       return;
     }
     list.innerHTML = SPRAWY.map(item =>
-      `<li><a href="${esc(item.file)}">${esc(item.title || item.file)}${item.info ? `<span class="quiz-info">${esc(item.info)}</span>` : ''}</a></li>`
+      `<li><a href="${esc(item.file)}">${esc(item.title || item.file)}</a></li>`
     ).join('');
   })();
 
