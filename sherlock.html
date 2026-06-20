@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sherlock Holmes pyta... — Quiz detektywistyczny</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui,sans-serif;background:#f5f4f0;color:#1a1a1a;min-height:100vh}
+#app{padding:1rem;max-width:480px;margin:0 auto}
+.hero{text-align:center;padding:1.5rem 0 1rem}
+.hero img{width:160px;height:160px;object-fit:cover;border-radius:50%;border:3px solid #AFA9EC}
+.fallback-icon{width:160px;height:160px;border-radius:50%;background:#EEEDFE;border:3px solid #AFA9EC;margin:0 auto;display:flex;align-items:center;justify-content:center;font-size:72px}
+.hero h1{font-size:22px;font-weight:600;color:#26215C;margin:.75rem 0 .5rem}
+.hero p{font-size:14px;color:#5F5E5A;line-height:1.6;margin:0 .5rem}
+.progress-label{font-size:12px;color:#5F5E5A;margin-bottom:.5rem}
+.progress-bar{background:#D3D1C7;border-radius:99px;height:6px;margin:0 0 1rem}
+.progress-fill{background:#534AB7;height:6px;border-radius:99px;transition:width .4s}
+.question-card{background:#fff;border:1px solid #D3D1C7;border-radius:14px;padding:1.25rem;margin-bottom:1rem}
+.ep-badge{display:inline-block;font-size:11px;color:#534AB7;background:#EEEDFE;padding:3px 10px;border-radius:99px;margin-bottom:.5rem;font-weight:600}
+.math-badge{display:inline-block;font-size:11px;color:#1d6b3a;background:#E2F5E9;padding:3px 10px;border-radius:99px;margin-bottom:.5rem;margin-left:6px;font-weight:600}
+.ep-row{margin-bottom:.75rem}
+.q-text{font-size:15px;font-weight:600;color:#1a1a1a;line-height:1.5;margin-bottom:1rem}
+.q-img{width:100%;border-radius:10px;margin-bottom:1rem;border:1px solid #D3D1C7;background:#fff}
+.option{display:flex;align-items:flex-start;gap:10px;padding:.75rem 1rem;border:1px solid #D3D1C7;border-radius:10px;margin-bottom:.5rem;cursor:pointer;transition:background .15s,border-color .15s;font-size:14px;color:#1a1a1a;line-height:1.5;background:#fff}
+.option:hover{background:#F1EFE8;border-color:#B4B2A9}
+.option .badge{flex-shrink:0;width:26px;height:26px;border-radius:50%;background:#F1EFE8;border:1px solid #B4B2A9;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;color:#5F5E5A}
+.option.correct{background:#EAF3DE;border-color:#3B6D11}
+.option.correct .badge{background:#3B6D11;color:#EAF3DE;border-color:#3B6D11}
+.option.wrong{background:#FCEBEB;border-color:#A32D2D}
+.option.wrong .badge{background:#A32D2D;color:#FCEBEB;border-color:#A32D2D}
+.option.disabled{cursor:default;pointer-events:none}
+.math-row{display:flex;gap:.5rem;margin-bottom:.5rem}
+#math-input{flex:1;padding:.75rem 1rem;border-radius:10px;border:1px solid #B4B2A9;font-size:16px;font-family:inherit}
+#math-input:focus{outline:2px solid #534AB7;border-color:#534AB7}
+#math-submit{padding:.75rem 1.1rem;border-radius:10px;border:none;background:#534AB7;color:#fff;font-weight:600;font-size:14px;cursor:pointer}
+#math-submit:hover{background:#3C3489}
+#math-submit:disabled{background:#B4B2A9;cursor:default}
+.explanation{margin-top:.75rem;padding:.75rem;background:#F1EFE8;border-radius:8px;font-size:13px;color:#444441;line-height:1.6;display:none;border-left:3px solid #534AB7}
+.praise{margin-top:.75rem;padding:.75rem;background:#EAF3DE;border-radius:8px;font-size:13px;color:#2c4a13;line-height:1.6;display:none;border-left:3px solid #3B6D11;font-weight:600}
+.hint-btn{display:none;font-size:12px;color:#534AB7;background:#EEEDFE;border:1px solid #AFA9EC;padding:6px 12px;border-radius:99px;cursor:pointer;margin-bottom:.75rem;font-weight:600}
+.hint-btn:hover{background:#dedcfb}
+.hint-box{display:none;margin-bottom:.75rem;padding:.75rem;background:#FFF8E1;border-radius:8px;font-size:13px;color:#5a4a14;line-height:1.6;border-left:3px solid #C9A227}
+.nav-btn{width:100%;padding:.75rem;border-radius:10px;border:1px solid #B4B2A9;background:#fff;font-size:15px;font-weight:600;color:#1a1a1a;cursor:pointer;margin-top:.5rem;display:none}
+.nav-btn:hover{background:#F1EFE8}
+.nav-btn.primary{background:#534AB7;color:#fff;border-color:#534AB7}
+.nav-btn.primary:hover{background:#3C3489}
+.nav-btn.shown{display:block}
+#name-input{width:100%;padding:.85rem 1rem;border-radius:10px;border:1px solid #B4B2A9;font-size:16px;margin-bottom:.85rem;font-family:inherit}
+#name-input:focus{outline:2px solid #534AB7;border-color:#534AB7}
+#name-screen .question-card{text-align:center}
+.sound-toggle{font-size:12px;color:#5F5E5A;background:#fff;border:1px solid #D3D1C7;padding:6px 12px;border-radius:99px;cursor:pointer;margin-bottom:.85rem;display:inline-block}
+.sound-toggle.is-muted{opacity:.55}
+.break-card{background:#fff;border:1px solid #D3D1C7;border-radius:14px;padding:1.25rem;text-align:center}
+.break-card h2{font-size:18px;color:#26215C;margin-bottom:.5rem}
+.break-card p{font-size:13px;color:#5F5E5A;margin-bottom:.85rem;line-height:1.5}
+.break-card video{width:100%;border-radius:10px;background:#000;margin-bottom:.85rem}
+#result-screen{display:none;text-align:center;padding:1rem}
+.result-icon{font-size:64px;margin:.5rem 0}
+.result-score{font-size:42px;font-weight:700;color:#534AB7;margin:.5rem 0}
+.result-msg{font-size:15px;color:#5F5E5A;line-height:1.6;margin:.75rem 0 1.5rem;background:#EEEDFE;padding:1rem;border-radius:12px}
+.result-bars{text-align:left;margin:1rem 0;background:#fff;border:1px solid #D3D1C7;border-radius:12px;padding:1rem}
+.r-bar-row{display:flex;align-items:center;gap:8px;margin-bottom:10px;font-size:13px}
+.r-bar-row:last-child{margin-bottom:0}
+.r-bar-label{width:120px;color:#5F5E5A;flex-shrink:0}
+.r-bar-bg{flex:1;background:#F1EFE8;border-radius:99px;height:10px}
+.r-bar-fill{height:10px;border-radius:99px;background:#534AB7;transition:width .6s}
+.r-bar-score{min-width:32px;text-align:right;font-weight:600;color:#534AB7}
+.restart-btn{width:100%;padding:.85rem;border-radius:10px;background:#534AB7;color:#fff;border:none;font-size:15px;font-weight:600;cursor:pointer;margin-top:1rem}
+.restart-btn:hover{background:#3C3489}
+.song-box{margin-top:1.25rem;background:#fff;border:1px solid #D3D1C7;border-radius:14px;padding:1.25rem}
+.song-box h3{font-size:16px;color:#26215C;margin-bottom:.5rem}
+.song-box p{font-size:13px;color:#5F5E5A;margin-bottom:.5rem;line-height:1.5}
+.song-toggle{padding:.6rem 1rem;border-radius:10px;background:#534AB7;color:#fff;border:none;font-size:14px;font-weight:600;cursor:pointer}
+.song-toggle:hover{background:#3C3489}
+</style>
+</head>
+<body>
+<div id="app">
+
+  <div id="name-screen">
+    <div class="hero">
+      <img src="images/sherholms.png" alt="Sherlock Holmes" id="hero-img-name" onerror="document.getElementById('hero-img-name').style.display='none';document.getElementById('fallback-icon-name').style.display='flex'">
+      <div class="fallback-icon" id="fallback-icon-name" style="display:none">🔍</div>
+      <h1>Sherlock Holmes potrzebuje pomocy</h1>
+      <p>Zanim zaczniemy śledztwo, detektywie — jak się nazywasz? Czeka na Ciebie 25 zagadek prosto z książek Arthura Conan Doyle'a.</p>
+    </div>
+    <div class="question-card">
+      <input id="name-input" type="text" placeholder="Wpisz swoje imię..." maxlength="20" onkeydown="if(event.key==='Enter')startQuiz()">
+      <button class="nav-btn primary shown" onclick="startQuiz()">Zaczynamy śledztwo 🔍</button>
+    </div>
+  </div>
+
+  <div id="quiz-screen" style="display:none">
+    <div class="hero" id="quiz-hero">
+      <img src="sherholms.png" alt="Sherlock Holmes" id="hero-img" onerror="document.getElementById('hero-img').style.display='none';document.getElementById('fallback-icon').style.display='flex'">
+      <div class="fallback-icon" id="fallback-icon" style="display:none">🔍</div>
+      <h1 id="hero-title">Co wiesz o Sherlocku Holmesie?</h1>
+      <p id="hero-text"></p>
+    </div>
+
+    <button class="sound-toggle" id="sound-toggle-btn" onclick="toggleSounds()">🔊 Dźwięki włączone</button>
+
+    <div class="progress-label" id="prog-label">Pytanie 1 z 25</div>
+    <div class="progress-bar"><div class="progress-fill" id="prog-fill" style="width:4%"></div></div>
+
+    <div class="question-card" id="q-card">
+      <div class="ep-row">
+        <span class="ep-badge" id="ep-badge"></span><span class="math-badge" id="math-badge" style="display:none">🧮 ZADANIE MATEMATYCZNE</span>
+      </div>
+      <img id="q-img" class="q-img" style="display:none">
+      <div class="q-text" id="q-text"></div>
+      <button class="hint-btn" id="hint-btn" onclick="toggleHint()">💡 Pokaż podpowiedź</button>
+      <div class="hint-box" id="hint-box"></div>
+      <div id="options-container"></div>
+      <div id="math-container" style="display:none">
+        <div class="math-row">
+          <input type="number" id="math-input" placeholder="Wpisz wynik..." onkeydown="if(event.key==='Enter')submitMath()">
+          <button id="math-submit" onclick="submitMath()">Zatwierdź</button>
+        </div>
+      </div>
+      <div class="praise" id="praise"></div>
+      <div class="explanation" id="explanation"></div>
+    </div>
+    <button class="nav-btn primary" id="next-btn" onclick="nextQ()">Następne pytanie →</button>
+  </div>
+
+  <div id="break-screen" style="display:none">
+    <div class="break-card">
+      <h2 id="break-title">Krótka przerwa na fajkę...</h2>
+      <p id="break-text">Sherlock Holmes musi to przemyśleć przy skrzypcach.</p>
+      <video id="break-video" controls playsinline></video>
+      <button class="nav-btn primary shown" onclick="continueAfterBreak()">Wracamy do śledztwa →</button>
+    </div>
+  </div>
+
+  <div id="result-screen">
+    <div class="result-icon" id="res-icon"></div>
+    <div style="font-size:22px;font-weight:600;color:#26215C;margin:.5rem 0">Śledztwo zakończone!</div>
+    <div class="result-score" id="res-score"></div>
+    <div class="result-msg" id="res-msg"></div>
+    <div class="result-bars">
+      <div class="r-bar-row"><span class="r-bar-label">Część 1 (1–5)</span><div class="r-bar-bg"><div class="r-bar-fill" id="bar1"></div></div><span class="r-bar-score" id="score1-txt"></span></div>
+      <div class="r-bar-row"><span class="r-bar-label">Część 2 (6–10)</span><div class="r-bar-bg"><div class="r-bar-fill" id="bar2"></div></div><span class="r-bar-score" id="score2-txt"></span></div>
+      <div class="r-bar-row"><span class="r-bar-label">Część 3 (11–15)</span><div class="r-bar-bg"><div class="r-bar-fill" id="bar3"></div></div><span class="r-bar-score" id="score3-txt"></span></div>
+      <div class="r-bar-row"><span class="r-bar-label">Część 4 (16–20)</span><div class="r-bar-bg"><div class="r-bar-fill" id="bar4"></div></div><span class="r-bar-score" id="score4-txt"></span></div>
+      <div class="r-bar-row"><span class="r-bar-label">Część 5 (21–25)</span><div class="r-bar-bg"><div class="r-bar-fill" id="bar5"></div></div><span class="r-bar-score" id="score5-txt"></span></div>
+    </div>
+    <div class="song-box">
+      <h3 id="song-title">Piosenka dla Ciebie, detektywie!</h3>
+      <p>Twoja nagroda za rozwiązanie sprawy gra automatycznie 🎵</p>
+      <button class="song-toggle" id="song-toggle-btn" onclick="toggleSong()">⏸️ Wstrzymaj piosenkę</button>
+    </div>
+    <button class="restart-btn" onclick="restart()">Zagraj jeszcze raz 🔄</button>
+  </div>
+
+</div>
+
+<audio id="snd-good" preload="auto"></audio>
+<audio id="snd-bad" preload="auto"></audio>
+<audio id="snd-song" src="mp3/sherlock.mp3" preload="auto" loop></audio>
+
+<script>
+const GOOD_SOUNDS = [
+  "audio/eureka.mp3",
+  "audio/plink.mp3",
+  "audio/bubbles.mp3"
+];
+const WRONG_SOUNDS = [
+  "audio/beep.mp3",
+  "audio/bop.mp3",
+  "audio/bounce.mp3",
+  "audio/bubblesloud.mp3",
+  "audio/dripdrop.mp3",
+  "audio/flutter.mp3",
+  "audio/ripple.mp3",
+  "audio/wobble.mp3"
+];
+
+const questions = [
+  {ep:"A Study in Scarlet",q:"Sherlock Holmes: «{name}, powiedz mi — pod jakim adresem w Londynie mieszkam razem z doktorem Watsonem?»",opts:["221B Baker Street","10 Downing Street","12 Diagon Alley","4 Privet Drive"],ans:0,exp:"Adres 221B Baker Street to jeden z najsłynniejszych adresów w literaturze — to właśnie tam Holmes i Watson rozwiązują większość swoich spraw."},
+  {ep:"A Study in Scarlet",q:"Sherlock Holmes: «{name}, powiedz mi — kim z zawodu jest mój przyjaciel i kronikarz, doktor Watson, zanim zamieszkał ze mną?»",opts:["Prawnikiem","Lekarzem wojskowym","Bankierem","Nauczycielem"],ans:1,exp:"Doktor Watson był lekarzem wojskowym, ranny wrócił z wojny w Afganistanie — to właśnie wtedy szukał współlokatora i poznał Holmesa."},
+  {ep:"The Adventures of Sherlock Holmes",q:"Sherlock Holmes: «{name}, powiedz mi — na jakim instrumencie muzycznym lubię grać, kiedy rozmyślam nad trudną sprawą?»",opts:["Na fortepianie","Na skrzypcach","Na flecie","Na gitarze"],ans:1,exp:"Holmes często grał na skrzypcach, zwłaszcza gdy intensywnie myślał — muzyka pomagała mu układać fakty w logiczną całość."},
+  {ep:"A Study in Scarlet",q:"Sherlock Holmes: «{name}, powiedz mi — jak nazywa się moja gospodyni, która zajmuje się mieszkaniem przy Baker Street?»",opts:["Pani Hudson","Pani Hooper","Pani Adler","Pani Watson"],ans:0,exp:"Pani Hudson to nasza wierna gospodyni, która znosi wszystkie dziwne eksperymenty i nietypowych gości odwiedzających Baker Street."},
+  {ep:"A Scandal in Bohemia",hint:"Podpowiedź: to metoda, w której z małych, pozornie nieważnych szczegółów wyciąga się duże, logiczne wnioski.",q:"Sherlock Holmes: «{name}, powiedz mi — jak nazywa się moja słynna metoda, dzięki której z drobnych szczegółów — plamy na rękawie, kurzu na bucie — wyciągam wnioski o całym życiu człowieka?»",opts:["Intuicja","Metoda dedukcyjna (obserwacja i wnioskowanie)","Magia","Zgadywanie"],ans:1,exp:"Metoda Holmesa polega na uważnej obserwacji drobnych szczegółów i logicznym wnioskowaniu — to nie magia, tylko trening uważności i logiki, którego każdy może się nauczyć."},
+  {ep:"A Study in Scarlet",q:"Sherlock Holmes: «{name}, powiedz mi — jak nazywa się pierwsza powieść, w której w ogóle pojawiam się jako bohater?»",opts:["Pies Baskerville'ów","Studium w szkarłacie","Znak czterech","Dolina trwogi"],ans:1,exp:"«Studium w szkarłacie» (A Study in Scarlet) z 1887 roku to pierwsza opowieść Arthura Conana Doyle'a, w której Holmes i Watson się poznają."},
+  {ep:"Zadanie matematyczne",math:true,q:"Sherlock Holmes: «{name}, w mieszkaniu przy Baker Street leżą 3 fajki na półce i 4 fajki w szufladzie biurka. Ile fajek mam łącznie?»",ans:7,exp:"3 + 4 = 7. Holmes lubił liczyć i porządkować swoje przedmioty równie dokładnie, jak fakty w śledztwie!"},
+  {ep:"A Scandal in Bohemia",q:"Sherlock Holmes: «{name}, powiedz mi — jak nazywam jedyną kobietę, która mnie przechytrzyła, i o której zawsze mówię z wielkim szacunkiem jako o «tej kobiecie»?»",opts:["Irena Adler","Mary Morstan","Pani Hudson","Violet Hunter"],ans:0,exp:"Irena Adler to jedyna osoba, która w opowiadaniach przechytrzyła Holmesa — od tej pory nazywa ją po prostu «tą kobietą» (the woman) z najwyższym uznaniem."},
+  {ep:"The Final Problem",q:"Sherlock Holmes: «{name}, powiedz mi — jak nazywa się mój najgroźniejszy przeciwnik, genialny profesor matematyki, którego nazywam «Napoleonem zbrodni»?»",opts:["Profesor Moriarty","Inspektor Lestrade","Doktor Mortimer","Pułkownik Moran"],ans:0,exp:"Profesor Moriarty to arcywróg Holmesa — genialny umysł, który stoi za wieloma przestępstwami w Londynie, ukryty za fasadą szanowanego naukowca."},
+  {ep:"The Final Problem",q:"Sherlock Holmes: «{name}, powiedz mi — nad jakim słynnym wodospadem w Szwajcarii dochodzi do mojej dramatycznej konfrontacji z Moriartym?»",opts:["Niagara","Wodospad Reichenbach","Wiktorii","Angel Falls"],ans:1,exp:"Wodospad Reichenbach w Szwajcarii to miejsce słynnej, dramatycznej sceny starcia Holmesa z Moriartym, która miała zakończyć (a właściwie nie zakończyła) historię detektywa."},
+  {ep:"The Hound of the Baskervilles",q:"Sherlock Holmes: «{name}, powiedz mi — w jakiej dzikiej, mglistej krainie Anglii rozgrywa się sprawa tajemniczego, upiornego psa nawiedzającego rodzinę Baskerville'ów?»",opts:["Na bagnach Dartmoor","W Szkocji","W Londynie","Nad morzem w Brighton"],ans:0,exp:"Akcja «Psa Baskerville'ów» toczy się na mglistych, niebezpiecznych bagnach Dartmoor — to właśnie ta ponura sceneria buduje cały klimat grozy w powieści."},
+  {ep:"Zadanie z mapą śledczą",img:"images/sher1.png",math:true,q:"Sherlock Holmes: «{name}, spójrz na tę mapę. To trasa, którą przemierzyłem po Londynie — cztery miejsca tworzące idealny kwadrat. Skrót na przełaj, czyli przekątna trasy, ma długość pierwiastka z 2 mili, a jeden bok kwadratu oznaczyłem na mapie literą X. Ile mil wynosi X?»",ans:1,exp:"W kwadracie o boku X przekątna ma długość X razy pierwiastek z 2. Skoro przekątna (skrót na przełaj) wynosi dokładnie pierwiastek z 2 mili, to X musi być równe 1 mili — to klasyczne zastosowanie twierdzenia Pitagorasa, tylko zamiast kartki w zeszycie mamy mapę detektywa!"},
+  {ep:"A Scandal in Bohemia",q:"Sherlock Holmes: «{name}, powiedz mi — jakiego narzędzia używam najczęściej, żeby dokładnie obejrzeć ślad, plamę albo drobny przedmiot na miejscu zdarzenia?»",opts:["Lupy (szkła powiększającego)","Lornetki","Mikroskopu elektronowego","Teleskopu"],ans:0,exp:"Lupa to jedno z najbardziej charakterystycznych narzędzi Holmesa — pozwala mu dostrzec drobne, niewidoczne gołym okiem szczegóły, kluczowe dla śledztwa."},
+  {ep:"The Greek Interpreter",q:"Sherlock Holmes: «{name}, powiedz mi — jak nazywa się mój starszy brat, który jest jeszcze bystrzejszy ode mnie, ale zbyt leniwy, by samemu prowadzić śledztwa?»",opts:["Mycroft Holmes","John Holmes","Henry Holmes","Sherrinford Holmes"],ans:0,exp:"Mycroft Holmes, starszy brat Sherlocka, posiada jeszcze większe zdolności dedukcyjne, ale wykorzystuje je głównie pracując dla brytyjskiego rządu, a nie w terenie."},
+  {ep:"A Study in Scarlet",q:"Sherlock Holmes: «{name}, powiedz mi — jak nazywa się inspektor Scotland Yardu, który regularnie prosi mnie o pomoc, choć czasem niechętnie przyznaje mi rację?»",opts:["Inspektor Lestrade","Inspektor Gregson","Inspektor Abberline","Inspektor Bradstreet"],ans:0,exp:"Inspektor Lestrade ze Scotland Yardu pojawia się w wielu opowiadaniach — choć bywa sceptyczny wobec metod Holmesa, regularnie korzysta z jego pomocy."},
+  {ep:"The Sign of Four",q:"Sherlock Holmes: «{name}, powiedz mi — jak nazywa się powieść, w której Watson poznaje swoją przyszłą żonę, Mary Morstan, podczas sprawy o skarb z Indii?»",opts:["Znak czterech","Dolina trwogi","Pies Baskerville'ów","Jego ostatni ukłon"],ans:0,exp:"«Znak czterech» (The Sign of Four) to powieść, w której Watson poznaje Mary Morstan — klientkę zgłaszającą się do Holmesa w sprawie tajemniczego skarbu."},
+  {ep:"Zadanie matematyczne",math:true,q:"Sherlock Holmes: «{name}, idąc śladem podejrzanego, Watson policzył 12 odcisków butów po lewej stronie ulicy i 9 po prawej. O ile więcej śladów było po lewej stronie?»",ans:3,exp:"12 - 9 = 3. Liczenie śladów to jedna z podstawowych metod obserwacyjnych — drobne różnice w liczbach też bywają ważną poszlaką."},
+  {ep:"Mit popkultury",q:"Sherlock Holmes: «{name}, powiedz mi — czy zdanie «Elementary, my dear Watson» («To proste, mój drogi Watsonie») naprawdę pojawia się dosłownie w oryginalnych książkach Conana Doyle'a?»",opts:["Tak, pojawia się wielokrotnie w każdej książce","Nie — to słynne zdanie w tej dokładnej formie nie istnieje w oryginalnych tekstach, spopularyzowały je późniejsze filmy","Tak, ale tylko raz, w ostatnim rozdziale","Nie, bo Holmes nigdy nie mówi do Watsona „mój drogi”"],ans:1,exp:"To jedna z najsłynniejszych «cytatów-mitów» w literaturze! W tej dokładnej formie zdanie nigdy nie pada w oryginalnych książkach — spopularyzowały je dopiero filmy i sztuki teatralne z początku XX wieku."},
+  {ep:"Mit popkultury — obrazek",img:"images/sher2.png",q:"Sherlock Holmes: «{name}, spójrz na te cztery przedmioty kojarzone ze mną. Który z nich NIE pojawia się w oryginalnych książkach Conana Doyle'a, a jest tylko mitem z filmów i ilustracji?»",opts:["1 — lupa","2 — skrzypce","3 — czapka myśliwska (deerstalker)","4 — fajka w kształcie kalabasy"],ans:3,exp:"Fajka w kształcie kalabasy nigdy nie pojawia się w książkach — wymyślił ją aktor teatralny William Gillette na początku XX wieku, bo wygodniej trzymało się ją na scenie podczas mówienia kwestii. Lupa i skrzypce są w pełni autentyczne z książek, a czapka myśliwska pochodzi z ilustracji Sidneya Pageta, choć w tekście jest opisana tylko ogólnie jako „czapka podróżna”."},
+  {ep:"Zadanie matematyczne",math:true,q:"Sherlock Holmes: «{name}, w sejfie podejrzanego było 5 banknotów po 10 funtów i 6 monet po 1 funcie. Ile funtów było łącznie w sejfie?»",ans:56,exp:"5 × 10 = 50, plus 6 × 1 = 6, razem 50 + 6 = 56 funtów. Dokładne liczenie dowodów finansowych to ważna część niejednej sprawy Holmesa!"},
+  {ep:"A Study in Scarlet",q:"Sherlock Holmes: «{name}, powiedz mi — jakim słowem na drzwiach mojego mieszkania (kołatka, tabliczka) najczęściej oznaczany jest mój adres w ekranizacjach i ilustracjach?»",opts:["221B","10B","B221","B12"],ans:0,exp:"221B to dokładny numer mieszkania przy Baker Street — litera „B” oznacza, że to jedno z kilku mieszkań pod tym adresem, na pierwszym piętrze nad sklepem."},
+  {ep:"A Study in Scarlet",q:"Sherlock Holmes: «{name}, powiedz mi — z jakiej wojny wrócił ranny doktor Watson, zanim zamieszkał ze mną przy Baker Street?»",opts:["Z wojny w Afganistanie","Z wojny krymskiej","Z wojny burskiej","Z wojny napoleońskiej"],ans:0,exp:"Watson został ranny podczas drugiej wojny brytyjsko-afgańskiej, służąc jako lekarz wojskowy — to doświadczenie ukształtowało jego charakter i obserwacje, które potem spisuje jako kronikarz przygód Holmesa."},
+  {ep:"His Last Bow",q:"Sherlock Holmes: «{name}, powiedz mi — w opowiadaniu „Jego ostatni ukłon” pomagam swojemu krajowi tuż przed wybuchem jakiej wielkiej wojny?»",opts:["Pierwszej wojny światowej","Drugiej wojny światowej","Wojny krymskiej","Wojny secesyjnej"],ans:0,exp:"„Jego ostatni ukłon” rozgrywa się tuż przed wybuchem I wojny światowej w 1914 roku — Holmes, już jako starszy mężczyzna, pomaga w sprawie szpiegowskiej zagrażającej Wielkiej Brytanii."},
+  {ep:"Ciekawostka literacka",q:"Sherlock Holmes: «{name}, powiedz mi w przybliżeniu — ile krótkich opowiadań o moich przygodach napisał w sumie Arthur Conan Doyle (oprócz czterech powieści)?»",opts:["Około 10","Około 56","Około 200","Tylko 3"],ans:1,exp:"Arthur Conan Doyle napisał w sumie 56 opowiadań i 4 powieści o Sherlocku Holmesie — razem te historie nazywane są „kanonem” (the Canon) i powstawały od 1887 do 1927 roku."},
+  {ep:"Podsumowanie",q:"Sherlock Holmes: «{name}, na koniec powiedz mi — co tak naprawdę uczyniło mnie najsłynniejszym detektywem w literaturze: magiczne moce czy coś zupełnie innego?»",opts:["Magiczne moce i czary","Uważna obserwacja, logika i ciężka praca nad detalami","Szczęście i przypadek","Pomoc duchów"],ans:1,exp:"Cały sekret Holmesa to nie magia, tylko uważna obserwacja, logiczne wnioskowanie i cierpliwe analizowanie nawet najmniejszych detali — dokładnie tego, czego Ty też uczyłeś/aś się przez całe to śledztwo!"}
+];
+
+const breakVideos = { 5: "mp4/sher1.mp4", 10: "mp4/sher2.mp4", 15: "mp4/sher3.mp4", 20: "mp4/sher4.mp4" };
+const breakTexts={
+  5:{title:"Krótka przerwa na fajkę i skrzypce...",text:"Sherlock Holmes zawsze robi sobie przerwę, żeby uporządkować myśli. Obejrzyj nagranie, a potem wróćmy do śledztwa."},
+  10:{title:"Jeszcze jedno, zanim wrócimy...",text:"Połowa drogi za nami! Holmes właśnie znalazł nowy trop."},
+  15:{title:"Kolejna przerwa przy kominku",text:"Zostało już niewiele spraw. Holmes nabija fajkę i patrzy w ogień."},
+  20:{title:"Ostatnia przerwa przed finałem",text:"Zostały już tylko ostatnie pytania. Holmes bierze głęboki wdech."}
+};
+const praises=[
+  "Brawo, {name}! Dokładnie tak rozumowałby Sherlock Holmes.",
+  "Świetnie, {name}! To jest myślenie jak prawdziwy detektyw.",
+  "Trafna odpowiedź! Holmes na pewno skinąłby głową z uznaniem.",
+  "Dobry refleks, {name}! Watson byłby pod wrażeniem.",
+  "Brawo! Tak właśnie wygląda dedukcja — krok po kroku, bez pośpiechu."
+];
+
+let userName="Detektywie";
+let current=0,score=0,scores=[0,0,0,0,0],answered=false,pendingNext=null,soundsEnabled=true;
+
+const sndGood=document.getElementById('snd-good');
+const sndBad=document.getElementById('snd-bad');
+const sndSong=document.getElementById('snd-song');
+let songPlaying=false;
+
+function toggleSounds(){
+  soundsEnabled=!soundsEnabled;
+  const btn=document.getElementById('sound-toggle-btn');
+  if(soundsEnabled){btn.textContent='🔊 Dźwięki włączone';btn.classList.remove('is-muted');}
+  else{btn.textContent='🔇 Dźwięki wyłączone';btn.classList.add('is-muted');}
+}
+
+function playGood(){
+  if(!soundsEnabled)return;
+  try{
+    const src=GOOD_SOUNDS[Math.floor(Math.random()*GOOD_SOUNDS.length)];
+    sndGood.src=src;sndGood.currentTime=0;sndGood.play().catch(()=>{});
+  }catch(e){}
+}
+function playBad(){
+  if(!soundsEnabled)return;
+  try{
+    const src=WRONG_SOUNDS[Math.floor(Math.random()*WRONG_SOUNDS.length)];
+    sndBad.src=src;sndBad.currentTime=0;sndBad.play().catch(()=>{});
+  }catch(e){}
+}
+
+function startQuiz(){
+  const v=document.getElementById('name-input').value.trim();
+  userName=v?v:"Detektywie";
+  document.getElementById('name-screen').style.display='none';
+  document.getElementById('quiz-screen').style.display='block';
+  document.getElementById('hero-text').textContent="Witaj, "+userName+"! Czeka na Ciebie 25 pytań o Sherlocku Holmesie — z prawdziwych książek, nie z filmów. Trzy z nich to zadania matematyczne, dwa mają obrazki. Powodzenia, detektywie!";
+  render();
+}
+
+function fillName(str){return str.replace(/\{name\}/g,userName);}
+
+function render(){
+  const q=questions[current];
+  document.getElementById('quiz-hero').style.display=current===0?'block':'none';
+  document.getElementById('prog-label').textContent='Pytanie '+(current+1)+' z '+questions.length;
+  document.getElementById('prog-fill').style.width=(((current+1)/questions.length)*100)+'%';
+  document.getElementById('ep-badge').textContent=q.ep;
+  document.getElementById('math-badge').style.display=q.math?'inline-block':'none';
+  document.getElementById('q-text').textContent=fillName(q.q);
+
+  const img=document.getElementById('q-img');
+  if(q.img){img.src=q.img;img.style.display='block';img.alt=q.ep;}
+  else{img.style.display='none';img.removeAttribute('src');}
+
+  const hintBtn=document.getElementById('hint-btn');
+  const hintBox=document.getElementById('hint-box');
+  hintBox.style.display='none';
+  hintBox.textContent=q.hint||'';
+  hintBtn.style.display=q.hint?'inline-block':'none';
+  hintBtn.textContent='💡 Pokaż podpowiedź';
+
+  const praise=document.getElementById('praise');
+  praise.style.display='none';
+  const exp=document.getElementById('explanation');
+  exp.style.display='none';
+  exp.textContent=q.exp;
+  document.getElementById('next-btn').classList.remove('shown');
+  answered=false;
+
+  const c=document.getElementById('options-container');
+  const mc=document.getElementById('math-container');
+  c.innerHTML='';
+
+  if(q.math){
+    c.style.display='none';
+    mc.style.display='block';
+    const inp=document.getElementById('math-input');
+    inp.value='';
+    inp.disabled=false;
+    document.getElementById('math-submit').disabled=false;
+    setTimeout(()=>inp.focus(),50);
+  } else {
+    c.style.display='block';
+    mc.style.display='none';
+    const labels=['A','B','C','D'];
+    q.opts.forEach(function(o,i){
+      const d=document.createElement('div');
+      d.className='option';
+      d.innerHTML='<span class="badge">'+labels[i]+'</span><span>'+o+'</span>';
+      d.onclick=function(){selectOption(i,d);};
+      c.appendChild(d);
+    });
+  }
+}
+
+function toggleHint(){
+  const box=document.getElementById('hint-box');
+  const btn=document.getElementById('hint-btn');
+  if(box.style.display==='none'){box.style.display='block';btn.textContent='💡 Ukryj podpowiedź';}
+  else{box.style.display='none';btn.textContent='💡 Pokaż podpowiedź';}
+}
+
+function segmentIndex(i){return Math.floor(i/5);}
+
+function finishAnswer(isCorrect,correctText){
+  const q=questions[current];
+  if(isCorrect){
+    score++;
+    scores[segmentIndex(current)]++;
+    playGood();
+    const p=document.getElementById('praise');
+    p.textContent=fillName(praises[Math.floor(Math.random()*praises.length)]);
+    p.style.display='block';
+  } else {
+    playBad();
+    document.getElementById('explanation').style.display='block';
+  }
+  const nb=document.getElementById('next-btn');
+  nb.classList.add('shown');
+  nb.textContent=current<questions.length-1?'Następne pytanie →':'Zobacz wynik 🏁';
+}
+
+function selectOption(i,el){
+  if(answered)return;
+  answered=true;
+  const q=questions[current];
+  const opts=document.querySelectorAll('.option');
+  opts.forEach(function(o){o.classList.add('disabled');});
+  const isCorrect=(i===q.ans);
+  if(isCorrect){el.classList.add('correct');}
+  else{el.classList.add('wrong');opts[q.ans].classList.add('correct');}
+  finishAnswer(isCorrect);
+}
+
+function submitMath(){
+  if(answered)return;
+  const inp=document.getElementById('math-input');
+  const val=inp.value.trim();
+  if(val==='')return;
+  answered=true;
+  inp.disabled=true;
+  document.getElementById('math-submit').disabled=true;
+  const q=questions[current];
+  const isCorrect=(Number(val)===Number(q.ans));
+  if(!isCorrect){
+    const note=document.createElement('div');
+    note.style.cssText='margin-top:.5rem;font-size:13px;color:#A32D2D;font-weight:600';
+    note.textContent='Poprawny wynik to: '+q.ans;
+    document.getElementById('math-container').appendChild(note);
+  }
+  finishAnswer(isCorrect);
+}
+
+function nextQ(){
+  const completed=current+1;
+  const next=completed;
+  if(next>=questions.length){showResult();return;}
+  if(breakVideos[completed]){
+    pendingNext=next;
+    showBreak(completed);
+    return;
+  }
+  current=next;
+  render();
+}
+
+function showBreak(completedCount){
+  document.getElementById('quiz-screen').style.display='none';
+  const bs=document.getElementById('break-screen');
+  bs.style.display='block';
+  document.getElementById('break-title').textContent=breakTexts[completedCount].title;
+  document.getElementById('break-text').textContent=breakTexts[completedCount].text;
+  const vid=document.getElementById('break-video');
+  vid.src=breakVideos[completedCount];
+  vid.load();
+}
+
+function continueAfterBreak(){
+  document.getElementById('break-screen').style.display='none';
+  document.getElementById('quiz-screen').style.display='block';
+  current=pendingNext;
+  render();
+}
+
+function toggleSong(){
+  const btn=document.getElementById('song-toggle-btn');
+  if(songPlaying){sndSong.pause();songPlaying=false;btn.textContent='▶️ Odtwórz piosenkę';}
+  else{sndSong.play().catch(()=>{});songPlaying=true;btn.textContent='⏸️ Wstrzymaj piosenkę';}
+}
+
+function showResult(){
+  document.getElementById('quiz-screen').style.display='none';
+  const rs=document.getElementById('result-screen');
+  rs.style.display='block';
+  const pct=Math.round((score/questions.length)*100);
+  let icon='🔍',msg='';
+  if(pct>=90){icon='🏆';msg=userName+', niesamowite! Znasz książkowego Holmesa lepiej niż niejeden londyński inspektor — nawet zadania matematyczne nie miały u Ciebie szans.';}
+  else if(pct>=70){icon='🌟';msg='Świetnie, '+userName+'! Masz instynkt detektywa i głowę do liczb. Holmes byłby z Ciebie dumny.';}
+  else if(pct>=50){icon='🔎';msg='Dobry wynik, '+userName+'! Zaczynasz rozumieć metodę dedukcji. Jeszcze kilka opowiadań i będziesz rozwiązywać sprawy razem z Holmesem!';}
+  else{icon='📖';msg='Holmes mówi: «Elementarne, mój drogi '+userName+'... ale jeszcze nie do końca!» — może warto sięgnąć po którąś z książek? Spróbuj jeszcze raz!';}
+  document.getElementById('res-icon').textContent=icon;
+  document.getElementById('res-score').textContent=score+' / '+questions.length;
+  document.getElementById('res-msg').textContent=msg;
+  for(let s=0;s<5;s++){
+    document.getElementById('bar'+(s+1)).style.width=(scores[s]/5*100)+'%';
+    document.getElementById('score'+(s+1)+'-txt').textContent=scores[s]+'/5';
+  }
+  document.getElementById('song-title').textContent="Piosenka dla Ciebie, "+userName;
+
+  sndSong.currentTime=0;
+  sndSong.play().then(()=>{
+    songPlaying=true;
+    document.getElementById('song-toggle-btn').textContent='⏸️ Wstrzymaj piosenkę';
+  }).catch(()=>{
+    songPlaying=false;
+    document.getElementById('song-toggle-btn').textContent='▶️ Odtwórz piosenkę';
+  });
+}
+
+function restart(){
+  current=0;score=0;scores=[0,0,0,0,0];answered=false;pendingNext=null;
+  sndSong.pause();sndSong.currentTime=0;songPlaying=false;
+  document.getElementById('result-screen').style.display='none';
+  document.getElementById('name-screen').style.display='block';
+  document.getElementById('name-input').value='';
+}
+</script>
+</body>
+</html>

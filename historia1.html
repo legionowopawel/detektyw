@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test z Historii - XVI i XVII Wiek</title>
+    <style>
+        :root {
+            --primary: #2e7d32;
+            --secondary: #c62828;
+            --bg: #f5f5f5;
+            --text: #333;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .container {
+            max-width: 600px;
+            width: 100%;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        h1 { color: var(--primary); text-align: center; font-size: 1.5rem; }
+        .progress {
+            text-align: center;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #666;
+        }
+        .question {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        .options {
+            display: grid;
+            gap: 10px;
+        }
+        button {
+            padding: 12px 20px;
+            border: 2px solid #ddd;
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.2s;
+            text-align: left;
+        }
+        button:hover:not(:disabled) {
+            background: #f0f0f0;
+            border-color: #bbb;
+        }
+        button.correct {
+            background-color: #e8f5e9;
+            border-color: var(--primary);
+            color: var(--primary);
+            font-weight: bold;
+        }
+        button.wrong {
+            background-color: #ffebee;
+            border-color: var(--secondary);
+            color: var(--secondary);
+        }
+        #result-screen {
+            display: none;
+            text-align: center;
+        }
+        .btn-next {
+            margin-top: 20px;
+            width: 100%;
+            background: var(--primary);
+            color: white;
+            border: none;
+            text-align: center;
+            display: none;
+        }
+        .btn-whatsapp {
+            background: #25D366;
+            color: white;
+            text-decoration: none;
+            padding: 15px;
+            display: inline-block;
+            border-radius: 8px;
+            margin-top: 20px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div id="quiz-screen">
+        <h1 id="category-title">📚 TEST Z HISTORII</h1>
+        <div class="progress">Pytanie <span id="current-idx">1</span> z 50</div>
+        <div id="question-text" class="question"></div>
+        <div id="options-container" class="options"></div>
+        <button id="next-btn" class="btn-next" onclick="loadNextQuestion()">Następne pytanie ➔</button>
+    </div>
+
+    <div id="result-screen">
+        <h1>Koniec testu! 🏆</h1>
+        <p style="font-size: 2rem; font-weight: bold;">Twój wynik: <span id="score">0</span> / 50</p>
+        <p id="rank-text"></p>
+        <a id="wa-share" class="btn-whatsapp" href="#">Wyślij wynik na WhatsApp 📱</a>
+        <button onclick="location.reload()" style="margin-top: 10px; width: 100%;">Spróbuj jeszcze raz</button>
+    </div>
+</div>
+
+<script>
+    const questions = [
+        { q: "Jak nazywamy XVI wiek w historii Polski?", a: ["Wiek ciemny", "Złoty wiek", "Wiek rycerski", "Wiek odkryć"], c: 1 },
+        { q: "Kto był ostatnim królem z dynastii Jagiellonów?", a: ["Stefan Batory", "Jan III Sobieski", "Zygmunt II August", "Władysław Jagiełło"], c: 2 },
+        { q: "Kim był Jan Zamoyski?", a: ["Królem Polski", "Kanclerzem i hetmanem", "Biskupem krakowskim", "Wodzem husarii"], c: 1 },
+        { q: "W którym roku Jan Zamoyski założył miasto Zamość?", a: ["1569", "1580", "1594", "1605"], c: 1 },
+        { q: "Jak nazywamy najazd Szwedów na Polskę (1655–1660)?", a: ["Potop turecki", "Wielka Wojna Północna", "Potop szwedzki", "Odsiecz wiedeńska"], c: 2 },
+        { q: "Kto bronił klasztoru na Jasnej Górze?", a: ["Stefan Czarniecki", "Jan III Sobieski", "Augustyn Kordecki", "Jan Zamoyski"], c: 2 },
+        { q: "W którym roku Jan III Sobieski pokonał Turków pod Wiedniem?", a: ["1655", "1660", "1672", "1683"], c: 3 },
+        { q: "Co to jest husaria?", a: ["Rodzaj miecza", "Ciężkozbrojna jazda polska", "Twierdza obronna", "Flota morska"], c: 1 },
+        { q: "Jaka była główna broń husarza?", a: ["Łuk", "Szabla", "Kopia", "Muszkiet"], c: 2 },
+        { q: "Jak nazywano wojnę podjazdową Czarnieckiego?", a: ["Wojna błyskawiczna", "Wojna podjazdowa", "Obrona okrężna", "Wyprawa krzyżowa"], c: 1 },
+        { q: "Złoty wiek Polski to XVI wiek. Który władca go ZACZĄŁ?", a: ["Jan III Sobieski", "Zygmunt I Stary", "Stefan Batory", "Jan Zamoyski"], c: 1 },
+        { q: "Co w tamtych czasach oznaczało bycie kanclerzem?", a: ["Naczelny wódz", "Premier i minister SZ", "Opiekun kościołów", "Wyborca króla"], c: 1 },
+        { q: "Ile lat trwał Potop Szwedzki (1655-1660)?", a: ["3 lata", "4 lata", "5 lat", "6 lat"], c: 2 },
+        { q: "Co znaczy, że obrona Jasnej Góry zmobilizowała Polaków?", a: ["Zmęczyła ich", "Zachęciła do walki", "Przestraszyła ich", "Przekonała do poddania"], c: 1 },
+        { q: "Gdzie leży Oliwa (miejsce pokoju 1660)?", a: ["Koło Krakowa", "Koło Gdańska", "Koło Warszawy", "Na Litwie"], c: 1 },
+        { q: "Z kim Polska NIE prowadziła wojen w XVII wieku?", a: ["Szwecja", "Turcja", "Francja", "Rosja"], c: 2 },
+        { q: "Do czego przymocowane były skrzydła husarza?", a: ["Do hełmu", "Do konia", "Do siodła lub pleców", "Do kopii"], c: 2 },
+        { q: "Który kraj miał więcej żołnierzy pod Wiedniem?", a: ["Polska", "Turcja", "Austria", "Obie armie równe"], c: 1 },
+        { q: "Czyje słowa sparafrazował Sobieski: 'Przybyliśmy, zobaczyliśmy, Bóg zwyciężył'?", a: ["Zamoyskiego", "Juliusza Cezara", "Kordeckiego", "Zygmunta Augusta"], c: 1 },
+        { q: "Gdzie dziś leży Kamieniec Podolski?", a: ["Polska", "Białoruś", "Ukraina", "Litwa"], c: 2 },
+        { q: "Które uczelnie były przed Akademią Zamojską?", a: ["Warszawa i Gdańsk", "Kraków i Wilno", "Lwów i Poznań", "Wrocław i Toruń"], c: 1 },
+        { q: "Kto wygrał pod Kircholmem (1605)?", a: ["Szwedzi", "Rzeczpospolita", "Rosja", "Turcja"], c: 1 },
+        { q: "Kiedy Czarniecki otrzymał tytuł hetmana?", a: ["Na początku", "Pod koniec życia", "Nigdy", "W wieku 30 lat"], c: 1 },
+        { q: "Kim był Mikołaj Kopernik?", a: ["Królem", "Astronomem", "Hetmanem", "Malarzem"], c: 1 },
+        { q: "Kiedy widać 'Tarczę Sobieskiego'?", a: ["Zimą", "Wiosną", "Latem", "Jesienią"], c: 2 },
+        { q: "Które państwo w XVII w. stało się największą potęgą-zagrożeniem?", a: ["Turcja", "Szwecja", "Rosja i Prusy", "Austria"], c: 2 },
+        { q: "Co znaczy 'ciężkozbrojna' jazda?", a: ["Powolna", "Dobrze opancerzona", "Piesza", "Tylko łuki"], c: 1 },
+        { q: "Co Zamoyski myślał o 'młodzieży chowaniu'?", a: ["Budować zamki", "Wychowanie to przyszłość", "Młodzież na wojnę", "Kobiety nie rządy"], c: 1 },
+        { q: "350-lecie Odsieczy Wiedeńskiej wypadnie w:", a: ["2030", "2033", "2035", "2040"], c: 1 },
+        { q: "Król wybrany w 1576 roku to:", a: ["Sobieski", "Zamoyski", "Stefan Batory", "Zygmunt III Waza"], c: 2 },
+        { q: "Jak Polska handlowała zbożem?", a: ["Lądem", "Przez Bałtyk", "Przez Dniepr", "Z Turcją"], c: 1 },
+        { q: "Czemu w XVII w. ubyło ludności?", a: ["USA", "Epidemie/wojny", "Rozkaz króla", "Szwedzi zabrali"], c: 1 },
+        { q: "Zamość na liście UNESCO oznacza:", a: ["Stolicę", "Ważny zabytek", "W UE", "ONZ"], c: 1 },
+        { q: "Co Kordecki ukrył przed Szwedami?", a: ["Złoto", "Obraz MB", "Dokumenty", "Broń"], c: 1 },
+        { q: "Branie pieniędzy od obcych państw przez szlachtę:", a: ["Wzmacniało Polskę", "Szkodziło ojczyźnie", "Bogaciło kraj", "Budowało zamki"], c: 1 },
+        { q: "Jak husarz trzymał 5m kopię?", a: ["Była lekka (drewniana)", "Do siodła", "W dwóch", "Ciągnął"], c: 0 },
+        { q: "Kim dowodził Sobieski w 1683?", a: ["Rosją", "Niemcami/Austrią", "Francją", "Czechami"], c: 1 },
+        { q: "Które miasto leży dziś w Polsce?", a: ["Kijów", "Wilno", "Zamość", "Smoleńsk"], c: 2 },
+        { q: "Ilu ostatnich Jagiellonów w Kaplicy Zygmuntowskiej?", a: ["1", "2", "3", "4"], c: 1 },
+        { q: "Reakcja cara na wojnę 1577-82:", a: ["Atak", "Pokój", "Ucieczka", "Syberia"], c: 1 },
+        { q: "Czemu Zamoyski nie chciał pokoju w 1582?", a: ["Ziemie", "Chciał pokonać Cara", "Strach", "Król"], c: 1 },
+        { q: "Narody Rzeczypospolitej to:", a: ["Francuzi", "Litwini, Białorusini, Ukraińcy", "Rosjanie", "Szwedzi"], c: 1 },
+        { q: "Przedmurze chrześcijaństwa to:", a: ["Kościoły", "Obrona przed Turcją", "Papieże", "Centrum"], c: 1 },
+        { q: "Czym zasłynął Kopernik?", a: ["Wiedeń", "Ziemia wokół Słońca", "Akademia", "Książka historyczna"], c: 1 },
+        { q: "Klasztor, który się NIE poddał:", a: ["Kraków", "Jasna Góra", "Gdańsk", "Wawel"], c: 1 },
+        { q: "Skąd Batory znał polski?", a: ["Szkoła", "Zamoyski pomagał", "Taki sam", "Nie znał"], c: 1 },
+        { q: "Gdzie jest zamek w Kamieńcu?", a: ["Polska", "Rumunia", "Ukraina", "Mołdawia"], c: 2 },
+        { q: "Ile kierunków wojen w XVII w.?", a: ["1", "2", "3", "4"], c: 2 },
+        { q: "Co straciliśmy w Oliwie?", a: ["Południe", "Wschód", "Ziemie nad Bałtykiem", "Małopolskę"], c: 2 },
+        { q: "Ile lat temu był Wiedeń (od 2024)?", a: ["300", "341", "350", "400"], c: 1 }
+    ];
+
+    let currentQuestion = 0;
+    let score = 0;
+
+    function loadQuestion() {
+        const q = questions[currentQuestion];
+        document.getElementById('current-idx').innerText = currentQuestion + 1;
+        document.getElementById('question-text').innerText = q.q;
+        const container = document.getElementById('options-container');
+        container.innerHTML = '';
+        document.getElementById('next-btn').style.display = 'none';
+
+        q.a.forEach((opt, idx) => {
+            const btn = document.createElement('button');
+            btn.innerText = String.fromCharCode(65 + idx) + ") " + opt;
+            btn.onclick = () => selectOption(idx, btn);
+            container.appendChild(btn);
+        });
+    }
+
+    function selectOption(idx, btn) {
+        const correct = questions[currentQuestion].c;
+        const buttons = document.querySelectorAll('.options button');
+        
+        buttons.forEach(b => b.disabled = true);
+
+        if (idx === correct) {
+            btn.classList.add('correct');
+            score++;
+        } else {
+            btn.classList.add('wrong');
+            buttons[correct].classList.add('correct');
+        }
+        
+        document.getElementById('next-btn').style.display = 'block';
+    }
+
+    function loadNextQuestion() {
+        currentQuestion++;
+        if (currentQuestion < questions.length) {
+            loadQuestion();
+        } else {
+            showResults();
+        }
+    }
+
+    function showResults() {
+        document.getElementById('quiz-screen').style.display = 'none';
+        document.getElementById('result-screen').style.display = 'block';
+        document.getElementById('score').innerText = score;
+
+        let rank = "";
+        if(score > 40) rank = "Jesteś Hetmanem Wielkim Koronnym! 👑";
+        else if(score > 20) rank = "Dobra robota, Strażniku Granic! ⚔️";
+        else rank = "Musisz jeszcze trochę poczytać o husarii... 📚";
+        
+        document.getElementById('rank-text').innerText = rank;
+
+        const text = `Mój wynik w teście z historii: ${score}/50. ${rank}`;
+        document.getElementById('wa-share').href = `https://wa.me/?text=${encodeURIComponent(text)}`;
+    }
+
+    loadQuestion();
+</script>
+
+</body>
+</html>

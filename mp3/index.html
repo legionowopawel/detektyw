@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Odtwarzacz MP3</title>
+    <style>
+        /* Stylizowanie pod ekrany telefonów (Mobile First) */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #121212;
+            color: #ffffff;
+            margin: 0;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            color: #1DB954;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+            width: 100%;
+        }
+
+        /* Odtwarzacz dopasowany do szerokości ekranu smartfona */
+        audio {
+            width: 100%;
+            max-width: 400px;
+            margin-bottom: 25px;
+            position: sticky;
+            top: 10px; /* Odtwarzacz zostaje na górze przy przewijaniu listy */
+            z-index: 10;
+        }
+
+        /* Kontener na listę piosenek */
+        #playlist {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        /* Duże, wygodne elementy listy dla palców na ekranie dotykowym */
+        li {
+            padding: 18px 15px;
+            background: #1e1e1e;
+            border: 1px solid #282828;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: background 0.2s, transform 0.1s;
+            /* Zapobiega zaznaczaniu tekstu przy szybkim klikaniu */
+            -webkit-user-select: none;
+            user-select: none; 
+            
+            /* Skracanie zbyt długich nazw kropkami (...) */
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* Efekt kliknięcia (użyteczne na telefonach) */
+        li:active {
+            transform: scale(0.98);
+        }
+
+        /* Styl dla aktualnie granej piosenki */
+        li.active {
+            background: #1DB954;
+            color: #000000;
+            font-weight: bold;
+            border-color: #1DB954;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Twoja Lista Utworów</h1>
+
+    <audio id="audio-player" controls></audio>
+    
+    <ul id="playlist">
+        <li data-src="spryt.mp3">Sprytnym być</li>
+        <li data-src="rower.mp3">Srprawa skradzionych rowerów</li>
+        <li data-src="pomoz.mp3">pomóż Porucznikowi w sprawie</li>
+    </ul>
+
+    <script>
+        const playlistContainer = document.getElementById('playlist');
+        const audioPlayer = document.getElementById('audio-player');
+        
+        // 1. Pobranie piosenek z HTML i automatyczne posortowanie ich alfabetycznie
+        const tracks = Array.from(playlistContainer.querySelectorAll('li'));
+        tracks.sort((a, b) => a.textContent.localeCompare(b.textContent, 'pl'));
+
+        // 2. Wyczyszczenie starej listy i wstrzyknięcie posortowanej
+        playlistContainer.innerHTML = '';
+        tracks.forEach((track, index) => {
+            playlistContainer.appendChild(track);
+            
+            // 3. Dodanie zdarzenia kliknięcia dla każdego utworu
+            track.addEventListener('click', () => playTrack(index));
+        });
+
+        // Funkcja obsługująca odtwarzanie
+        function playTrack(index) {
+            // Usunięcie zaznaczenia z poprzedniego utworu
+            const currentActive = document.querySelector('li.active');
+            if (currentActive) currentActive.classList.remove('active');
+
+            // Zaznaczenie nowego, aktualnego utworu
+            const activeTrack = tracks[index];
+            activeTrack.classList.add('active');
+
+            // Załadowanie i odtworzenie piosenki
+            audioPlayer.src = activeTrack.getAttribute('data-src');
+            audioPlayer.play();
+
+            // Magia: Gdy piosenka się skończy, automatycznie włącz następną z listy
+            audioPlayer.onended = () => {
+                const nextIndex = index + 1;
+                // Jeśli to nie był ostatni utwór na liście, graj dalej
+                if (nextIndex < tracks.length) {
+                    playTrack(nextIndex);
+                }
+            };
+        }
+    </script>
+
+</body>
+</html>
