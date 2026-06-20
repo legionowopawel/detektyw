@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Odtwarzacz MP3</title>
     <style>
-        /* Stylizowanie pod ekrany telefonów (Mobile First) */
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             background-color: #121212;
@@ -28,17 +27,15 @@
             width: 100%;
         }
 
-        /* Odtwarzacz dopasowany do szerokości ekranu smartfona */
         audio {
             width: 100%;
             max-width: 400px;
             margin-bottom: 25px;
             position: sticky;
-            top: 10px; /* Odtwarzacz zostaje na górze przy przewijaniu listy */
+            top: 10px;
             z-index: 10;
         }
 
-        /* Kontener na listę piosenek */
         #playlist {
             list-style: none;
             padding: 0;
@@ -47,37 +44,120 @@
             max-width: 400px;
         }
 
-        /* Duże, wygodne elementy listy dla palców na ekranie dotykowym */
-        li {
+        /* ── wiersz utworu ── */
+        .track-row {
+            display: flex;
+            align-items: stretch;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid #282828;
+        }
+
+        .track-title {
+            flex: 1;
             padding: 18px 15px;
             background: #1e1e1e;
-            border: 1px solid #282828;
-            border-radius: 8px;
-            margin-bottom: 10px;
             cursor: pointer;
             font-size: 1.1rem;
             transition: background 0.2s, transform 0.1s;
-            /* Zapobiega zaznaczaniu tekstu przy szybkim klikaniu */
             -webkit-user-select: none;
-            user-select: none; 
-            
-            /* Skracanie zbyt długich nazw kropkami (...) */
+            user-select: none;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
         }
 
-        /* Efekt kliknięcia (użyteczne na telefonach) */
-        li:active {
-            transform: scale(0.98);
+        .track-title:active { transform: scale(0.98); }
+
+        .track-row.active .track-title {
+            background: #1DB954;
+            color: #000;
+            font-weight: bold;
         }
 
-        /* Styl dla aktualnie granej piosenki */
-        li.active {
-            background: #1DB954;
-            color: #000000;
+        /* przycisk "tekst piosenki" */
+        .btn-lyrics {
+            flex-shrink: 0;
+            width: 44px;
+            background: #2a2a2a;
+            border: none;
+            border-left: 1px solid #383838;
+            color: #aaa;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: background 0.2s, color 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-lyrics:hover { background: #333; color: #fff; }
+        .btn-lyrics.open  { background: #1DB954; color: #000; }
+
+        /* ── panel z tekstem piosenki ── */
+        .lyrics-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: #0d0d0d;
+            z-index: 100;
+            overflow-y: auto;
+            padding: 0 0 40px;
+        }
+
+        .lyrics-overlay.visible { display: block; }
+
+        .lyrics-header {
+            position: sticky;
+            top: 0;
+            background: #181818;
+            border-bottom: 1px solid #282828;
+            padding: 14px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 10;
+        }
+
+        .lyrics-topbar {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .btn-close {
+            background: none;
+            border: 1px solid #444;
+            color: #fff;
+            border-radius: 6px;
+            padding: 6px 14px;
+            font-size: 0.95rem;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+        .btn-close:hover { background: #333; }
+
+        .lyrics-song-title {
+            font-size: 1rem;
             font-weight: bold;
-            border-color: #1DB954;
+            color: #1DB954;
+            flex: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .lyrics-audio {
+            width: 100%;
+        }
+
+        .lyrics-body {
+            padding: 20px 20px 0;
+            white-space: pre-wrap;
+            line-height: 1.85;
+            font-size: 1rem;
+            color: #ddd;
         }
     </style>
 </head>
@@ -86,52 +166,87 @@
     <h1>Twoja Lista Utworów</h1>
 
     <audio id="audio-player" controls></audio>
-    
-    <ul id="playlist">
-        <li data-src="spryt.mp3">Sprytnym być</li>
-        <li data-src="rower.mp3">Srprawa skradzionych rowerów</li>
-        <li data-src="pomoz.mp3">pomóż Porucznikowi w sprawie</li>
-    </ul>
+
+    <ul id="playlist"></ul>
+
+    <!-- nakładka z tekstem piosenki -->
+    <div class="lyrics-overlay" id="lyricsOverlay">
+        <div class="lyrics-header">
+            <div class="lyrics-topbar">
+                <button class="btn-close" onclick="closeLyrics()">✕ Zamknij</button>
+                <span class="lyrics-song-title" id="lyricsSongTitle"></span>
+            </div>
+            <audio class="lyrics-audio" id="lyrics-player" controls></audio>
+        </div>
+        <div class="lyrics-body" id="lyricsBody">Ładowanie…</div>
+    </div>
+
+    <script src="manifest.js"></script>
 
     <script>
-        const playlistContainer = document.getElementById('playlist');
-        const audioPlayer = document.getElementById('audio-player');
-        
-        // 1. Pobranie piosenek z HTML i automatyczne posortowanie ich alfabetycznie
-        const tracks = Array.from(playlistContainer.querySelectorAll('li'));
-        tracks.sort((a, b) => a.textContent.localeCompare(b.textContent, 'pl'));
+        const playlistEl   = document.getElementById('playlist');
+        const audioPlayer  = document.getElementById('audio-player');
+        const lyricsPlayer = document.getElementById('lyrics-player');
+        const overlay      = document.getElementById('lyricsOverlay');
+        const lyricsBody   = document.getElementById('lyricsBody');
+        const lyricsSongTitle = document.getElementById('lyricsSongTitle');
 
-        // 2. Wyczyszczenie starej listy i wstrzyknięcie posortowanej
-        playlistContainer.innerHTML = '';
-        tracks.forEach((track, index) => {
-            playlistContainer.appendChild(track);
-            
-            // 3. Dodanie zdarzenia kliknięcia dla każdego utworu
-            track.addEventListener('click', () => playTrack(index));
+        const rows = []; // { rowEl, titleEl, btnEl, file, title, lyrics }
+
+        SPRAWY.forEach((item, index) => {
+            // wiersz-wrapper
+            const row = document.createElement('li');
+            row.className = 'track-row';
+
+            // tytuł / klik = odtwórz
+            const titleEl = document.createElement('div');
+            titleEl.className = 'track-title';
+            titleEl.textContent = item.title;
+            titleEl.addEventListener('click', () => playTrack(index));
+            row.appendChild(titleEl);
+
+            // przycisk tekstu (tylko jeśli jest lyrics)
+            let btnEl = null;
+            if (item.lyrics) {
+                btnEl = document.createElement('button');
+                btnEl.className = 'btn-lyrics';
+                btnEl.title = 'Tekst piosenki';
+                btnEl.textContent = '📜';
+                btnEl.addEventListener('click', () => openLyrics(index));
+                row.appendChild(btnEl);
+            }
+
+            playlistEl.appendChild(row);
+            rows.push({ rowEl: row, titleEl, btnEl, file: item.file, title: item.title, lyrics: item.lyrics || null });
         });
 
-        // Funkcja obsługująca odtwarzanie
+        /* ── odtwarzanie ── */
         function playTrack(index) {
-            // Usunięcie zaznaczenia z poprzedniego utworu
-            const currentActive = document.querySelector('li.active');
-            if (currentActive) currentActive.classList.remove('active');
-
-            // Zaznaczenie nowego, aktualnego utworu
-            const activeTrack = tracks[index];
-            activeTrack.classList.add('active');
-
-            // Załadowanie i odtworzenie piosenki
-            audioPlayer.src = activeTrack.getAttribute('data-src');
+            rows.forEach(r => r.rowEl.classList.remove('active'));
+            rows[index].rowEl.classList.add('active');
+            audioPlayer.src = rows[index].file;
             audioPlayer.play();
-
-            // Magia: Gdy piosenka się skończy, automatycznie włącz następną z listy
             audioPlayer.onended = () => {
-                const nextIndex = index + 1;
-                // Jeśli to nie był ostatni utwór na liście, graj dalej
-                if (nextIndex < tracks.length) {
-                    playTrack(nextIndex);
-                }
+                if (index + 1 < rows.length) playTrack(index + 1);
             };
+        }
+
+        /* ── panel z tekstem ── */
+        function openLyrics(index) {
+            const item = rows[index];
+            lyricsSongTitle.textContent = item.title;
+            lyricsPlayer.src = item.file;
+            overlay.classList.add('visible');
+            document.body.style.overflow = 'hidden';
+
+            lyricsBody.textContent = item.lyrics || '⚠️ Brak tekstu piosenki.';
+        }
+
+        function closeLyrics() {
+            overlay.classList.remove('visible');
+            document.body.style.overflow = '';
+            lyricsPlayer.pause();
+            lyricsPlayer.src = '';
         }
     </script>
 
