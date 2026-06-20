@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Sprawa nr 26: Zagadka z Wypożyczalni Rowerów</title>
+<title>Psychologia słynnego porucznika</title>
 <style>
   :root{
     --paper:#ece2c8; --paper-dark:#ddcfa8; --ink:#2b2520; --ink-soft:#5b5247;
@@ -83,24 +83,24 @@
 
 <div id="intro-screen">
   <div class="header">
-    <span class="badge">SPRAWA NR 26 — AKTA POUFNE</span>
-    <h1>Tajemnica zniknionych rowerów</h1>
+    <span class="badge">ĆWICZENIA PSYCHOLOGICZNE — AKTA</span>
+    <h1>Psychologia słynnego detektywa z telewizji</h1>
   </div>
   <div class="intro-wrap">
     <div class="photo-frame">
-      <img src="images/rower.png" alt="Sprawa nr 26: Zagadka z Wypożyczalni Rowerów">
+      <img src="images/psychC.png" alt="Psychologia słynnego porucznika">
     </div>
     <div class="case-file">
       <h2>Notatki</h2>
-      <p>W miasteczku nad jeziorem, z wypożyczalni rowerów przy molo, w nocy zniknęły trzy rowery i kasa z biletami. Właściciel wypożyczalni, pan Henderson, jest oburzony.</p>
-      <p>Żeby pomóc rozwiązać tę zagadkę, odpowiedz na 10 pytań związanych bezpośrednio ze sprawą — same liczby muszą się zgadzać.</p>
+      <p>Niektórzy bohaterowie filmowi i serialowi są mistrzami psychologii — potrafią rozczytać ludzi i wykorzystać to w pracy detektywa.</p>
+      <p>Każde pytanie dotyczy innej sceny lub wątku. Odpowiedz na 10 pytań.</p>
     </div>
     <button id="start-btn">Zaczynamy →</button>
   </div>
 </div>
 
 <div id="quiz-screen" style="display:none;">
-  <div class="mini-bar">SPRAWA NR 26 — ROWERY</div>
+  <div class="mini-bar">PSYCHOLOGIA — ĆWICZENIA</div>
   <div id="score-bar">
     <span id="score-label">Punkty: 0 / 10</span>
     <div id="progress-track"><div id="progress-fill"></div></div>
@@ -115,7 +115,7 @@
   <p id="final-text"></p>
   <div class="audio-wrap">
     <p>🎧 Posłuchaj nagrania:</p>
-    <audio controls src="mp3/rower.mp3" preload="none"></audio>
+    <audio controls src="mp3/psychC.mp3" preload="none"></audio>
   </div>
   <button id="restart-btn">Powrót do strony głównej</button>
 </div>
@@ -143,122 +143,132 @@
 <script>
 const Q = [
   {
-    "type": "num",
-    "subject": "Matematyka",
-    "q": "Pan Henderson miał 3 rowery po 250 zł każdy i kasę z biletami wartą 80 zł. Jaka jest łączna wartość strat (w zł)? Wpisz samą liczbę.",
-    "correct": 830,
-    "explain": "3 × 250 zł = 750 zł, plus kasa 80 zł = <b>830 zł</b>."
-  },
-  {
     "type": "mc",
-    "subject": "Matematyka",
-    "q": "Strażnik zamknął molo o 22:15, a świadek widział złodzieja o 23:40. Ile minut upłynęło między tymi zdarzeniami?",
+    "subject": "Psychologia",
+    "episode": "Pierwsza rozmowa z podejrzanym",
+    "q": "Dlaczego podejrzani na początku rozmowy zwykle się nie boją?",
     "opts": [
-      "85 minut",
-      "75 minut",
-      "95 minut",
-      "70 minut"
+      "bo wydaje się rozkojarzony i niegroźny",
+      "bo jest bardzo elegancki i groźny",
+      "bo nosi mundur",
+      "bo nigdy nie zadaje pytań"
     ],
     "correct": 0,
-    "explain": "Od 22:15 do 23:40 mija 1 godzina i 25 minut, czyli <b>85 minut</b>."
+    "explain": "Sprawia wrażenie <b>rozkojarzonego i niegroźnego</b>, więc podejrzani czują się bezpiecznie i mówią więcej, niż powinni."
   },
   {
     "type": "mc",
-    "subject": "Fizyka",
-    "q": "Rowery stały w zamkniętej szopie bez okien o objętości 20 m³. Jedna osoba zużywa ok. 1 m³ powietrza na godzinę. Na ile godzin starczy powietrza dla jednej osoby zamkniętej w takiej szopie?",
+    "subject": "Psychologia",
+    "episode": "Pożegnanie przy drzwiach",
+    "q": "Na czym polega trik, gdy detektyw już wychodzi z pokoju, a potem odwraca się i mówi 'jeszcze jedna rzecz...'?",
     "opts": [
-      "10 godzin",
-      "15 godzin",
-      "20 godzin",
-      "25 godzin"
-    ],
-    "correct": 2,
-    "explain": "20 m³ ÷ 1 m³ na godzinę = <b>20 godzin</b>."
-  },
-  {
-    "type": "mc",
-    "subject": "Matematyka",
-    "q": "Termometr w szopie pokazywał rano 15°C, a w południe temperatura wzrosła o 8°C. Jaka była temperatura w południe?",
-    "opts": [
-      "21°C",
-      "23°C",
-      "25°C",
-      "18°C"
+      "na pożegnaniu się grzecznie",
+      "zaskakuje podejrzanego pytaniem, gdy ten myśli, że rozmowa się skończyła",
+      "na przypomnieniu sobie drogi do domu",
+      "na żarcie z pogody"
     ],
     "correct": 1,
-    "explain": "15°C + 8°C = <b>23°C</b>."
+    "explain": "Podejrzany rozluźnia się myśląc, że rozmowa już się skończyła, a wtedy pada <b>najważniejsze pytanie</b>."
   },
   {
     "type": "mc",
-    "subject": "Fizyka",
-    "q": "Rower przejechał 30 metrów w 6 sekund. Jaka była jego prędkość?",
+    "subject": "Psychologia",
+    "episode": "Stary płaszcz",
+    "q": "Czemu noszenie starego, znoszonego płaszcza pomaga w pracy detektywa?",
     "opts": [
-      "6 m/s",
-      "4 m/s",
-      "5 m/s",
-      "8 m/s"
+      "bo jest ciepło",
+      "bo to wymóg służbowy",
+      "bo wygląda niegroźnie, więc ludzie mówią szczerze",
+      "bo ma dużo kieszeni"
     ],
     "correct": 2,
-    "explain": "30 m ÷ 6 s = <b>5 m/s</b>."
+    "explain": "Znoszony płaszcz sprawia, że detektyw <b>wygląda niegroźnie</b>, więc rozmówcy czują się swobodnie i popełniają błędy."
   },
   {
     "type": "mc",
-    "subject": "Fizyka",
-    "q": "Złodziej zostawił ślad opony w piasku. Jedno koło robi pełny obrót na długości 1,5 metra. Ile w przybliżeniu wynosi obwód tego koła?",
+    "subject": "Psychologia",
+    "episode": "Eleganccy podejrzani",
+    "q": "Wielu bogatych podejrzanych z początku nie docenia detektywa. Dlaczego to błąd z ich strony?",
     "opts": [
-      "1,0 m",
-      "2,0 m",
-      "1,5 m",
-      "0,5 m"
-    ],
-    "correct": 2,
-    "explain": "Obwód koła to dokładnie długość jednego pełnego obrotu, czyli <b>1,5 m</b>."
-  },
-  {
-    "type": "mc",
-    "subject": "Matematyka",
-    "q": "Złodziej ukradł rower o 22:00. Śledczy przybyli na miejsce 3 godziny i 15 minut później. O której godzinie przybyli?",
-    "opts": [
-      "00:45",
-      "01:30",
-      "01:00",
-      "01:15"
-    ],
-    "correct": 3,
-    "explain": "22:00 + 3 godziny = 01:00, plus 15 minut = <b>01:15</b>."
-  },
-  {
-    "type": "mc",
-    "subject": "Matematyka",
-    "q": "Przesłuchano trzech świadków. Pierwszy mówił 12 minut, drugi 8 minut, trzeci 19 minut. Ile czasu zajęły wszystkie rozmowy razem?",
-    "opts": [
-      "35 minut",
-      "39 minut",
-      "42 minuty",
-      "45 minut"
+      "bo jest bogatszy niż oni",
+      "pod niepozornym wyglądem kryje się bardzo bystry obserwator",
+      "bo ma lepszy samochód",
+      "bo zawsze się myli w modzie"
     ],
     "correct": 1,
-    "explain": "12 + 8 + 19 = <b>39 minut</b>."
-  },
-  {
-    "type": "mc",
-    "subject": "Matematyka",
-    "q": "Wypożyczalnia zarabia 15 zł za godzinę wypożyczenia jednego roweru. Ile zarobi za 4 godziny wypożyczenia dwóch rowerów?",
-    "opts": [
-      "100 zł",
-      "110 zł",
-      "120 zł",
-      "130 zł"
-    ],
-    "correct": 2,
-    "explain": "15 zł × 4 godziny × 2 rowery = <b>120 zł</b>."
+    "explain": "Pod niechlujnym wizerunkiem kryje się <b>bardzo bystry obserwator</b>, który zauważa to, czego inni nie widzą."
   },
   {
     "type": "word",
-    "subject": "Język polski",
-    "q": "Jak nazywamy osobę, która kradnie? Wpisz jedno słowo.",
-    "correct": "złodziej",
-    "explain": "Osobę, która kradnie, nazywamy <b>złodziejem</b>."
+    "subject": "Psychologia",
+    "episode": "Notatnik detektywa",
+    "q": "Jak nazywamy mały przedmiot do zapisywania notatek, który detektyw zawsze nosi przy sobie? Wpisz jedno słowo.",
+    "correct": "notatnik",
+    "explain": "To oczywiście <b>notatnik</b> — niezbędne narzędzie pracy."
+  },
+  {
+    "type": "num",
+    "subject": "Psychologia",
+    "episode": "Cygaro w dłoni",
+    "q": "Detektyw zwykle udaje, że zapomniał o czymś ważnym tuż przed zadaniem kluczowego pytania. Ile razy najczęściej robi to w jednej rozmowie? Wpisz samą liczbę.",
+    "correct": 1,
+    "explain": "Najczęściej robi to <b>1 raz</b> — na sam koniec, żeby zaskoczyć rozmówcę."
+  },
+  {
+    "type": "mc",
+    "subject": "Psychologia",
+    "episode": "Cierpliwość detektywa",
+    "q": "Co jest największą zaletą tego typu detektywa?",
+    "opts": [
+      "siła fizyczna",
+      "cierpliwość i uważna obserwacja",
+      "szybka jazda samochodem",
+      "głośny krzyk"
+    ],
+    "correct": 1,
+    "explain": "Jego siłą jest <b>cierpliwość i uważna obserwacja</b> drobnych szczegółów."
+  },
+  {
+    "type": "mc",
+    "subject": "Psychologia",
+    "episode": "Drobne szczegóły",
+    "q": "Co najczęściej pomaga rozwiązać sprawę?",
+    "opts": [
+      "małe, niezauważone przez innych szczegóły",
+      "przypadek",
+      "plotki sąsiadów",
+      "artykuły w gazecie"
+    ],
+    "correct": 0,
+    "explain": "To zwykle <b>małe, niezauważone przez innych szczegóły</b> prowadzą do rozwiązania sprawy."
+  },
+  {
+    "type": "mc",
+    "subject": "Psychologia",
+    "episode": "Pies o nietypowym imieniu",
+    "q": "Detektyw ma psa, którego nazwał w bardzo prosty sposób — po prostu:",
+    "opts": [
+      "Rex",
+      "Pies",
+      "Burek",
+      "Azor"
+    ],
+    "correct": 1,
+    "explain": "Nazwał go po prostu <b>'Pies'</b> — to jego charakterystyczne, niezbyt poważne podejście do nazewnictwa."
+  },
+  {
+    "type": "mc",
+    "subject": "Psychologia",
+    "episode": "Niepozorny detektyw",
+    "q": "Dlaczego niepozorny wygląd tego detektywa bywa mylący?",
+    "opts": [
+      "bo jest bogaty",
+      "bo jest najsilniejszy",
+      "bo jest najszybszy",
+      "bo pod niepozornym wyglądem kryje się bystry obserwator"
+    ],
+    "correct": 3,
+    "explain": "To kontrast między wyglądem a bystrością umysłu czyni go tak skutecznym."
   }
 ];
 

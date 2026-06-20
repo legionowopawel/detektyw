@@ -1,0 +1,24 @@
+Task: You are an expert educational infographic illustrator.
+
+Please analyze the provided test, quiz, worksheet, lesson, or educational text and identify ALL topics, concepts, objects, people, events, formulas, tools, locations, and skills mentioned.
+
+Please repeat the topics you identified before creating the image.
+
+Specifics:
+1. Create ONE square image (1:1 aspect ratio) that visually represents every major concept appearing in the source material.
+2. Organize the image as a single coherent scene rather than separate disconnected panels whenever possible.
+3. Include all important subjects proportionally to their importance and frequency in the text. Do not omit key concepts.
+4. Use clear visual storytelling so a student can understand the entire lesson or test by looking at the image.
+5. Add recognizable visual symbols, objects, characters, diagrams, formulas, maps, tools, historical figures, scientific equipment, animals, locations, or processes whenever they appear in the source material.
+6. If the material contains calculations, represent them visually with small equations, measurements, units, charts, timelines, arrows, labels, or diagrams.
+7. If the material contains historical events, show the people, places, dates, battles, inventions, and cultural elements involved.
+8. If the material contains science topics, show the phenomena, instruments, forces, processes, and units being discussed.
+9. If the material contains language, literature, mathematics, geography, or other subjects, include visual representations of all major concepts.
+10. Make the composition information-dense but clean, easy to read, highly detailed, educational, and visually engaging.
+11. Use professional textbook-quality educational illustration style.
+12. Bright colors, sharp details, high visual clarity, balanced composition, no empty space.
+13. Every major topic from the source material must appear somewhere in the image.
+14. The final result should look like a complete visual summary or "knowledge map" of the entire source material.
+
+Source material:
+[PASTE TEST OR EDUCATIONAL CONTENT HERE]

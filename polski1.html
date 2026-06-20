@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Sprawa nr 26: Zagadka z Wypożyczalni Rowerów</title>
+<title>Język polski dla młodego śledczego</title>
 <style>
   :root{
     --paper:#ece2c8; --paper-dark:#ddcfa8; --ink:#2b2520; --ink-soft:#5b5247;
@@ -83,24 +83,24 @@
 
 <div id="intro-screen">
   <div class="header">
-    <span class="badge">SPRAWA NR 26 — AKTA POUFNE</span>
-    <h1>Tajemnica zniknionych rowerów</h1>
+    <span class="badge">ĆWICZENIA JĘZYKOWE — AKTA</span>
+    <h1>Język polski w pracy detektywa</h1>
   </div>
   <div class="intro-wrap">
     <div class="photo-frame">
-      <img src="images/rower.png" alt="Sprawa nr 26: Zagadka z Wypożyczalni Rowerów">
+      <img src="images/polski1.png" alt="Język polski dla młodego śledczego">
     </div>
     <div class="case-file">
       <h2>Notatki</h2>
-      <p>W miasteczku nad jeziorem, z wypożyczalni rowerów przy molo, w nocy zniknęły trzy rowery i kasa z biletami. Właściciel wypożyczalni, pan Henderson, jest oburzony.</p>
-      <p>Żeby pomóc rozwiązać tę zagadkę, odpowiedz na 10 pytań związanych bezpośrednio ze sprawą — same liczby muszą się zgadzać.</p>
+      <p>Precyzyjny język to jedno z najważniejszych narzędzi w pracy policjanta, detektywa i analityka — dobry raport musi być jasny i bez błędów.</p>
+      <p>Odpowiedz na 10 pytań z języka polskiego, które przydają się w pracy śledczej.</p>
     </div>
     <button id="start-btn">Zaczynamy →</button>
   </div>
 </div>
 
 <div id="quiz-screen" style="display:none;">
-  <div class="mini-bar">SPRAWA NR 26 — ROWERY</div>
+  <div class="mini-bar">JĘZYK POLSKI — ĆWICZENIA</div>
   <div id="score-bar">
     <span id="score-label">Punkty: 0 / 10</span>
     <div id="progress-track"><div id="progress-fill"></div></div>
@@ -115,7 +115,7 @@
   <p id="final-text"></p>
   <div class="audio-wrap">
     <p>🎧 Posłuchaj nagrania:</p>
-    <audio controls src="mp3/rower.mp3" preload="none"></audio>
+    <audio controls src="mp3/polski1.mp3" preload="none"></audio>
   </div>
   <button id="restart-btn">Powrót do strony głównej</button>
 </div>
@@ -143,122 +143,122 @@
 <script>
 const Q = [
   {
-    "type": "num",
-    "subject": "Matematyka",
-    "q": "Pan Henderson miał 3 rowery po 250 zł każdy i kasę z biletami wartą 80 zł. Jaka jest łączna wartość strat (w zł)? Wpisz samą liczbę.",
-    "correct": 830,
-    "explain": "3 × 250 zł = 750 zł, plus kasa 80 zł = <b>830 zł</b>."
-  },
-  {
     "type": "mc",
-    "subject": "Matematyka",
-    "q": "Strażnik zamknął molo o 22:15, a świadek widział złodzieja o 23:40. Ile minut upłynęło między tymi zdarzeniami?",
+    "subject": "Język polski",
+    "q": "Które słowo jest synonimem (ma podobne znaczenie) do słowa 'detektyw'?",
     "opts": [
-      "85 minut",
-      "75 minut",
-      "95 minut",
-      "70 minut"
-    ],
-    "correct": 0,
-    "explain": "Od 22:15 do 23:40 mija 1 godzina i 25 minut, czyli <b>85 minut</b>."
-  },
-  {
-    "type": "mc",
-    "subject": "Fizyka",
-    "q": "Rowery stały w zamkniętej szopie bez okien o objętości 20 m³. Jedna osoba zużywa ok. 1 m³ powietrza na godzinę. Na ile godzin starczy powietrza dla jednej osoby zamkniętej w takiej szopie?",
-    "opts": [
-      "10 godzin",
-      "15 godzin",
-      "20 godzin",
-      "25 godzin"
-    ],
-    "correct": 2,
-    "explain": "20 m³ ÷ 1 m³ na godzinę = <b>20 godzin</b>."
-  },
-  {
-    "type": "mc",
-    "subject": "Matematyka",
-    "q": "Termometr w szopie pokazywał rano 15°C, a w południe temperatura wzrosła o 8°C. Jaka była temperatura w południe?",
-    "opts": [
-      "21°C",
-      "23°C",
-      "25°C",
-      "18°C"
+      "kucharz",
+      "śledczy",
+      "malarz",
+      "ogrodnik"
     ],
     "correct": 1,
-    "explain": "15°C + 8°C = <b>23°C</b>."
+    "explain": "Synonimem słowa 'detektyw' jest <b>śledczy</b> — to bardzo przydatne słowo w pracy policji."
   },
   {
     "type": "mc",
-    "subject": "Fizyka",
-    "q": "Rower przejechał 30 metrów w 6 sekund. Jaka była jego prędkość?",
+    "subject": "Język polski",
+    "q": "Jak nazywamy historię o przestępstwie, w której śledzimy, jak jest ono rozwiązywane?",
     "opts": [
-      "6 m/s",
-      "4 m/s",
-      "5 m/s",
-      "8 m/s"
-    ],
-    "correct": 2,
-    "explain": "30 m ÷ 6 s = <b>5 m/s</b>."
-  },
-  {
-    "type": "mc",
-    "subject": "Fizyka",
-    "q": "Złodziej zostawił ślad opony w piasku. Jedno koło robi pełny obrót na długości 1,5 metra. Ile w przybliżeniu wynosi obwód tego koła?",
-    "opts": [
-      "1,0 m",
-      "2,0 m",
-      "1,5 m",
-      "0,5 m"
-    ],
-    "correct": 2,
-    "explain": "Obwód koła to dokładnie długość jednego pełnego obrotu, czyli <b>1,5 m</b>."
-  },
-  {
-    "type": "mc",
-    "subject": "Matematyka",
-    "q": "Złodziej ukradł rower o 22:00. Śledczy przybyli na miejsce 3 godziny i 15 minut później. O której godzinie przybyli?",
-    "opts": [
-      "00:45",
-      "01:30",
-      "01:00",
-      "01:15"
-    ],
-    "correct": 3,
-    "explain": "22:00 + 3 godziny = 01:00, plus 15 minut = <b>01:15</b>."
-  },
-  {
-    "type": "mc",
-    "subject": "Matematyka",
-    "q": "Przesłuchano trzech świadków. Pierwszy mówił 12 minut, drugi 8 minut, trzeci 19 minut. Ile czasu zajęły wszystkie rozmowy razem?",
-    "opts": [
-      "35 minut",
-      "39 minut",
-      "42 minuty",
-      "45 minut"
+      "romans",
+      "kryminał",
+      "baśń",
+      "komedia"
     ],
     "correct": 1,
-    "explain": "12 + 8 + 19 = <b>39 minut</b>."
+    "explain": "Taka historia to <b>kryminał</b>. To gatunek ulubiony przez wielu policjantów i analityków."
   },
   {
     "type": "mc",
-    "subject": "Matematyka",
-    "q": "Wypożyczalnia zarabia 15 zł za godzinę wypożyczenia jednego roweru. Ile zarobi za 4 godziny wypożyczenia dwóch rowerów?",
+    "subject": "Język polski",
+    "q": "Która część mowy nazywa czynność, np. 'biegnie', 'pyta', 'notuje'?",
     "opts": [
-      "100 zł",
-      "110 zł",
-      "120 zł",
-      "130 zł"
+      "rzeczownik",
+      "czasownik",
+      "przymiotnik",
+      "liczebnik"
     ],
-    "correct": 2,
-    "explain": "15 zł × 4 godziny × 2 rowery = <b>120 zł</b>."
+    "correct": 1,
+    "explain": "Czynności nazywa <b>czasownik</b>. Dobre rozróżnianie części mowy pomaga np. policjantowi precyzyjnie pisać raporty."
   },
   {
     "type": "word",
     "subject": "Język polski",
-    "q": "Jak nazywamy osobę, która kradnie? Wpisz jedno słowo.",
-    "correct": "złodziej",
-    "explain": "Osobę, która kradnie, nazywamy <b>złodziejem</b>."
+    "q": "Jak nazywamy osobę, która widziała przestępstwo i może o nim opowiedzieć? Wpisz jedno słowo.",
+    "correct": "świadek",
+    "explain": "Taka osoba to <b>świadek</b> — kluczowe słowo w pracy detektywa."
+  },
+  {
+    "type": "mc",
+    "subject": "Język polski",
+    "q": "Które słowo jest rzeczownikiem?",
+    "opts": [
+      "szybko",
+      "policjant",
+      "czerwony",
+      "biegać"
+    ],
+    "correct": 1,
+    "explain": "<b>Policjant</b> to rzeczownik — nazywa osobę."
+  },
+  {
+    "type": "num",
+    "subject": "Język polski",
+    "q": "Ile liter ma słowo 'detektyw'? Wpisz samą liczbę.",
+    "correct": 8,
+    "explain": "d-e-t-e-k-t-y-w to <b>8 liter</b>."
+  },
+  {
+    "type": "mc",
+    "subject": "Język polski",
+    "q": "Jaki znak stawiamy na końcu zdania pytającego, np. w raporcie policyjnym?",
+    "opts": [
+      "kropka",
+      "pytajnik",
+      "wykrzyknik",
+      "przecinek"
+    ],
+    "correct": 1,
+    "explain": "Na końcu pytania stawiamy <b>pytajnik</b>."
+  },
+  {
+    "type": "mc",
+    "subject": "Język polski",
+    "q": "Które słowo to przymiotnik (opisuje, jaki jest ktoś lub coś)?",
+    "opts": [
+      "biegnie",
+      "szybki",
+      "policja",
+      "notatnik"
+    ],
+    "correct": 1,
+    "explain": "<b>Szybki</b> to przymiotnik — opisuje cechę."
+  },
+  {
+    "type": "mc",
+    "subject": "Język polski",
+    "q": "Jak nazywamy krótki, rzeczowy tekst opisujący zdarzenie, który pisze policjant?",
+    "opts": [
+      "notatka służbowa",
+      "wiersz",
+      "bajka",
+      "piosenka"
+    ],
+    "correct": 0,
+    "explain": "To <b>notatka służbowa</b> — musi być jasna i precyzyjna."
+  },
+  {
+    "type": "mc",
+    "subject": "Język polski",
+    "q": "Dokładny i precyzyjny opis zdarzenia szczególnie przydaje się np.:",
+    "opts": [
+      "kucharzowi",
+      "analitykowi policji",
+      "fryzjerowi",
+      "malarzowi"
+    ],
+    "correct": 1,
+    "explain": "Precyzyjny język bardzo pomaga <b>analitykowi policji</b> w pracy nad sprawą."
   }
 ];
 
