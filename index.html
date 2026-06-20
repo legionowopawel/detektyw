@@ -173,14 +173,27 @@
     border-radius: 2px;
     color: #2a1f0e;
     text-decoration: none;
-    font-size: .93rem;
-    line-height: 1.4;
     transition: background .15s;
   }
   .quiz-list li a:hover,
   .quiz-list li a:focus {
     background: rgba(255,240,200,.75);
     outline: none;
+  }
+
+  .quiz-item-title {
+    display: block;
+    font-size: .93rem;
+    line-height: 1.4;
+  }
+
+  .quiz-item-info {
+    display: block;
+    font-size: .76rem;
+    line-height: 1.4;
+    color: #6b4a1b;
+    opacity: .85;
+    margin-top: .25rem;
   }
 
   .quiz-loading {
@@ -332,9 +345,36 @@
       return;
     }
     list.innerHTML = SPRAWY.map(item =>
-      `<li><a href="${esc(item.file)}">${esc(item.title || item.file)}</a></li>`
+      `<li><a href="${esc(item.file)}">
+        <span class="quiz-item-title">${esc(item.title || item.file)}</span>
+        <span class="quiz-item-info">${esc(buildInfo(item))}</span>
+      </a></li>`
     ).join('');
   })();
+
+  /* Buduje tekst opisu efektów na podstawie pól w manifest.js */
+  function buildInfo(item) {
+    const parts = [];
+    if (item.pytania) parts.push(item.pytania + ' pytań');
+
+    const efekty = [];
+    if (item.zdjecie) efekty.push('🖼️ zdjęcie');
+    if (item.dzwieki) efekty.push('🔊 efekty dźwiękowe');
+    if (item.muzyka) efekty.push('🎵 muzyka w tle');
+    if (item.filmy && item.filmy > 0) {
+      efekty.push('🎬 ' + item.filmy + (item.filmyCo ? ` filmy-przerwy (co ${item.filmyCo} pytań)` : ' filmy-przerwy'));
+    }
+    if (item.filmKoniec) efekty.push('🎬 film na koniec');
+    if (item.piosenkaKoniec) efekty.push('🎵 piosenka na koniec');
+
+    if (efekty.length === 0) {
+      parts.push('bez dodatków');
+    } else {
+      parts.push(...efekty);
+    }
+
+    return parts.join(' · ');
+  }
 
   function esc(s) {
     return String(s)
