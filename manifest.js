@@ -136,5 +136,41 @@ var SPRAWY = [
     "filmyCo": 0,
     "filmKoniec": false,
     "piosenkaKoniec": false
+  },
+  {
+    "file": "excel1.html",
+    "title": "Excel podstawy — część 1",
+    "pytania": 18,
+    "zdjecie": true,
+    "dzwieki": true,
+    "muzyka": false,
+    "filmy": 0,
+    "filmyCo": 0,
+    "filmKoniec": false,
+    "piosenkaKoniec": true
+  },
+  {
+    "file": "excel2.html",
+    "title": "Excel podstawy — część 2",
+    "pytania": 17,
+    "zdjecie": true,
+    "dzwieki": true,
+    "muzyka": false,
+    "filmy": 0,
+    "filmyCo": 0,
+    "filmKoniec": false,
+    "piosenkaKoniec": true
+  },
+  {
+    "file": "excel3.html",
+    "title": "Excel podstawy — część 3: Sprawa Znikającego Pączka",
+    "pytania": 8,
+    "zdjecie": true,
+    "dzwieki": true,
+    "muzyka": false,
+    "filmy": 0,
+    "filmyCo": 0,
+    "filmKoniec": false,
+    "piosenkaKoniec": true
   }
 ];

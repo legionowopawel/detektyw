@@ -19,10 +19,13 @@ Tekst musi być wierny plikowi polski1.html i zawierać wszystkie poprawne odpow
 - [Verse 1 - Slow Interrogation]: Spokojne przesłuchanie w przyciemnionym gabinecie. Detektyw pyta niskim, monotonnym głosem ([Quiet monotone voice]). Poszkodowany odpowiada, wplatając pierwsze fakty z testu (synonim detektywa to śledczy, historia o przestępstwie to kryminał, czynność to czasownik, świadek widział zdarzenie, policjant to rzeczownik, detektyw ma 8 liter).
 - [Chorus]: Wyjątkowo klimatyczny, melodyjny i cichy śpiew. Wprowadź w nim moment kompletnego zawieszenia instrumentów na szeptane pytanie: [Stop all instruments] [Soft, breathy whisper] "Jeszcze jedna rzecz...", po czym muzyka wraca w postaci leniwych akordów pianina.
 - [Verse 2 - Calm Data Aggregation]: Jazzowa, spokojna melorecytacja. Detektyw chłodno i logicznie układa resztę puzzli z testu (na końcu pytania stawiamy pytajnik, "szybki" to przymiotnik, krótki tekst to notatka służbowa, dokładny opis pomaga analitykowi policji).
-- [Bridge] & [Outro]: Subtelne, ciche rozwiązanie zagadki, bezwzględny triumf intelektu i nienagannej rzetelności, zamknięcie akt z wynikiem 10/10.
+- [Bridge] & [Outro]: Subtelne, ciche rozwiązanie zagadki, bezwzględny triumf intelektu i nienagannej rzetelności, zamknięcie akt z pozytywnym wynikiem!
 
 5. FORMATOWANIE DLA SUNO:
 Wszystkie instrukcje dla systemu (Sfx), nazwy sekcji i opisy emocji pisz wyłącznie w języku angielskim, w nawiasach kwadratowych [ ]. Nigdy nie używaj nawiasów okrągłych ( ). Cały tekst piosenki zamknij w jednym oknie kodu (code block).
 
 Oto plik źródłowy polski1.html, na podstawie którego masz napisać tekst:
-[TUTAJ WKLEJASZ TREŚĆ PLIKU POLSKI1.HTML]
+
+Uwaga, - prawidłowo muszą być wymawiane polskie wyrazy a jeśli są obce słowa to muszą być wypowiadane z prawidłowym akcentem i Suno musi być na to przygotowany.
+
+[TUTAJ WKLEJASZ TREŚĆ PLIKU HTML]
