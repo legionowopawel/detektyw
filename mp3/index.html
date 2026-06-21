@@ -205,19 +205,16 @@
             titleEl.addEventListener('click', () => playTrack(index));
             row.appendChild(titleEl);
 
-            // przycisk tekstu (tylko jeśli jest lyrics)
-            let btnEl = null;
-            if (item.lyrics) {
-                btnEl = document.createElement('button');
-                btnEl.className = 'btn-lyrics';
-                btnEl.title = 'Tekst piosenki';
-                btnEl.textContent = '📜';
-                btnEl.addEventListener('click', () => openLyrics(index));
-                row.appendChild(btnEl);
-            }
+            // przycisk tekstu (zawsze - tekst pobierany dynamicznie z pliku .txt)
+            const btnEl = document.createElement('button');
+            btnEl.className = 'btn-lyrics';
+            btnEl.title = 'Tekst piosenki';
+            btnEl.textContent = '📜';
+            btnEl.addEventListener('click', () => openLyrics(index));
+            row.appendChild(btnEl);
 
             playlistEl.appendChild(row);
-            rows.push({ rowEl: row, titleEl, btnEl, file: item.file, title: item.title, lyrics: item.lyrics || null });
+            rows.push({ rowEl: row, titleEl, btnEl, file: item.file, title: item.title });
         });
 
         /* ── odtwarzanie ── */
@@ -239,7 +236,19 @@
             overlay.classList.add('visible');
             document.body.style.overflow = 'hidden';
 
-            lyricsBody.textContent = item.lyrics || '⚠️ Brak tekstu piosenki.';
+            lyricsBody.textContent = 'Ładowanie…';
+            const txtFile = item.file.replace(/\.mp3$/i, '.txt');
+            fetch(txtFile)
+                .then(res => {
+                    if (!res.ok) throw new Error('brak pliku');
+                    return res.text();
+                })
+                .then(text => {
+                    lyricsBody.textContent = text.trim() || '⚠️ Plik tekstu jest pusty.';
+                })
+                .catch(() => {
+                    lyricsBody.textContent = '⚠️ Brak tekstu piosenki dla tego utworu (' + txtFile + ').';
+                });
         }
 
         function closeLyrics() {
