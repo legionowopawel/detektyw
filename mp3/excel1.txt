@@ -1,0 +1,58 @@
+[Intro]
+[Rain sound FX]
+[Slow, quiet double bass pluck]
+[Soft whispered voice]
+[Sighing and deeply sad]
+Ciemna noc w biurze... Wszędzie paragony i faktury, wielki chaos.
+Ktoś podkrada pieniądze ze skarbonki... 
+[Soft breathy whisper]
+Mamma mia, co za zawiłość... Jak to rozwikłać?
+
+[Verse 1 - Slow Interrogation]
+[Quiet monotone voice]
+[Brushed drums enter slowly]
+Detektyw zakłada płaszcz i włącza komputer, by zbadać te duże zbiory danych.
+Zamiast kartki i długopisu otwiera program... to Excel, arkusz w kratkę.
+Cały plik to nasz tajny skoroszyt, pełen pionowych kolumn i poziomych wierszy.
+Wpisujemy cyfry w małe, prostokątne pola — każda komórka ma swój dokładny adres.
+Na przykład B3... tam, gdzie kolumna spotyka się z wierszem.
+[Spoken word]
+Pronto, wpisujemy dane skrupulatnie i nienagannie!
+
+[Chorus]
+[Melodic and very quiet singing]
+Excel, Excel... on sam przeliczy wszystko na nowo, gdy zmienisz jedną liczbę.
+Wystarczy na początku wpisać specjalny znak... znak równości.
+[Stop all instruments]
+[Soft, breathy whisper]
+Jeszcze jedna rzecz...
+[Lazy piano chords return]
+Formuła =A1+B1 już działa, komputer liczy sam.
+
+[Verse 2 - Calm Data Aggregation]
+[Jazz lounge melody, very calm]
+[Soft saxophone swell]
+Czas na poważne śledztwo. Używamy funkcji SUMA, by dodać wszystkie wydatki.
+Włączamy filtr — on ukrywa zbędne wiersze, a pokazuje tylko to, co podejrzane.
+Sortujemy liczby od największej do najmniejszej... bezsprzecznie.
+Nagle wszystko widać na wykresie, te wielkie słupki obok liczb mówią same za siebie!
+Ktoś wydał za dużo na lizaki! Komórka świeci na czerwono...
+[Spoken word, warm and smiling]
+Perfetto! Mamy cię, rzezimieszku! Tabela przestawna cię zdradziła!
+
+[Bridge]
+[Quiet piano and soft drums triplet]
+Górny wiersz z nagłówkami zablokowany, by nic nie zniknęło przy przewijaniu.
+Robimy kopię zapasową — backup na pendrive, bo bezpieczeństwo to rzetelność.
+To nie magia, to umiejętność szybkiego liczenia i porządkowania!
+Bravissimo, wynik śledztwa to dziesięć na dziesięć!
+
+[Outro]
+[Music slowing down, very soft]
+[Whispered voice]
+Sprawa zamknięta, winny odnaleziony.
+Zamykamy arkusz, młody detektywie.
+[Sfx: Laptop lid closing]
+Excel niepodważalnie zadziałał...
+[Soft saxophone fade out]
+[End]

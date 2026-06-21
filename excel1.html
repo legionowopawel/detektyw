@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Excel podstawy — część 1 (łatwiejsza)</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui,sans-serif;background:#eef3f2;color:#1a1a1a;min-height:100vh}
+#app{padding:1rem;max-width:480px;margin:0 auto}
+.hero{text-align:center;padding:1.5rem 0 1rem}
+.hero img{width:160px;height:160px;object-fit:cover;border-radius:50%;border:3px solid #4F9A78}
+.fallback-icon{width:160px;height:160px;border-radius:50%;background:#E1F2EA;border:3px solid #4F9A78;margin:0 auto;display:flex;align-items:center;justify-content:center;font-size:72px}
+.hero h1{font-size:22px;font-weight:600;color:#1B4D3E;margin:.75rem 0 .5rem}
+.hero p{font-size:14px;color:#5F5E5A;line-height:1.6;margin:0 .5rem}
+.progress-label{font-size:12px;color:#5F5E5A;margin-bottom:.5rem}
+.progress-bar{background:#D3D1C7;border-radius:99px;height:6px;margin:0 0 1rem}
+.progress-fill{background:#1B7A4D;height:6px;border-radius:99px;transition:width .4s}
+.question-card{background:#fff;border:1px solid #D3D1C7;border-radius:14px;padding:1.25rem;margin-bottom:1rem}
+.ep-badge{display:inline-block;font-size:11px;color:#1B7A4D;background:#E1F2EA;padding:3px 10px;border-radius:99px;margin-bottom:.5rem;font-weight:600}
+.ep-row{margin-bottom:.75rem}
+.q-text{font-size:15px;font-weight:600;color:#1a1a1a;line-height:1.5;margin-bottom:1rem}
+.q-img{width:100%;border-radius:10px;margin-bottom:1rem;border:1px solid #D3D1C7;background:#fff}
+.q-symbol{font-size:48px;text-align:center;background:#F4F7F6;border:1px solid #D3D1C7;border-radius:10px;padding:1.25rem;margin-bottom:1rem;font-weight:700;color:#1B7A4D;font-family:Georgia,serif}
+.q-symbol.sym-italic{font-style:italic}
+.q-symbol.sym-underline{text-decoration:underline}
+.option{display:flex;align-items:flex-start;gap:10px;padding:.75rem 1rem;border:1px solid #D3D1C7;border-radius:10px;margin-bottom:.5rem;cursor:pointer;transition:background .15s,border-color .15s;font-size:14px;color:#1a1a1a;line-height:1.5;background:#fff}
+.option:hover{background:#F1EFE8;border-color:#B4B2A9}
+.option .badge{flex-shrink:0;width:26px;height:26px;border-radius:50%;background:#F1EFE8;border:1px solid #B4B2A9;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;color:#5F5E5A}
+.option.correct{background:#EAF3DE;border-color:#3B6D11}
+.option.correct .badge{background:#3B6D11;color:#EAF3DE;border-color:#3B6D11}
+.option.wrong{background:#FCEBEB;border-color:#A32D2D}
+.option.wrong .badge{background:#A32D2D;color:#FCEBEB;border-color:#A32D2D}
+.option.disabled{cursor:default;pointer-events:none}
+.text-row{display:flex;gap:.5rem;margin-bottom:.5rem}
+#text-input{flex:1;padding:.75rem 1rem;border-radius:10px;border:1px solid #B4B2A9;font-size:16px;font-family:inherit}
+#text-input:focus{outline:2px solid #1B7A4D;border-color:#1B7A4D}
+#text-submit{padding:.75rem 1.1rem;border-radius:10px;border:none;background:#1B7A4D;color:#fff;font-weight:600;font-size:14px;cursor:pointer}
+#text-submit:hover{background:#145C3A}
+#text-submit:disabled{background:#B4B2A9;cursor:default}
+.explanation{margin-top:.75rem;padding:.75rem;background:#F1EFE8;border-radius:8px;font-size:13px;color:#444441;line-height:1.6;display:none;border-left:3px solid #1B7A4D}
+.praise{margin-top:.75rem;padding:.75rem;background:#EAF3DE;border-radius:8px;font-size:13px;color:#2c4a13;line-height:1.6;display:none;border-left:3px solid #3B6D11;font-weight:600}
+.hint-btn{display:none;font-size:12px;color:#1B7A4D;background:#E1F2EA;border:1px solid #4F9A78;padding:6px 12px;border-radius:99px;cursor:pointer;margin-bottom:.75rem;font-weight:600}
+.hint-btn:hover{background:#cdeadc}
+.hint-box{display:none;margin-bottom:.75rem;padding:.75rem;background:#FFF8E1;border-radius:8px;font-size:13px;color:#5a4a14;line-height:1.6;border-left:3px solid #C9A227}
+.nav-btn{width:100%;padding:.75rem;border-radius:10px;border:1px solid #B4B2A9;background:#fff;font-size:15px;font-weight:600;color:#1a1a1a;cursor:pointer;margin-top:.5rem;display:none}
+.nav-btn:hover{background:#F1EFE8}
+.nav-btn.primary{background:#1B7A4D;color:#fff;border-color:#1B7A4D}
+.nav-btn.primary:hover{background:#145C3A}
+.nav-btn.shown{display:block}
+#name-input{width:100%;padding:.85rem 1rem;border-radius:10px;border:1px solid #B4B2A9;font-size:16px;margin-bottom:.85rem;font-family:inherit}
+#name-input:focus{outline:2px solid #1B7A4D;border-color:#1B7A4D}
+#name-screen .question-card{text-align:center}
+.sound-toggle{font-size:12px;color:#5F5E5A;background:#fff;border:1px solid #D3D1C7;padding:6px 12px;border-radius:99px;cursor:pointer;margin-bottom:.85rem;display:inline-block}
+.sound-toggle.is-muted{opacity:.55}
+#result-screen{display:none;text-align:center;padding:1rem}
+.result-icon{font-size:64px;margin:.5rem 0}
+.result-score{font-size:42px;font-weight:700;color:#1B7A4D;margin:.5rem 0}
+.result-msg{font-size:15px;color:#5F5E5A;line-height:1.6;margin:.75rem 0 1.5rem;background:#E1F2EA;padding:1rem;border-radius:12px}
+.result-bars{text-align:left;margin:1rem 0;background:#fff;border:1px solid #D3D1C7;border-radius:12px;padding:1rem}
+.r-bar-row{display:flex;align-items:center;gap:8px;margin-bottom:10px;font-size:13px}
+.r-bar-row:last-child{margin-bottom:0}
+.r-bar-label{width:120px;color:#5F5E5A;flex-shrink:0}
+.r-bar-bg{flex:1;background:#F1EFE8;border-radius:99px;height:10px}
+.r-bar-fill{height:10px;border-radius:99px;background:#1B7A4D;transition:width .6s}
+.r-bar-score{min-width:32px;text-align:right;font-weight:600;color:#1B7A4D}
+.restart-btn{width:100%;padding:.85rem;border-radius:10px;background:#1B7A4D;color:#fff;border:none;font-size:15px;font-weight:600;cursor:pointer;margin-top:1rem}
+.restart-btn:hover{background:#145C3A}
+.song-box{margin-top:1.25rem;background:#fff;border:1px solid #D3D1C7;border-radius:14px;padding:1.25rem}
+.song-box h3{font-size:16px;color:#1B4D3E;margin-bottom:.5rem}
+.song-box p{font-size:13px;color:#5F5E5A;margin-bottom:.5rem;line-height:1.5}
+.song-toggle{padding:.6rem 1rem;border-radius:10px;background:#1B7A4D;color:#fff;border:none;font-size:14px;font-weight:600;cursor:pointer}
+.song-toggle:hover{background:#145C3A}
+</style>
+</head>
+<body>
+<div id="app">
+
+  <div id="name-screen">
+    <div class="hero">
+      <img src="images/komisarz_excel.png" alt="Komisarz Excel" id="hero-img-name" onerror="document.getElementById('hero-img-name').style.display='none';document.getElementById('fallback-icon-name').style.display='flex'">
+      <div class="fallback-icon" id="fallback-icon-name" style="display:none">📊</div>
+      <h1>Excel podstawy — część 1</h1>
+      <p>Zanim zaczniemy, jak się nazywasz, młody detektywie danych? Czeka na Ciebie 18 pytań — od zera do pierwszych formuł w Excelu.</p>
+    </div>
+    <div class="question-card">
+      <input id="name-input" type="text" placeholder="Wpisz swoje imię..." maxlength="20" onkeydown="if(event.key==='Enter')startQuiz()">
+      <button class="nav-btn primary shown" onclick="startQuiz()">Zaczynamy 📊</button>
+    </div>
+  </div>
+
+  <div id="quiz-screen" style="display:none">
+    <div class="hero" id="quiz-hero">
+      <img src="images/komisarz_excel.png" alt="Komisarz Excel" id="hero-img" onerror="document.getElementById('hero-img').style.display='none';document.getElementById('fallback-icon').style.display='flex'">
+      <div class="fallback-icon" id="fallback-icon" style="display:none">📊</div>
+      <h1 id="hero-title">Excel podstawy — część 1</h1>
+      <p id="hero-text"></p>
+    </div>
+
+    <button class="sound-toggle" id="sound-toggle-btn" onclick="toggleSounds()">🔊 Dźwięki włączone</button>
+
+    <div class="progress-label" id="prog-label">Pytanie 1 z 18</div>
+    <div class="progress-bar"><div class="progress-fill" id="prog-fill" style="width:5%"></div></div>
+
+    <div class="question-card" id="q-card">
+      <div class="ep-row">
+        <span class="ep-badge" id="ep-badge"></span>
+      </div>
+      <img id="q-img" class="q-img" style="display:none">
+      <div id="q-symbol" class="q-symbol" style="display:none"></div>
+      <div class="q-text" id="q-text"></div>
+      <button class="hint-btn" id="hint-btn" onclick="toggleHint()">💡 Pokaż podpowiedź</button>
+      <div class="hint-box" id="hint-box"></div>
+      <div id="options-container"></div>
+      <div id="text-container" style="display:none">
+        <div class="text-row">
+          <input type="number" id="text-input" placeholder="Wpisz liczbę..." onkeydown="if(event.key==='Enter')submitText()">
+          <button id="text-submit" onclick="submitText()">Zatwierdź</button>
+        </div>
+      </div>
+      <div class="praise" id="praise"></div>
+      <div class="explanation" id="explanation"></div>
+    </div>
+    <button class="nav-btn primary" id="next-btn" onclick="nextQ()">Następne pytanie →</button>
+  </div>
+
+  <div id="result-screen">
+    <div class="result-icon" id="res-icon"></div>
+    <div style="font-size:22px;font-weight:600;color:#1B4D3E;margin:.5rem 0">Część 1 zakończona!</div>
+    <div class="result-score" id="res-score"></div>
+    <div class="result-msg" id="res-msg"></div>
+    <div class="result-bars">
+      <div class="r-bar-row"><span class="r-bar-label">Część A (1–6)</span><div class="r-bar-bg"><div class="r-bar-fill" id="bar1"></div></div><span class="r-bar-score" id="score1-txt"></span></div>
+      <div class="r-bar-row"><span class="r-bar-label">Część B (7–12)</span><div class="r-bar-bg"><div class="r-bar-fill" id="bar2"></div></div><span class="r-bar-score" id="score2-txt"></span></div>
+      <div class="r-bar-row"><span class="r-bar-label">Część C (13–18)</span><div class="r-bar-bg"><div class="r-bar-fill" id="bar3"></div></div><span class="r-bar-score" id="score3-txt"></span></div>
+    </div>
+    <div class="song-box">
+      <h3 id="song-title">Piosenka dla Ciebie, detektywie!</h3>
+      <p>Twoja nagroda gra automatycznie 🎵</p>
+      <button class="song-toggle" id="song-toggle-btn" onclick="toggleSong()">⏸️ Wstrzymaj piosenkę</button>
+    </div>
+    <button class="restart-btn" onclick="restart()">Zagraj jeszcze raz 🔄</button>
+  </div>
+
+</div>
+
+<audio id="snd-good" preload="auto"></audio>
+<audio id="snd-bad" preload="auto"></audio>
+<audio id="snd-song" src="mp3/excel1.mp3" preload="auto" loop></audio>
+
+<script>
+const GOOD_SOUNDS = [
+  "audio/eureka.mp3",
+  "audio/plink.mp3",
+  "audio/bubbles.mp3"
+];
+const WRONG_SOUNDS = [
+  "audio/beep.mp3",
+  "audio/bop.mp3",
+  "audio/bounce.mp3",
+  "audio/bubblesloud.mp3",
+  "audio/dripdrop.mp3",
+  "audio/flutter.mp3",
+  "audio/ripple.mp3",
+  "audio/wobble.mp3"
+];
+
+const questions = [
+  {ep:"Po co Excel?",hint:"To w porządku, {name}, nie musisz wiedzieć tego od razu — pomyśl, do czego przydałaby się wielka, poukładana tabela.",q:"{name}, na początek powiedz mi — co to w ogóle za rodzaj programu jak Excel? Do czego w ogóle służy?",opts:["Do oglądania filmów", "Do układania i liczenia dużych ilości danych w tabeli (liczb, tekstu)", "Do rysowania obrazków i malowania", "Tylko do pisania listów i wypracowań"],ans:1,exp:"Excel to program do arkuszy kalkulacyjnych — czyli wielkiej, poukładanej tabeli, w której można zapisywać liczby i tekst, a komputer sam je dla nas policzy, posortuje i poukłada."},
+  {ep:"Po co Excel?",hint:"Spokojnie, {name} — pomyśl, co jest szybsze: liczenie 500 wierszy w głowie, czy jednym kliknięciem?",q:"{name}, wyobraź sobie, że jesteś detektywem i masz listę 500 podejrzanych z ich adresami i wiekiem. Po co wpisać to do Excela, zamiast trzymać to na kartce?",opts:["Bo Excel sam policzy, posortuje i wyszuka dane w sekundę, czego na kartce nie da się zrobić tak szybko", "Bo Excel jest ładniejszy kolorystycznie", "Nie ma żadnego powodu, kartka jest tak samo dobra", "Bo na kartce nie mieszczą się litery"],ans:0,exp:"Przy małej liczbie danych kartka wystarczy. Ale przy setkach czy tysiącach wpisów człowiek zgubiłby się i popełniał błędy — Excel policzy, posortuje i znajdzie to, czego szukamy, w ułamku sekundy."},
+  {ep:"Po co Excel?",hint:"Nic się nie stało, że to pudło, {name} — pomyśl, co się dzieje, gdy w Excelu poprawisz jedną liczbę.",q:"{name}, czym Excel jest dużo lepszy od zwykłej kartki i długopisu, kiedy mamy mnóstwo danych do policzenia?",opts:["Tym, że jak zmienisz jedną liczbę, Excel sam przeliczy wszystko na nowo — nie musisz liczyć ręcznie od początku", "Tym, że nie trzeba ładować baterii do kartki", "Niczym, to dokładnie to samo", "Tym, że kartkę można zgnieść, a komputer nie"],ans:0,exp:"To jest właśnie magia arkusza kalkulacyjnego — jeśli zmienisz jedną liczbę, wszystkie formuły, sumy i wykresy automatycznie się przeliczają. Na kartce musiałbyś liczyć wszystko od nowa ręcznie."},
+  {ep:"Excel od środka",img:"images/excel1_01.png",hint:"Spójrz jeszcze raz na obrazek, {name} — to jedna z najczęściej używanych aplikacji biurowych.",q:"{name}, spójrz na ten zrzut ekranu. Jak nazywa się ten program i co przedstawia ten poukładany w kratkę obszar pośrodku?",opts:["To gra komputerowa, a kratka to plansza", "To przeglądarka internetowa, a kratka to strona WWW", "To Word, a kratka to strona do pisania", "To Excel, a kratka to arkusz złożony z komórek — miejsc, gdzie wpisujemy dane"],ans:3,exp:"To właśnie Excel — program do arkuszy kalkulacyjnych. Cały ten poukładany w kratkę obszar to arkusz, a każde pojedyncze pole w kratce nazywa się komórką."},
+  {ep:"Excel od środka",img:"images/excel1_02.png",hint:"Nic nie szkodzi, {name} — pomyśl: litery idą w poprzek na samej górze, a cyfry z boku, w pionie.",q:"{name}, spójrz teraz na te litery na górze (A, B, C...) i cyfry z boku (1, 2, 3...) na obrazku. Co one oznaczają?",opts:["Litery to klawisze klawiatury, a cyfry to godziny", "Litery to nazwy kolumn, a cyfry to numery wierszy — razem tworzą adres komórki", "To przypadkowe ozdoby bez znaczenia", "To numery stron w dokumencie"],ans:1,exp:"Litery u góry oznaczają kolumny (pionowe rzędy), a cyfry z boku oznaczają wiersze (poziome rzędy). Razem litera i cyfra (np. B3) tworzą dokładny adres jednej komórki w arkuszu."},
+  {ep:"Podstawy arkusza",hint:"Spokojnie, {name} — to pojedyncze, prostokątne pole w tabeli, do którego wpisujesz jedną liczbę albo jedno słowo.",q:"{name}, jak nazywa się pojedyncze, prostokątne pole w arkuszu, do którego wpisujemy liczbę albo tekst?",opts:["Klatka", "Skrzynka", "Komórka", "Pudełko"],ans:2,exp:"To pole nazywa się komórką. Cały arkusz Excela składa się właśnie z komórek poukładanych w kolumny i wiersze."},
+  {ep:"Podstawy arkusza",hint:"Drobiazg, {name} — pomyśl o kolumnie jak o filarze budynku: stoi prosto, pionowo.",q:"{name}, czym różni się kolumna od wiersza w arkuszu?",opts:["Kolumna biegnie poziomo, a wiersz pionowo", "Kolumna jest tylko w Wordzie, a wiersz tylko w Excelu", "To dokładnie to samo, tylko inna nazwa", "Kolumna biegnie pionowo (z góry na dół), a wiersz poziomo (od lewej do prawej)"],ans:3,exp:"Kolumny biegną pionowo i są oznaczone literami (A, B, C...), a wiersze biegną poziomo i są oznaczone cyframi (1, 2, 3...)."},
+  {ep:"Podstawy arkusza",hint:"Nic się nie stało, {name} — adres komórki to zawsze para: litera kolumny i numer wiersza.",q:"{name}, komórka ma adres B3. Co dokładnie oznaczają litera B i cyfra 3?",opts:["To losowy kod bez znaczenia", "B to nazwa pliku, a 3 to liczba stron", "B to godzina, a 3 to minuta", "B to kolumna B, a 3 to wiersz 3 — komórka leży na ich przecięciu"],ans:3,exp:"Adres komórki to zawsze litera kolumny + numer wiersza. B3 to komórka leżąca dokładnie tam, gdzie krzyżuje się kolumna B z wierszem 3."},
+  {ep:"Podstawy arkusza",hint:"Spokojnie, {name} — pomyśl o tym jak o kilku kartkach w jednym zeszycie zamiast wielu osobnych zeszytów.",q:"{name}, na dole arkusza widać czasem zakładki, np. „Arkusz1”, „Arkusz2”. Po co jest więcej niż jeden arkusz w tym samym pliku?",opts:["Żeby trzymać różne tabele osobno w jednym pliku, np. osobno styczeń, osobno luty", "To błąd programu, nie powinno ich być więcej niż jeden", "Żeby zająć więcej miejsca na dysku", "Żeby plik ładował się wolniej"],ans:0,exp:"Dodatkowe arkusze pozwalają trzymać różne, powiązane ze sobą tabele w jednym pliku — np. każdy miesiąc na osobnej zakładce, zamiast tworzyć osobne pliki dla każdego."},
+  {ep:"Podstawy arkusza",hint:"Nic nie szkodzi, {name} — to słowo brzmi trochę jak „zeszyt”, tylko inaczej się nazywa.",q:"{name}, jak nazywa się cały plik Excela — ten, który zawiera w sobie wszystkie arkusze razem?",opts:["Notatnik", "Album", "Segregator", "Skoroszyt"],ans:3,exp:"Cały plik Excela, mogący zawierać wiele arkuszy, nazywa się skoroszytem. To trochę jak zeszyt z wieloma kartkami w środku."},
+  {ep:"Wpisywanie danych",hint:"Spokojnie, {name} — Enter w Excelu działa podobnie jak w innych programach: zatwierdza to, co wpisałeś.",q:"{name}, klikasz w komórkę i wpisujesz liczbę 25. Co się stanie, gdy wciśniesz klawisz Enter?",opts:["Cały arkusz zostanie usunięty", "Liczba zniknie bez śladu", "Liczba zostanie zapisana w komórce, a kursor przeskoczy do komórki poniżej", "Komputer się wyłączy"],ans:2,exp:"Po wpisaniu danych i wciśnięciu Enter wartość zostaje zapisana w komórce, a Excel automatycznie przesuwa zaznaczenie do komórki poniżej, żeby można było wpisywać dalej."},
+  {ep:"Wpisywanie danych",hint:"Nic się nie stało, {name} — to drobna sztuczka Excela, łatwo ją zapamiętać przy okazji.",q:"{name}, gdy wpiszesz w komórce tekst, ustawia się on zwykle przy lewej krawędzi. A gdy wpiszesz liczbę? Po której stronie się ustawia?",opts:["Liczba znika z widoku", "Liczba domyślnie ustawia się przy prawej krawędzi komórki", "Liczba zawsze ląduje na samym środku", "Liczba zawsze ustawia się przy lewej krawędzi, tak jak tekst"],ans:1,exp:"To mała, ale przydatna wskazówka: Excel domyślnie wyrównuje tekst do lewej, a liczby do prawej. Dzięki temu na pierwszy rzut oka widać, czy w komórce jest liczba, czy tekst."},
+  {ep:"Wpisywanie danych",hint:"Ten znak mówi Excelowi „uwaga, teraz będę liczyć”. Spokojnie, {name}, spróbuj jeszcze raz.",q:"{name}, żeby Excel coś dla nas policzył (np. dodał dwie liczby), musimy zacząć wpis od specjalnego znaku. Jaki to znak?",opts:["Znak gwiazdki *", "Znak procentu %", "Znak zapytania ?", "Znak równości ="],ans:3,exp:"Wszystkie obliczenia w Excelu — formuły — zaczynają się od znaku równości =. To sygnał dla programu: „nie wpisuję zwykłego tekstu, tylko polecenie do policzenia”."},
+  {ep:"Wpisywanie danych",hint:"Spokojnie, {name} — formuła zaczyna się od znaku =, a potem podajesz adresy komórek ze znakiem działania między nimi.",q:"{name}, w komórce A1 jest liczba 5, a w komórce B1 liczba 3. Jaką formułę trzeba wpisać, żeby Excel dodał te dwie liczby?",opts:["A1 plus B1", "5+3=A1B1", "=A1+B1", "dodaj(A1,B1)"],ans:2,exp:"Poprawna formuła to =A1+B1. Excel rozumie znaki działań (+, −, *, /) i adresy komórek, dzięki czemu sam doda do siebie wartości znajdujące się w A1 i B1."},
+  {ep:"Wpisywanie danych",symbol:"Σ SUMA(A1:A5)",hint:"Nic się nie stało, {name} — nazwa funkcji „SUMA” to spora podpowiedź sama w sobie.",q:"{name}, spójrz na ten zapis: Σ SUMA(A1:A5). Co dokładnie zrobi ta formuła?",opts:["Doda do siebie wszystkie liczby z komórek od A1 do A5", "Posortuje komórki alfabetycznie", "Usunie wszystkie dane z kolumny A", "Pomnoży liczby z komórek A1 i A5"],ans:0,exp:"Funkcja SUMA (czasem oznaczana grecką literą Σ, sigma) dodaje do siebie wszystkie liczby w podanym zakresie — tutaj od komórki A1 do A5. To jedna z najczęściej używanych funkcji w Excelu."},
+  {ep:"Ikony i formatowanie",symbol:"B",hint:"Spokojnie, {name} — spójrz, jak wygląda sama litera B na ikonie. Gruba, prawda?",q:"{name}, na pasku narzędzi widzisz pogrubioną literę B. Co zrobi kliknięcie w tę ikonę?",opts:["Usunie zaznaczony tekst", "Pogrubi zaznaczony tekst", "Zmieni język na angielski", "Doda obrazek"],ans:1,exp:"Litera B (od angielskiego „Bold”) to ikona pogrubienia — pogrubia zaznaczony tekst, robiąc go grubszym i bardziej wyraźnym."},
+  {ep:"Ikony i formatowanie",symbol:"I",symbolStyle:"italic",hint:"Nic nie szkodzi, {name} — przyjrzyj się, jak sama litera I jest narysowana na ikonie.",q:"{name}, obok pogrubienia jest pochylona litera I. Co ona robi z zaznaczonym tekstem?",opts:["Ustawia tekst pochyło — to kursywa (italic)", "Powiększa czcionkę", "Podkreśla tekst", "Zmienia kolor tekstu na czerwony"],ans:0,exp:"Pochylona litera I (od „Italic”) ustawia tekst pochyło — to właśnie kursywa, często używana do podkreślenia ważnego fragmentu w inny sposób niż pogrubienie."},
+  {ep:"Ikony i formatowanie",symbol:"U",symbolStyle:"underline",hint:"Spokojnie, {name} — spójrz na samą ikonę, ma linię pod literą U.",q:"{name}, trzecia ikona to podkreślona litera U. Co ona zrobi z zaznaczonym tekstem?",opts:["Zmieni wielkość liter na duże", "Podkreśli tekst linią od spodu", "Przekreśli tekst", "Wytłuści tło komórki"],ans:1,exp:"Podkreślona litera U (od „Underline”) dodaje linię pod tekstem — to podkreślenie, jeszcze jeden ze sposobów wyróżnienia ważnych danych."}
+];
+
+const SEGMENT_SIZE = 6;
+const NUM_SEGMENTS = 3;
+
+const praises=[
+  "Brawo, {name}! Dokładnie tak rozumowałby prawdziwy detektyw danych.",
+  "Świetnie, {name}! Komisarz Excel skinąłby głową z uznaniem.",
+  "Trafna odpowiedź! Tak właśnie wygląda porządek w arkuszu.",
+  "Dobry refleks, {name}! Excel nie ma przed Tobą tajemnic.",
+  "Brawo! Krok po kroku stajesz się mistrzem arkuszy."
+];
+
+let userName="Detektywie";
+let current=0,score=0,scores=[0,0,0],answered=false,soundsEnabled=true;
+
+const sndGood=document.getElementById('snd-good');
+const sndBad=document.getElementById('snd-bad');
+const sndSong=document.getElementById('snd-song');
+let songPlaying=false;
+
+function toggleSounds(){
+  soundsEnabled=!soundsEnabled;
+  const btn=document.getElementById('sound-toggle-btn');
+  if(soundsEnabled){btn.textContent='🔊 Dźwięki włączone';btn.classList.remove('is-muted');}
+  else{btn.textContent='🔇 Dźwięki wyłączone';btn.classList.add('is-muted');}
+}
+
+function playGood(){
+  if(!soundsEnabled)return;
+  try{
+    const src=GOOD_SOUNDS[Math.floor(Math.random()*GOOD_SOUNDS.length)];
+    sndGood.src=src;sndGood.currentTime=0;sndGood.play().catch(()=>{});
+  }catch(e){}
+}
+function playBad(){
+  if(!soundsEnabled)return;
+  try{
+    const src=WRONG_SOUNDS[Math.floor(Math.random()*WRONG_SOUNDS.length)];
+    sndBad.src=src;sndBad.currentTime=0;sndBad.play().catch(()=>{});
+  }catch(e){}
+}
+
+function startQuiz(){
+  const v=document.getElementById('name-input').value.trim();
+  userName=v?v:"Detektywie";
+  document.getElementById('name-screen').style.display='none';
+  document.getElementById('quiz-screen').style.display='block';
+  document.getElementById('hero-text').textContent="Witaj, "+userName+"! Czeka na Ciebie 18 pytań o Excelu — podstawy arkusza i pierwsze formuły. Kilka pytań ma obrazki. Powodzenia!";
+  render();
+}
+
+function fillName(str){return str.replace(/\{name\}/g,userName);}
+
+function render(){
+  const q=questions[current];
+  document.getElementById('quiz-hero').style.display=current===0?'block':'none';
+  document.getElementById('prog-label').textContent='Pytanie '+(current+1)+' z '+questions.length;
+  document.getElementById('prog-fill').style.width=(((current+1)/questions.length)*100)+'%';
+  document.getElementById('ep-badge').textContent=q.ep;
+  document.getElementById('q-text').textContent=fillName(q.q);
+
+  const img=document.getElementById('q-img');
+  if(q.img){img.src=q.img;img.style.display='block';img.alt=q.ep;}
+  else{img.style.display='none';img.removeAttribute('src');}
+
+  const sym=document.getElementById('q-symbol');
+  sym.classList.remove('sym-italic','sym-underline');
+  if(q.symbol){
+    sym.textContent=q.symbol;
+    sym.style.display='block';
+    if(q.symbolStyle==='italic')sym.classList.add('sym-italic');
+    if(q.symbolStyle==='underline')sym.classList.add('sym-underline');
+  } else {
+    sym.style.display='none';
+    sym.textContent='';
+  }
+
+  const hintBtn=document.getElementById('hint-btn');
+  const hintBox=document.getElementById('hint-box');
+  hintBox.style.display='none';
+  hintBox.textContent=q.hint?fillName(q.hint):'';
+  hintBtn.style.display=q.hint?'inline-block':'none';
+  hintBtn.textContent='💡 Pokaż podpowiedź';
+
+  const praise=document.getElementById('praise');
+  praise.style.display='none';
+  const exp=document.getElementById('explanation');
+  exp.style.display='none';
+  exp.textContent=q.exp;
+  document.getElementById('next-btn').classList.remove('shown');
+  answered=false;
+
+  const c=document.getElementById('options-container');
+  const tc=document.getElementById('text-container');
+  c.innerHTML='';
+
+  if(q.textInput){
+    c.style.display='none';
+    tc.style.display='block';
+    const inp=document.getElementById('text-input');
+    inp.value='';
+    inp.disabled=false;
+    document.getElementById('text-submit').disabled=false;
+    setTimeout(()=>inp.focus(),50);
+  } else {
+    c.style.display='block';
+    tc.style.display='none';
+    const labels=['A','B','C','D'];
+    q.opts.forEach(function(o,i){
+      const d=document.createElement('div');
+      d.className='option';
+      d.innerHTML='<span class="badge">'+labels[i]+'</span><span>'+o+'</span>';
+      d.onclick=function(){selectOption(i,d);};
+      c.appendChild(d);
+    });
+  }
+}
+
+function toggleHint(){
+  const box=document.getElementById('hint-box');
+  const btn=document.getElementById('hint-btn');
+  if(box.style.display==='none'){box.style.display='block';btn.textContent='💡 Ukryj podpowiedź';}
+  else{box.style.display='none';btn.textContent='💡 Pokaż podpowiedź';}
+}
+
+function segmentIndex(i){return Math.min(Math.floor(i/SEGMENT_SIZE),NUM_SEGMENTS-1);}
+
+function finishAnswer(isCorrect){
+  if(isCorrect){
+    score++;
+    scores[segmentIndex(current)]++;
+    playGood();
+    const p=document.getElementById('praise');
+    p.textContent=fillName(praises[Math.floor(Math.random()*praises.length)]);
+    p.style.display='block';
+  } else {
+    playBad();
+    document.getElementById('explanation').style.display='block';
+  }
+  const nb=document.getElementById('next-btn');
+  nb.classList.add('shown');
+  nb.textContent=current<questions.length-1?'Następne pytanie →':'Zobacz wynik 🏁';
+}
+
+function selectOption(i,el){
+  if(answered)return;
+  answered=true;
+  const q=questions[current];
+  const opts=document.querySelectorAll('.option');
+  opts.forEach(function(o){o.classList.add('disabled');});
+  const isCorrect=(i===q.ans);
+  if(isCorrect){el.classList.add('correct');}
+  else{el.classList.add('wrong');opts[q.ans].classList.add('correct');}
+  finishAnswer(isCorrect);
+}
+
+function submitText(){
+  if(answered)return;
+  const inp=document.getElementById('text-input');
+  const val=inp.value.trim();
+  if(val==='')return;
+  answered=true;
+  inp.disabled=true;
+  document.getElementById('text-submit').disabled=true;
+  const q=questions[current];
+  const isCorrect=(Number(val)===Number(q.answerNumber));
+  if(!isCorrect){
+    const note=document.createElement('div');
+    note.style.cssText='margin-top:.5rem;font-size:13px;color:#A32D2D;font-weight:600';
+    note.textContent='Poprawna odpowiedź to: '+q.answerNumber;
+    document.getElementById('text-container').appendChild(note);
+  }
+  finishAnswer(isCorrect);
+}
+
+function nextQ(){
+  const next=current+1;
+  if(next>=questions.length){showResult();return;}
+  current=next;
+  render();
+}
+
+function toggleSong(){
+  const btn=document.getElementById('song-toggle-btn');
+  if(songPlaying){sndSong.pause();songPlaying=false;btn.textContent='▶️ Odtwórz piosenkę';}
+  else{sndSong.play().catch(()=>{});songPlaying=true;btn.textContent='⏸️ Wstrzymaj piosenkę';}
+}
+
+function showResult(){
+  document.getElementById('quiz-screen').style.display='none';
+  const rs=document.getElementById('result-screen');
+  rs.style.display='block';
+  const pct=Math.round((score/questions.length)*100);
+  let icon='📊',msg='';
+  if(pct>=90){icon='🏆';msg=userName+', niesamowite! Excel nie ma przed Tobą żadnych tajemnic — czas na część 2!';}
+  else if(pct>=70){icon='🌟';msg='Świetnie, '+userName+'! Masz oko do danych i pewną rękę do arkuszy.';}
+  else if(pct>=50){icon='🔎';msg='Dobry wynik, '+userName+'! Zaczynasz rozumieć, jak działa Excel.';}
+  else{icon='📖';msg='Niezła robota, '+userName+', ale jeszcze nie wszystko jest jasne — może warto jeszcze raz przejrzeć materiał? Spróbuj ponownie!';}
+  document.getElementById('res-icon').textContent=icon;
+  document.getElementById('res-score').textContent=score+' / '+questions.length;
+  document.getElementById('res-msg').textContent=msg;
+  for(let s=0;s<NUM_SEGMENTS;s++){
+    document.getElementById('bar'+(s+1)).style.width=(scores[s]/SEGMENT_SIZE*100)+'%';
+    document.getElementById('score'+(s+1)+'-txt').textContent=scores[s]+'/'+SEGMENT_SIZE;
+  }
+  document.getElementById('song-title').textContent="Piosenka dla Ciebie, "+userName;
+
+  sndSong.currentTime=0;
+  sndSong.play().then(()=>{
+    songPlaying=true;
+    document.getElementById('song-toggle-btn').textContent='⏸️ Wstrzymaj piosenkę';
+  }).catch(()=>{
+    songPlaying=false;
+    document.getElementById('song-toggle-btn').textContent='▶️ Odtwórz piosenkę';
+  });
+}
+
+function restart(){
+  current=0;score=0;scores=[0,0,0];answered=false;
+  sndSong.pause();sndSong.currentTime=0;songPlaying=false;
+  document.getElementById('result-screen').style.display='none';
+  document.getElementById('name-screen').style.display='block';
+  document.getElementById('name-input').value='';
+}
+</script>
+</body>
+</html>

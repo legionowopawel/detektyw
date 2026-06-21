@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Sprawa: Zagadka Znikającego Pączka — Quiz Excelowy</title>
+<style>
+  :root{
+    --paper:#f3efe2; --paper-dark:#e4ddc4; --ink:#23321f; --ink-soft:#56624f;
+    --excel:#1d6f42; --case-red:#8c2b2b; --good:#1d6f42; --bad:#9c2b2b; --line:#c9c2a0;
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+  html,body{height:100%;}
+  body{
+    margin:0; background:var(--paper); color:var(--ink);
+    font-family:'Courier New', monospace; line-height:1.5; padding:0 0 90px 0; min-height:100%;
+  }
+  .header{background:var(--ink); color:var(--paper); padding:18px 14px 16px; text-align:center; border-bottom:5px solid var(--excel);}
+  .badge{display:inline-block; font-size:11px; letter-spacing:2px; background:var(--case-red); color:#fff; padding:3px 8px; border-radius:2px; margin-bottom:8px; text-transform:uppercase;}
+  .header h1{margin:0; font-size:19px;}
+  .header p{margin:8px auto 0; max-width:560px; font-size:13px; color:var(--paper-dark); font-style:italic;}
+  .intro-wrap{max-width:480px; margin:0 auto; padding:0 14px;}
+  .video-frame{margin:18px auto 0; background:#000; border:1px solid var(--line); box-shadow:0 3px 10px rgba(0,0,0,0.15); padding:6px;}
+  .video-frame video{display:block; width:100%; height:auto; border-radius:2px; background:#000;}
+  .case-file{margin:18px auto 0; background:#fffdf6; border:1px solid var(--line); border-left:5px solid var(--excel); box-shadow:0 3px 10px rgba(0,0,0,0.12); padding:16px; border-radius:2px;}
+  .case-file h2{margin:0 0 8px; font-size:14px; text-transform:uppercase; letter-spacing:1px; color:var(--case-red);}
+  .case-file p{margin:0 0 10px; font-size:14px; color:var(--ink-soft);}
+  #start-btn{display:block; width:100%; margin:18px 0 6px; background:var(--excel); color:#fff; border:none; padding:14px 18px; border-radius:4px; font-size:15px; font-family:inherit; cursor:pointer;}
+  #score-bar{max-width:480px; margin:10px auto 0; display:flex; justify-content:space-between; align-items:center; font-size:12px; color:var(--ink-soft); padding:0 14px;}
+  #progress-track{flex:1; height:7px; background:var(--paper-dark); border-radius:4px; margin:0 10px; overflow:hidden; border:1px solid var(--line);}
+  #progress-fill{height:100%; width:0%; background:var(--excel); transition:width .3s ease;}
+  main{max-width:480px; margin:0 auto; padding:0 14px;}
+  .q-card{background:#fffdf6; border:1px solid var(--line); border-radius:5px; box-shadow:0 3px 8px rgba(0,0,0,0.08); margin:16px 0; padding:16px 14px 14px;}
+  .q-meta{display:flex; justify-content:space-between; align-items:baseline; margin-bottom:8px; flex-wrap:wrap; gap:6px;}
+  .q-num{font-size:11px; color:#fff; background:var(--ink); padding:2px 8px; border-radius:10px;}
+  .q-subject{font-size:10.5px; letter-spacing:1px; text-transform:uppercase; color:var(--excel); font-weight:bold;}
+  .q-img{display:block; width:100%; border-radius:4px; margin:0 0 12px; border:1px solid var(--line); background:#fff;}
+  .q-text{font-size:16px; margin:6px 0 14px; color:var(--ink);}
+  .options{display:flex; flex-direction:column; gap:9px;}
+  .opt-btn{text-align:left; background:var(--paper); border:1.5px solid var(--line); border-radius:4px; padding:12px 14px; font-size:14.5px; font-family:inherit; color:var(--ink); cursor:pointer; transition:background .15s, border-color .15s, transform .05s; user-select:none;}
+  .opt-btn:active{transform:scale(0.98);}
+  .opt-btn.correct{background:#e1ede5; border-color:var(--good); color:var(--good); font-weight:bold;}
+  .opt-btn.wrong{background:#f4e0e0; border-color:var(--bad); color:var(--bad); font-weight:bold;}
+  .opt-btn[disabled]{cursor:default;}
+  .explain{margin-top:14px; padding:12px; border-radius:5px; font-size:14px; display:none; border:1px dashed var(--line); background:#faf6ec;}
+  .explain.show{display:block;}
+  .explain.right-feel{border-color:var(--good); background:#eaf3ed;}
+  .explain.wrong-feel{border-color:var(--bad); background:#f7ecec;}
+  .explain b{color:var(--excel);}
+  .next-btn{margin-top:14px; width:100%; background:var(--excel); color:#fff; border:none; padding:12px 18px; border-radius:4px; font-size:14.5px; cursor:pointer; font-family:inherit;}
+  #final{display:none; max-width:480px; margin:24px auto 0; background:var(--ink); color:var(--paper); border-radius:6px; padding:22px 18px; text-align:center;}
+  #final h2{margin-top:0; color:var(--paper-dark); font-size:17px;}
+  #final .stamp{font-size:38px; margin:6px 0;}
+  #final p{font-size:14px; line-height:1.6;}
+  #restart-btn{margin-top:14px; width:100%; background:var(--excel); color:#fff; border:none; padding:13px 18px; border-radius:4px; font-size:14.5px; cursor:pointer; font-family:inherit;}
+  .audio-wrap{margin-top:18px; text-align:left;}
+  .audio-wrap p{font-size:12.5px; color:var(--paper-dark); margin-bottom:6px;}
+  audio{width:100%;}
+  .wrong-list{max-width:480px; margin:18px auto 0; padding:0 14px 10px;}
+  .wrong-list h3{font-size:14px; color:var(--case-red); text-transform:uppercase; letter-spacing:1px; border-bottom:2px solid var(--line); padding-bottom:6px;}
+  .wrong-item{background:#fffdf6; border:1px solid var(--line); border-left:4px solid var(--bad); border-radius:4px; padding:10px 12px; margin-top:10px; font-size:13.5px;}
+  .wrong-item .wq{color:var(--ink); margin-bottom:4px;}
+  .wrong-item .wa{color:var(--good); font-weight:bold;}
+  .mini-bar{background:var(--ink); color:var(--paper); padding:8px 14px; font-size:11px; text-align:center; letter-spacing:1px; border-bottom:3px solid var(--excel);}
+  #mute-bar{position:fixed; left:0; right:0; bottom:0; background:var(--ink); padding:10px 14px; text-align:center; border-top:3px solid var(--excel); z-index:50;}
+  #mute-btn{background:transparent; color:var(--paper); border:1.5px solid var(--paper-dark); padding:9px 16px; border-radius:4px; font-size:13px; font-family:inherit; cursor:pointer;}
+  #mute-btn.is-muted{background:var(--excel); border-color:var(--excel); color:#fff;}
+  footer{text-align:center; font-size:11px; color:var(--ink-soft); margin-top:24px; padding:0 14px;}
+</style>
+</head>
+<body>
+
+<div id="intro-screen">
+  <div class="header">
+    <span class="badge">ŚLEDZTWO KLASY 4A — AKTA POUFNE</span>
+    <h1>Sprawa Znikającego Pączka</h1>
+  </div>
+  <div class="intro-wrap">
+    <div class="video-frame">
+      <video controls playsinline src="mp4/excel3.mp4"></video>
+    </div>
+    <div class="case-file">
+      <h2>Notatki ze sklepiku pana Henia</h2>
+      <p>W szkolnym sklepiku pana Henia od dłuższego czasu giną pączki z marmoladą! Wszystkie inne słodycze się zgadzają — tylko pączków stale brakuje. Pan Henio przyniósł całą teczkę paragonów z roku i poprosił o pomoc sprytną dziewczynkę z klasy 4a.</p>
+      <p>Pomóż jej krok po kroku rozwikłać tę zagadkę za pomocą Excela — odpowiedz na 8 pytań, a na koniec dowiesz się, kto naprawdę podkrada pączki!</p>
+    </div>
+    <button id="start-btn">Zaczynamy śledztwo →</button>
+  </div>
+</div>
+
+<div id="quiz-screen" style="display:none;">
+  <div class="mini-bar">ŚLEDZTWO — ZNIKAJĄCY PĄCZEK</div>
+  <div id="score-bar">
+    <span id="score-label">Punkty: 0 / 8</span>
+    <div id="progress-track"><div id="progress-fill"></div></div>
+    <span id="q-counter">Pytanie 1 / 8</span>
+  </div>
+  <main id="quiz-root"></main>
+</div>
+
+<div id="final">
+  <h2>Śledztwo zakończone!</h2>
+  <div class="stamp">🐦📋</div>
+  <p id="final-text"></p>
+  <div class="audio-wrap">
+    <p>🎧 Twoja nagroda — piosenka o sprawie:</p>
+    <audio id="reward-audio" controls src="mp3/excel3.mp3" preload="auto"></audio>
+  </div>
+  <button id="restart-btn">Powrót do strony głównej</button>
+</div>
+
+<div class="wrong-list" id="wrong-list" style="display:none;">
+  <h3>Pytania, w których się pomyliłaś/eś</h3>
+  <div id="wrong-items"></div>
+</div>
+
+<div id="mute-bar">
+  <button id="mute-btn">🔊 Wyłącz dźwięk</button>
+</div>
+
+<audio id="snd-good" src="audio/eureka.mp3" preload="auto"></audio>
+<audio id="snd-bad" preload="auto"></audio>
+
+<script>
+const Q = [
+  {
+    "subject": "Wprowadzanie danych",
+    "img": "images/excel3_01.png",
+    "q": "Dziewczynka rozkłada na biurku paragony pana Henia z całego roku i musi je poukładać w Excelu. Jak nazywają się pionowe i poziome elementy arkusza, w które wpisze daty i liczbę pączków?",
+    "opts": ["Skoroszyty i pliki", "Formuły i walidacje", "Kolumny i wiersze", "Wykresy i legendy"],
+    "correct": 2,
+    "explain": "Pionowe elementy arkusza to <b>kolumny</b> (oznaczone literami), a poziome to <b>wiersze</b> (oznaczone cyframi). To w nich porządkuje się surowe dane."
+  },
+  {
+    "subject": "Adresowanie",
+    "img": "images/excel3_02.png",
+    "q": "Dziewczynka klika w pole na skrzyżowaniu kolumny B i wiersza 3, aby wpisać tam liczbę sprzedanych pączków. Jak profesjonalnie nazywa się to pojedyncze pole i jaki jest jego adres?",
+    "opts": ["Komórka, o adresie B3", "Skoroszyt, o adresie 3B", "Funkcja, o adresie B3", "Kopia, o nazwie B3"],
+    "correct": 0,
+    "explain": "Każde pojedyncze okienko w programie to <b>komórka</b>, a jej adres tworzy się, łącząc literę kolumny z numerem wiersza (np. B3)."
+  },
+  {
+    "subject": "Formuły",
+    "img": "images/excel3_03.png",
+    "q": "Dane z całego roku są już wpisane. Teraz dziewczynka chce policzyć różnicę między tym, ile pączków rano wystawiono, a ile zarejestrowano na kasie. Co musi wpisać na samym początku w komórce, aby Excel wykonał działanie matematyczne, a nie tylko wyświetlił tekst?",
+    "opts": ["Słowo „SUMA”", "Znak zapytania (?)", "Znak równości (=)", "Plus (+)"],
+    "correct": 2,
+    "explain": "Każda formuła i funkcja w Excelu musi zaczynać się od <b>znaku równości (=)</b>, np. =A1-B1."
+  },
+  {
+    "subject": "Automatyzacja",
+    "img": "images/excel3_04.png",
+    "q": "Pan Henio zauważa błąd: zamiast 15 pączków powinno być 25. Dziewczynka poprawia tę jedną liczbę w tabeli. Co stanie się z końcowym wynikiem ?",
+    "opts": ["Nic, trzeba całą tabelę napisać od nowa.", "Excel sam automatycznie przeliczy wynik na nowo.", "Program się zablokuje i wyświetli błąd walidacji.", "Zmienią się tylko kolumny, ale wiersze zostaną stare."],
+    "correct": 1,
+    "explain": "Po zmianie danych wejściowych <b>wszystkie połączone z nimi formuły natychmiast aktualizują wyniki</b> — to siła arkusza kalkulacyjnego."
+  },
+  {
+    "subject": "Tabela przestawna",
+    "img": "images/excel3_05.png",
+    "q": "Dane z całego roku to tysiące wierszy! Dziewczynka uruchamia potężne narzędzie analityczne, które błyskawicznie pokazuje, że każdego dnia znika dokładnie jeden pączek. Jakiego narzędzia użyła?",
+    "opts": ["Kopia zapasowa na pendrive", "Tabela przestawna", "Funkcja JEŻELI", "Blokowanie okienek"],
+    "correct": 1,
+    "explain": "<b>Tabela przestawna</b> (Pivot Table) pozwala błyskawicznie agregować, filtrować i znajdować powtarzające się trendy w ogromnych zbiorach danych."
+  },
+  {
+    "subject": "Wykresy",
+    "img": "images/excel3_06.png",
+    "q": "Klasa 4a chce sprawdzić, czy strata ma związek z konkretną godziną dnia. Dziewczynka generuje wykres, na którym widać wielki słupek wystrzeliwujący w górę tuż po ostatniej lekcji. Jak nazywa się ten typ wykresu?",
+    "opts": ["Wykres kołowy", "Wykres liniowy", "Wykres słupkowy", "Wykres siatkowy"],
+    "correct": 2,
+    "explain": "<b>Wykres słupkowy</b> idealnie nadaje się do porównywania wartości w różnych momentach czasu."
+  },
+  {
+    "subject": "Logika szkolnego życia",
+    "img": "images/excel3_07.png",
+    "q": "Wiadomo już, że pączek znika pod koniec dnia. Dzieci zauważyły, że pani sprzątaczka myje wtedy podłogi na korytarzu obok sklepiku. Dlaczego robi to dopiero, gdy dzieci już wyjdą ze szkoły?",
+    "opts": ["Bo nie lubi dzieci i woli pracować w samotności.", "Aby dzieci nie poślizgnęły się na mokrej podłodze i bezpiecznie wróciły do domu.", "Bo w ciągu dnia woda w kranie jest za zimna.", "Żeby nikt nie widział, jak zjada drożdżówki."],
+    "correct": 1,
+    "explain": "Mycie podłóg po wyjściu uczniów to podstawowa zasada <b>bezpieczeństwa w szkole</b>, zapobiegająca nieszczęśliwym upadkom."
+  },
+  {
+    "subject": "Finałowa zawiłość",
+    "img": "images/excel3_08.png",
+    "q": "Podczas mycia podłóg pani sprzątaczka szeroko otwiera okna, żeby przewietrzyć szkołę. Sklepik pana Henia jest na drugim piętrze. Czy otwieranie okien może mieć związek ze znikającym pączkiem?",
+    "opts": ["Tak, przez otwarte okno mogą wlecieć sprytne ptaki, jak kruki, i porwać pączka z lady.", "Nie, bo sklepik jest na drugim piętrze, więc żaden człowiek nie wejdzie przez okno.", "Nie, bo zapach marmolady odstrasza wszystkie zwierzęta.", "Tak, bo wiatr z okna zdmuchuje pączki prosto do kosza."],
+    "correct": 0,
+    "explain": "Ptaki krukowate są niezwykle inteligentne i potrafią wykorzystać moment nieuwagi oraz otwarte okno, by zdobyć pożywienie — niezależnie od piętra."
+  }
+];
+
+// Mieszanie kolejności odpowiedzi A/B/C/D dla każdego pytania, żeby dobra odpowiedź nie była zawsze w tym samym miejscu
+function shuffleOptions(item){
+  const order = item.opts.map((_, i) => i);
+  for(let i = order.length - 1; i > 0; i--){
+    const j = Math.floor(Math.random() * (i + 1));
+    [order[i], order[j]] = [order[j], order[i]];
+  }
+  item.opts = order.map(i => item.opts[i]);
+  item.correct = order.indexOf(item.correct);
+}
+Q.forEach(shuffleOptions);
+
+let current = 0, score = 0, soundsOn = true;
+const wrongAnswers = [];
+
+const introScreen = document.getElementById('intro-screen');
+const quizScreen = document.getElementById('quiz-screen');
+const root = document.getElementById('quiz-root');
+const scoreLabel = document.getElementById('score-label');
+const qCounter = document.getElementById('q-counter');
+const progressFill = document.getElementById('progress-fill');
+const finalDiv = document.getElementById('final');
+const finalText = document.getElementById('final-text');
+const sndGood = document.getElementById('snd-good');
+const sndBad = document.getElementById('snd-bad');
+const muteBtn = document.getElementById('mute-btn');
+const rewardAudio = document.getElementById('reward-audio');
+
+const WRONG_SOUNDS = ["audio/beep.mp3","audio/bop.mp3","audio/bounce.mp3","audio/bubbles.mp3","audio/plink.mp3","audio/ripple.mp3","audio/wobble.mp3"];
+
+muteBtn.addEventListener('click', ()=>{
+  soundsOn = !soundsOn;
+  muteBtn.classList.toggle('is-muted', !soundsOn);
+  muteBtn.textContent = soundsOn ? '🔊 Wyłącz dźwięk' : '🔇 Włącz dźwięk';
+});
+
+document.getElementById('start-btn').addEventListener('click', ()=>{
+  introScreen.style.display = 'none';
+  quizScreen.style.display = 'block';
+  renderQuestion(0);
+});
+
+function playGood(){ if(!soundsOn) return; try{ sndGood.currentTime=0; sndGood.play(); }catch(e){} }
+function playBad(){
+  if(!soundsOn) return;
+  const pick = WRONG_SOUNDS[Math.floor(Math.random()*WRONG_SOUNDS.length)];
+  try{ sndBad.src = pick; sndBad.currentTime = 0; sndBad.play(); }catch(e){}
+}
+
+function renderQuestion(i){
+  root.innerHTML = '';
+  const item = Q[i];
+  const card = document.createElement('div');
+  card.className = 'q-card';
+
+  const meta = document.createElement('div');
+  meta.className = 'q-meta';
+  meta.innerHTML = `<span class="q-num">Pytanie ${i+1}</span><span class="q-subject">${item.subject}</span>`;
+  card.appendChild(meta);
+
+  if(item.img){
+    const img = document.createElement('img');
+    img.className = 'q-img';
+    img.src = item.img;
+    img.alt = item.subject;
+    img.onerror = function(){ this.style.display = 'none'; };
+    card.appendChild(img);
+  }
+
+  const qText = document.createElement('div');
+  qText.className = 'q-text';
+  qText.textContent = item.q;
+  card.appendChild(qText);
+
+  const explainDiv = document.createElement('div');
+  explainDiv.className = 'explain';
+
+  function afterAnswer(isCorrect){
+    if(isCorrect){
+      score++;
+      playGood();
+      explainDiv.classList.add('show','right-feel');
+      explainDiv.innerHTML = `✅ <b>Dobrze!</b> ${item.explain}`;
+    } else {
+      wrongAnswers.push({q:item.q, a: item.opts[item.correct]});
+      playBad();
+      explainDiv.classList.add('show','wrong-feel');
+      explainDiv.innerHTML = `🔎 <b>Nie tym razem.</b> ${item.explain}`;
+    }
+    scoreLabel.textContent = `Punkty: ${score} / ${Q.length}`;
+
+    const nextBtn = document.createElement('button');
+    nextBtn.className = 'next-btn';
+    nextBtn.textContent = (i+1 < Q.length) ? 'Następne pytanie →' : 'Zobacz wynik końcowy';
+    nextBtn.addEventListener('click', ()=> goNext(i));
+    explainDiv.appendChild(nextBtn);
+  }
+
+  const optsWrap = document.createElement('div');
+  optsWrap.className = 'options';
+  item.opts.forEach((optText, idx)=>{
+    const btn = document.createElement('button');
+    btn.className = 'opt-btn';
+    btn.textContent = String.fromCharCode(65+idx) + ') ' + optText;
+    btn.addEventListener('click', ()=>{
+      const buttons = optsWrap.querySelectorAll('.opt-btn');
+      buttons.forEach(b=>b.disabled = true);
+      const ok = idx === item.correct;
+      if(ok){ btn.classList.add('correct'); }
+      else { btn.classList.add('wrong'); buttons[item.correct].classList.add('correct'); }
+      afterAnswer(ok);
+    });
+    optsWrap.appendChild(btn);
+  });
+  card.appendChild(optsWrap);
+
+  card.appendChild(explainDiv);
+  root.appendChild(card);
+
+  qCounter.textContent = `Pytanie ${i+1} / ${Q.length}`;
+  progressFill.style.width = `${(i/Q.length)*100}%`;
+  window.scrollTo({top:0, behavior:'auto'});
+}
+
+function goNext(i){
+  current = i+1;
+  if(current < Q.length){ renderQuestion(current); }
+  else { showFinal(); }
+}
+
+function showFinal(){
+  quizScreen.style.display = 'none';
+  progressFill.style.width = '100%';
+  finalDiv.style.display = 'block';
+  let msg;
+  if(score === Q.length) msg = `Brawo, detektywie! ${score} z ${Q.length} punktów — sprawa rozwiązana wzorowo, dokładnie jak w Excelu!`;
+  else if(score >= Q.length*0.7) msg = `Świetnie! ${score} z ${Q.length} punktów. Kruk nie miał u Ciebie szans.`;
+  else if(score >= Q.length*0.4) msg = `Dobry początek! ${score} z ${Q.length} punktów. Jeszcze trochę i będziesz mistrzem Excela!`;
+  else msg = `Zdobyłaś/eś ${score} z ${Q.length} punktów. Spróbuj jeszcze raz i złap tego kruka!`;
+  finalText.textContent = msg;
+
+  const wrongListDiv = document.getElementById('wrong-list');
+  const wrongItemsDiv = document.getElementById('wrong-items');
+  if(wrongAnswers.length > 0){
+    wrongListDiv.style.display = 'block';
+    wrongItemsDiv.innerHTML = wrongAnswers.map(w =>
+      `<div class="wrong-item"><div class="wq">${w.q}</div><div class="wa">Poprawna odpowiedź: ${w.a}</div></div>`
+    ).join('');
+  }
+
+  if(soundsOn){
+    try{ rewardAudio.currentTime = 0; rewardAudio.play().catch(()=>{}); }catch(e){}
+  }
+  window.scrollTo({top:0, behavior:'auto'});
+}
+
+document.getElementById('restart-btn').addEventListener('click', ()=>{
+  window.location.href = 'index.html';
+});
+</script>
+
+</body>
+</html>
