@@ -1,0 +1,822 @@
+﻿<!DOCTYPE html><html lang="pl"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Inwentaryzacja mebli</title><style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:Segoe UI,Arial,sans-serif;background:#f0f2f5;color:#222}header{background:#1a4a8a;color:#fff;padding:18px 30px}header h1{font-size:1.5rem;font-weight:600}header p{font-size:.85rem;opacity:.75;margin-top:4px}#nav{padding:10px 24px;background:#fff;border-bottom:1px solid #eee}#nav a{color:#1a4a8a;text-decoration:none;font-size:.9rem;margin-right:20px}#nav a:hover{text-decoration:underline}#toolbar{background:#fff;border-bottom:1px solid #ddd;padding:10px 24px;display:flex;gap:12px;flex-wrap:wrap;align-items:center}#toolbar label{font-size:.85rem;color:#555}#filterInput{padding:6px 12px;border:1px solid #bbb;border-radius:6px;font-size:.9rem;width:260px}#strefahFilter{padding:6px 10px;border:1px solid #bbb;border-radius:6px;font-size:.9rem}#counter{margin-left:auto;font-size:.85rem;color:#666}#grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px;padding:20px 24px}.card{background:#fff;border-radius:10px;box-shadow:0 2px 8px rgba(0,0,0,.1);overflow:hidden;cursor:pointer;transition:transform .15s,box-shadow .15s;position:relative}.card:hover{transform:translateY(-3px);box-shadow:0 6px 18px rgba(0,0,0,.16)}.card img{width:100%;height:180px;object-fit:cover;display:block;background:#e8eaf0}.map-badge{position:absolute;top:8px;right:8px;background:#ff6b35;color:#fff;padding:4px 10px;border-radius:4px;font-size:.7rem;font-weight:700;z-index:10}.caption{padding:10px 12px 12px;font-size:.82rem;line-height:1.5}.caption strong{font-size:.9rem}.caption small{color:#777}.badge{display:inline-block;background:#1a4a8a;color:#fff;font-size:.7rem;font-weight:600;padding:2px 7px;border-radius:20px;text-transform:uppercase;letter-spacing:.04em;margin-bottom:4px}#modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.82);z-index:1000;align-items:center;justify-content:center}#modal-overlay.active{display:flex}#modal-box{background:#fff;border-radius:12px;max-width:92vw;max-height:92vh;overflow:auto;display:flex;flex-direction:column;box-shadow:0 12px 40px rgba(0,0,0,.5)}#modal-img{max-width:88vw;max-height:75vh;object-fit:contain;display:block;border-radius:10px 10px 0 0}#modal-info{padding:14px 20px 18px;border-top:1px solid #eee;min-width:280px}#modal-info h2{font-size:1.05rem;margin:6px 0 4px}#modal-info p{font-size:.88rem;color:#555}#modal-close{position:absolute;top:14px;right:18px;font-size:2rem;color:#fff;cursor:pointer;line-height:1;user-select:none}#modal-close:hover{color:#ffd}</style></head><body><header><h1>&#127968; Inwentaryzacja mebli</h1><p>Spis przed przeprowadzka</p></header><div id="nav"><a href="zestawienie.html">&#128101; Zestawienie duplikatow</a><a href="Obrazki.html">&#127912; Obrazki</a></div><div id="toolbar"><label>Szukaj: <input id="filterInput" type="text" placeholder="np. szafka, 022..." oninput="filterCards()"></label><label>Strefa: <select id="strefahFilter" onchange="filterCards()"><option value="">- wszystkie -</option></select></label><span id="counter"></span></div><div id="grid">    <div class="card" data-strefa="akta" onclick="openModal('foto/sekretarka-uczestnicy-Sylwia-Gosia-akta_000_xxx_Open Space.png','Poz. 000 - MAPA: Open Space','0 x 0 x 0 cm','akta')">
+      <div class="map-badge">MAPA</div>
+      <img src="foto/sekretarka-uczestnicy-Sylwia-Gosia-akta_000_xxx_Open Space.png" alt="MAPA: Open Space" loading="lazy">
+      <div class="caption"><span class="badge">akta</span> <strong>#000</strong> Open Space<br><small>plan</small></div>
+    </div>
+    <div class="card" data-strefa="akta" onclick="openModal('foto/akta_001_200x100x72_stół konferencyjny.jpg','Poz. 001 - stół konferencyjny','200 x 100 x 72 cm','akta')">
+      <img src="foto/akta_001_200x100x72_stół konferencyjny.jpg" alt="stół konferencyjny" loading="lazy">
+      <div class="caption"><span class="badge">akta</span> <strong>#001</strong> stół konferencyjny<br><small>200 x 100 x 72 cm</small></div>
+    </div>
+    <div class="card" data-strefa="akta" onclick="openModal('foto/akta_004_120x43x195_Szafka Segregatory.jpg','Poz. 004 - Szafka Segregatory','120 x 43 x 195 cm','akta')">
+      <img src="foto/akta_004_120x43x195_Szafka Segregatory.jpg" alt="Szafka Segregatory" loading="lazy">
+      <div class="caption"><span class="badge">akta</span> <strong>#004</strong> Szafka Segregatory<br><small>120 x 43 x 195 cm</small></div>
+    </div>
+    <div class="card" data-strefa="akta" onclick="openModal('foto/akta_005_120x48x195_szafka Segregatory=.jpg','Poz. 005 - szafka Segregatory=','120 x 48 x 195 cm','akta')">
+      <img src="foto/akta_005_120x48x195_szafka Segregatory=.jpg" alt="szafka Segregatory=" loading="lazy">
+      <div class="caption"><span class="badge">akta</span> <strong>#005</strong> szafka Segregatory=<br><small>120 x 48 x 195 cm</small></div>
+    </div>
+    <div class="card" data-strefa="akta" onclick="openModal('foto/akta_006_120x48x195_szafka_Segregatory.jpg','Poz. 006 - szafka Segregatory','120 x 48 x 195 cm','akta')">
+      <img src="foto/akta_006_120x48x195_szafka_Segregatory.jpg" alt="szafka Segregatory" loading="lazy">
+      <div class="caption"><span class="badge">akta</span> <strong>#006</strong> szafka Segregatory<br><small>120 x 48 x 195 cm</small></div>
+    </div>
+    <div class="card" data-strefa="akta" onclick="openModal('foto/akta_007_120x48x195_szafka_Segregatory.jpg','Poz. 007 - szafka Segregatory','120 x 48 x 195 cm','akta')">
+      <img src="foto/akta_007_120x48x195_szafka_Segregatory.jpg" alt="szafka Segregatory" loading="lazy">
+      <div class="caption"><span class="badge">akta</span> <strong>#007</strong> szafka Segregatory<br><small>120 x 48 x 195 cm</small></div>
+    </div>
+    <div class="card" data-strefa="akta" onclick="openModal('foto/akta_008_120x48x195_szafka segregatory.jpg','Poz. 008 - szafka segregatory','120 x 48 x 195 cm','akta')">
+      <img src="foto/akta_008_120x48x195_szafka segregatory.jpg" alt="szafka segregatory" loading="lazy">
+      <div class="caption"><span class="badge">akta</span> <strong>#008</strong> szafka segregatory<br><small>120 x 48 x 195 cm</small></div>
+    </div>
+    <div class="card" data-strefa="akta" onclick="openModal('foto/akta_009_120x48x195_szafka Segregatory.jpg','Poz. 009 - szafka Segregatory','120 x 48 x 195 cm','akta')">
+      <img src="foto/akta_009_120x48x195_szafka Segregatory.jpg" alt="szafka Segregatory" loading="lazy">
+      <div class="caption"><span class="badge">akta</span> <strong>#009</strong> szafka Segregatory<br><small>120 x 48 x 195 cm</small></div>
+    </div>
+    <div class="card" data-strefa="akta" onclick="openModal('foto/akta_010_120x43x195_szafka segregatory.jpg','Poz. 010 - szafka segregatory','120 x 43 x 195 cm','akta')">
+      <img src="foto/akta_010_120x43x195_szafka segregatory.jpg" alt="szafka segregatory" loading="lazy">
+      <div class="caption"><span class="badge">akta</span> <strong>#010</strong> szafka segregatory<br><small>120 x 43 x 195 cm</small></div>
+    </div>
+    <div class="card" data-strefa="akta" onclick="openModal('foto/akta_017_120x60x75_ stolik roboczy do dziurkaczy  spinaczy z boku.jpg','Poz. 017 -  stolik roboczy do dziurkaczy  spinaczy z boku','120 x 60 x 75 cm','akta')">
+      <img src="foto/akta_017_120x60x75_ stolik roboczy do dziurkaczy  spinaczy z boku.jpg" alt=" stolik roboczy do dziurkaczy  spinaczy z boku" loading="lazy">
+      <div class="caption"><span class="badge">akta</span> <strong>#017</strong>  stolik roboczy do dziurkaczy  spinaczy z boku<br><small>120 x 60 x 75 cm</small></div>
+    </div>
+    <div class="card" data-strefa="doniczka" onclick="openModal('foto/doniczka_200_25x25x70_ Hoya carnosa.jpg','Poz. 200 -  Hoya carnosa','25 x 25 x 70 cm','doniczka')">
+      <img src="foto/doniczka_200_25x25x70_ Hoya carnosa.jpg" alt=" Hoya carnosa" loading="lazy">
+      <div class="caption"><span class="badge">doniczka</span> <strong>#200</strong>  Hoya carnosa<br><small>25 x 25 x 70 cm</small></div>
+    </div>
+    <div class="card" data-strefa="doniczka" onclick="openModal('foto/doniczka_201_25x25x70_geranium.jpg','Poz. 201 - geranium','25 x 25 x 70 cm','doniczka')">
+      <img src="foto/doniczka_201_25x25x70_geranium.jpg" alt="geranium" loading="lazy">
+      <div class="caption"><span class="badge">doniczka</span> <strong>#201</strong> geranium<br><small>25 x 25 x 70 cm</small></div>
+    </div>
+    <div class="card" data-strefa="doniczka" onclick="openModal('foto/doniczka_202_25x25x60_Zroślicha Stopowcowa.jpg','Poz. 202 - Zroślicha Stopowcowa','25 x 25 x 60 cm','doniczka')">
+      <img src="foto/doniczka_202_25x25x60_Zroślicha Stopowcowa.jpg" alt="Zroślicha Stopowcowa" loading="lazy">
+      <div class="caption"><span class="badge">doniczka</span> <strong>#202</strong> Zroślicha Stopowcowa<br><small>25 x 25 x 60 cm</small></div>
+    </div>
+    <div class="card" data-strefa="doniczka" onclick="openModal('foto/doniczka_203_25x25x10_Zamiokulas.jpg','Poz. 203 - Zamiokulas','25 x 25 x 10 cm','doniczka')">
+      <img src="foto/doniczka_203_25x25x10_Zamiokulas.jpg" alt="Zamiokulas" loading="lazy">
+      <div class="caption"><span class="badge">doniczka</span> <strong>#203</strong> Zamiokulas<br><small>25 x 25 x 10 cm</small></div>
+    </div>
+    <div class="card" data-strefa="doniczka" onclick="openModal('foto/doniczka_204_25x25x50_Zamiokulkas zamiolistny.jpg','Poz. 204 - Zamiokulkas zamiolistny','25 x 25 x 50 cm','doniczka')">
+      <img src="foto/doniczka_204_25x25x50_Zamiokulkas zamiolistny.jpg" alt="Zamiokulkas zamiolistny" loading="lazy">
+      <div class="caption"><span class="badge">doniczka</span> <strong>#204</strong> Zamiokulkas zamiolistny<br><small>25 x 25 x 50 cm</small></div>
+    </div>
+    <div class="card" data-strefa="doniczka" onclick="openModal('foto/doniczka_205_25x25x80_Wężownica Sansawiera.jpg','Poz. 205 - Wężownica Sansawiera','25 x 25 x 80 cm','doniczka')">
+      <img src="foto/doniczka_205_25x25x80_Wężownica Sansawiera.jpg" alt="Wężownica Sansawiera" loading="lazy">
+      <div class="caption"><span class="badge">doniczka</span> <strong>#205</strong> Wężownica Sansawiera<br><small>25 x 25 x 80 cm</small></div>
+    </div>
+    <div class="card" data-strefa="doniczka" onclick="openModal('foto/doniczka_206_15x15x20_Peperomia tępolistna.jpg','Poz. 206 - Peperomia tępolistna','15 x 15 x 20 cm','doniczka')">
+      <img src="foto/doniczka_206_15x15x20_Peperomia tępolistna.jpg" alt="Peperomia tępolistna" loading="lazy">
+      <div class="caption"><span class="badge">doniczka</span> <strong>#206</strong> Peperomia tępolistna<br><small>15 x 15 x 20 cm</small></div>
+    </div>
+    <div class="card" data-strefa="doniczka" onclick="openModal('foto/doniczka_207_15x15x25_Peperomia tępolistna.jpg','Poz. 207 - Peperomia tępolistna','15 x 15 x 25 cm','doniczka')">
+      <img src="foto/doniczka_207_15x15x25_Peperomia tępolistna.jpg" alt="Peperomia tępolistna" loading="lazy">
+      <div class="caption"><span class="badge">doniczka</span> <strong>#207</strong> Peperomia tępolistna<br><small>15 x 15 x 25 cm</small></div>
+    </div>
+    <div class="card" data-strefa="doniczka" onclick="openModal('foto/doniczka_208_15x15x50_geranium.jpg','Poz. 208 - geranium','15 x 15 x 50 cm','doniczka')">
+      <img src="foto/doniczka_208_15x15x50_geranium.jpg" alt="geranium" loading="lazy">
+      <div class="caption"><span class="badge">doniczka</span> <strong>#208</strong> geranium<br><small>15 x 15 x 50 cm</small></div>
+    </div>
+    <div class="card" data-strefa="doniczka" onclick="openModal('foto/doniczka_209_15x15x20_Peperomia tępolistna.jpg','Poz. 209 - Peperomia tępolistna','15 x 15 x 20 cm','doniczka')">
+      <img src="foto/doniczka_209_15x15x20_Peperomia tępolistna.jpg" alt="Peperomia tępolistna" loading="lazy">
+      <div class="caption"><span class="badge">doniczka</span> <strong>#209</strong> Peperomia tępolistna<br><small>15 x 15 x 20 cm</small></div>
+    </div>
+    <div class="card" data-strefa="doniczka" onclick="openModal('foto/doniczka_210_25x25x80_Peperomia tępolistna.jpg','Poz. 210 - Peperomia tępolistna','25 x 25 x 80 cm','doniczka')">
+      <img src="foto/doniczka_210_25x25x80_Peperomia tępolistna.jpg" alt="Peperomia tępolistna" loading="lazy">
+      <div class="caption"><span class="badge">doniczka</span> <strong>#210</strong> Peperomia tępolistna<br><small>25 x 25 x 80 cm</small></div>
+    </div>
+    <div class="card" data-strefa="doniczka" onclick="openModal('foto/doniczka_211_25x25x50_Dracena obrzeżona.jpg','Poz. 211 - Dracena obrzeżona','25 x 25 x 50 cm','doniczka')">
+      <img src="foto/doniczka_211_25x25x50_Dracena obrzeżona.jpg" alt="Dracena obrzeżona" loading="lazy">
+      <div class="caption"><span class="badge">doniczka</span> <strong>#211</strong> Dracena obrzeżona<br><small>25 x 25 x 50 cm</small></div>
+    </div>
+    <div class="card" data-strefa="doniczka" onclick="openModal('foto/doniczka_212_25x25x50_Wężownica.jpg','Poz. 212 - Wężownica','25 x 25 x 50 cm','doniczka')">
+      <img src="foto/doniczka_212_25x25x50_Wężownica.jpg" alt="Wężownica" loading="lazy">
+      <div class="caption"><span class="badge">doniczka</span> <strong>#212</strong> Wężownica<br><small>25 x 25 x 50 cm</small></div>
+    </div>
+    <div class="card" data-strefa="doniczka" onclick="openModal('foto/doniczka_213_25x25x25_kula bukszpanowa sztuczna z plastiku.jpg','Poz. 213 - kula bukszpanowa sztuczna z plastiku','25 x 25 x 25 cm','doniczka')">
+      <img src="foto/doniczka_213_25x25x25_kula bukszpanowa sztuczna z plastiku.jpg" alt="kula bukszpanowa sztuczna z plastiku" loading="lazy">
+      <div class="caption"><span class="badge">doniczka</span> <strong>#213</strong> kula bukszpanowa sztuczna z plastiku<br><small>25 x 25 x 25 cm</small></div>
+    </div>
+    <div class="card" data-strefa="doniczka" onclick="openModal('foto/doniczka_214_25x25x10_Zamiokulas.jpg','Poz. 214 - Zamiokulas','25 x 25 x 10 cm','doniczka')">
+      <img src="foto/doniczka_214_25x25x10_Zamiokulas.jpg" alt="Zamiokulas" loading="lazy">
+      <div class="caption"><span class="badge">doniczka</span> <strong>#214</strong> Zamiokulas<br><small>25 x 25 x 10 cm</small></div>
+    </div>
+    <div class="card" data-strefa="doniczka" onclick="openModal('foto/doniczka_215_25x25x40_Hoya carnosa.jpg','Poz. 215 - Hoya carnosa','25 x 25 x 40 cm','doniczka')">
+      <img src="foto/doniczka_215_25x25x40_Hoya carnosa.jpg" alt="Hoya carnosa" loading="lazy">
+      <div class="caption"><span class="badge">doniczka</span> <strong>#215</strong> Hoya carnosa<br><small>25 x 25 x 40 cm</small></div>
+    </div>
+    <div class="card" data-strefa="doniczka" onclick="openModal('foto/doniczka_216_25x25x30_oplątwa.jpg','Poz. 216 - oplątwa','25 x 25 x 30 cm','doniczka')">
+      <img src="foto/doniczka_216_25x25x30_oplątwa.jpg" alt="oplątwa" loading="lazy">
+      <div class="caption"><span class="badge">doniczka</span> <strong>#216</strong> oplątwa<br><small>25 x 25 x 30 cm</small></div>
+    </div>
+    <div class="card" data-strefa="doniczka" onclick="openModal('foto/doniczka_217_25x25x200_Dracena obrzeżona u Pani dyrektor.jpg','Poz. 217 - Dracena obrzeżona u Pani dyrektor','25 x 25 x 200 cm','doniczka')">
+      <img src="foto/doniczka_217_25x25x200_Dracena obrzeżona u Pani dyrektor.jpg" alt="Dracena obrzeżona u Pani dyrektor" loading="lazy">
+      <div class="caption"><span class="badge">doniczka</span> <strong>#217</strong> Dracena obrzeżona u Pani dyrektor<br><small>25 x 25 x 200 cm</small></div>
+    </div>
+    <div class="card" data-strefa="doniczka" onclick="openModal('foto/doniczka_218_15x15x30_Epipremnum złociste.JPG','Poz. 218 - Epipremnum złociste','15 x 15 x 30 cm','doniczka')">
+      <img src="foto/doniczka_218_15x15x30_Epipremnum złociste.JPG" alt="Epipremnum złociste" loading="lazy">
+      <div class="caption"><span class="badge">doniczka</span> <strong>#218</strong> Epipremnum złociste<br><small>15 x 15 x 30 cm</small></div>
+    </div>
+    <div class="card" data-strefa="doniczka" onclick="openModal('foto/doniczka_219_15x15x25_Zroślicha Stopowcowa.jpg','Poz. 219 - Zroślicha Stopowcowa','15 x 15 x 25 cm','doniczka')">
+      <img src="foto/doniczka_219_15x15x25_Zroślicha Stopowcowa.jpg" alt="Zroślicha Stopowcowa" loading="lazy">
+      <div class="caption"><span class="badge">doniczka</span> <strong>#219</strong> Zroślicha Stopowcowa<br><small>15 x 15 x 25 cm</small></div>
+    </div>
+    <div class="card" data-strefa="doniczka" onclick="openModal('foto/doniczka_401_15x15x20_skrzydłokwiat.jpg','Poz. 401 - skrzydłokwiat','15 x 15 x 20 cm','doniczka')">
+      <img src="foto/doniczka_401_15x15x20_skrzydłokwiat.jpg" alt="skrzydłokwiat" loading="lazy">
+      <div class="caption"><span class="badge">doniczka</span> <strong>#401</strong> skrzydłokwiat<br><small>15 x 15 x 20 cm</small></div>
+    </div>
+    <div class="card" data-strefa="doniczka" onclick="openModal('foto/doniczka_402_15x15x20_grudnik.JPG','Poz. 402 - grudnik','15 x 15 x 20 cm','doniczka')">
+      <img src="foto/doniczka_402_15x15x20_grudnik.JPG" alt="grudnik" loading="lazy">
+      <div class="caption"><span class="badge">doniczka</span> <strong>#402</strong> grudnik<br><small>15 x 15 x 20 cm</small></div>
+    </div>
+    <div class="card" data-strefa="doniczka" onclick="openModal('foto/doniczka_403_15x15x20_Sansewiera gwinejska u Mariusza.JPG','Poz. 403 - Sansewiera gwinejska u Mariusza','15 x 15 x 20 cm','doniczka')">
+      <img src="foto/doniczka_403_15x15x20_Sansewiera gwinejska u Mariusza.JPG" alt="Sansewiera gwinejska u Mariusza" loading="lazy">
+      <div class="caption"><span class="badge">doniczka</span> <strong>#403</strong> Sansewiera gwinejska u Mariusza<br><small>15 x 15 x 20 cm</small></div>
+    </div>
+    <div class="card" data-strefa="doniczka" onclick="openModal('foto/doniczka_404_15x15x20_Sansewieria u Mariusza.JPG','Poz. 404 - Sansewieria u Mariusza','15 x 15 x 20 cm','doniczka')">
+      <img src="foto/doniczka_404_15x15x20_Sansewieria u Mariusza.JPG" alt="Sansewieria u Mariusza" loading="lazy">
+      <div class="caption"><span class="badge">doniczka</span> <strong>#404</strong> Sansewieria u Mariusza<br><small>15 x 15 x 20 cm</small></div>
+    </div>
+    <div class="card" data-strefa="doniczka" onclick="openModal('foto/doniczka_405_15x15x20_Aloes zwyczajny u Mariusza.JPG','Poz. 405 - Aloes zwyczajny u Mariusza','15 x 15 x 20 cm','doniczka')">
+      <img src="foto/doniczka_405_15x15x20_Aloes zwyczajny u Mariusza.JPG" alt="Aloes zwyczajny u Mariusza" loading="lazy">
+      <div class="caption"><span class="badge">doniczka</span> <strong>#405</strong> Aloes zwyczajny u Mariusza<br><small>15 x 15 x 20 cm</small></div>
+    </div>
+    <div class="card" data-strefa="doniczka" onclick="openModal('foto/doniczka_406_20x20x25_pandan u Mariusza.JPG','Poz. 406 - pandan u Mariusza','20 x 20 x 25 cm','doniczka')">
+      <img src="foto/doniczka_406_20x20x25_pandan u Mariusza.JPG" alt="pandan u Mariusza" loading="lazy">
+      <div class="caption"><span class="badge">doniczka</span> <strong>#406</strong> pandan u Mariusza<br><small>20 x 20 x 25 cm</small></div>
+    </div>
+    <div class="card" data-strefa="doniczka" onclick="openModal('foto/doniczka_407_15x15x20_zroślicha.jpg','Poz. 407 - zroślicha','15 x 15 x 20 cm','doniczka')">
+      <img src="foto/doniczka_407_15x15x20_zroślicha.jpg" alt="zroślicha" loading="lazy">
+      <div class="caption"><span class="badge">doniczka</span> <strong>#407</strong> zroślicha<br><small>15 x 15 x 20 cm</small></div>
+    </div>
+    <div class="card" data-strefa="doniczka" onclick="openModal('foto/doniczka_408_15x15x30_zielistka u Mariusza.JPG','Poz. 408 - zielistka u Mariusza','15 x 15 x 30 cm','doniczka')">
+      <img src="foto/doniczka_408_15x15x30_zielistka u Mariusza.JPG" alt="zielistka u Mariusza" loading="lazy">
+      <div class="caption"><span class="badge">doniczka</span> <strong>#408</strong> zielistka u Mariusza<br><small>15 x 15 x 30 cm</small></div>
+    </div>
+    <div class="card" data-strefa="dyrektor" onclick="openModal('foto/dyrektor_054_xxx_gabinet Pani dyrektor PLAN.png','Poz. 054 - MAPA: gabinet Pani dyrektor PLAN','0 x 0 x 0 cm','dyrektor')">
+      <div class="map-badge">MAPA</div>
+      <img src="foto/dyrektor_054_xxx_gabinet Pani dyrektor PLAN.png" alt="MAPA: gabinet Pani dyrektor PLAN" loading="lazy">
+      <div class="caption"><span class="badge">dyrektor</span> <strong>#054</strong> gabinet Pani dyrektor PLAN<br><small>plan</small></div>
+    </div>
+    <div class="card" data-strefa="dyrektor" onclick="openModal('foto/dyrektor_055_212x183x77 biurko podnoszone kształt litery L.jpg','Poz. 055 - biurko podnoszone kształt litery L','212 x 183 x 77 cm','dyrektor')">
+      <img src="foto/dyrektor_055_212x183x77 biurko podnoszone kształt litery L.jpg" alt="biurko podnoszone kształt litery L" loading="lazy">
+      <div class="caption"><span class="badge">dyrektor</span> <strong>#055</strong> biurko podnoszone kształt litery L<br><small>212 x 183 x 77 cm</small></div>
+    </div>
+    <div class="card" data-strefa="dyrektor" onclick="openModal('foto/dyrektor_055a_43x80x59_kontener biurowy Dyrekto na kółkach.jpg','Poz. 055a - kontener biurowy Dyrekto na kółkach','43 x 80 x 59 cm','dyrektor')">
+      <img src="foto/dyrektor_055a_43x80x59_kontener biurowy Dyrekto na kółkach.jpg" alt="kontener biurowy Dyrekto na kółkach" loading="lazy">
+      <div class="caption"><span class="badge">dyrektor</span> <strong>#055a</strong> kontener biurowy Dyrekto na kółkach<br><small>43 x 80 x 59 cm</small></div>
+    </div>
+    <div class="card" data-strefa="dyrektor" onclick="openModal('foto/dyrektor_055b_36x59x69_szafeczka Dyrektor.jpg','Poz. 055b - szafeczka Dyrektor','36 x 59 x 69 cm','dyrektor')">
+      <img src="foto/dyrektor_055b_36x59x69_szafeczka Dyrektor.jpg" alt="szafeczka Dyrektor" loading="lazy">
+      <div class="caption"><span class="badge">dyrektor</span> <strong>#055b</strong> szafeczka Dyrektor<br><small>36 x 59 x 69 cm</small></div>
+    </div>
+    <div class="card" data-strefa="dyrektor" onclick="openModal('foto/dyrektor_055c_70x70x120_krzesło obrotowe Dyrektor.JPG','Poz. 055c - krzesło obrotowe Dyrektor','70 x 70 x 120 cm','dyrektor')">
+      <img src="foto/dyrektor_055c_70x70x120_krzesło obrotowe Dyrektor.JPG" alt="krzesło obrotowe Dyrektor" loading="lazy">
+      <div class="caption"><span class="badge">dyrektor</span> <strong>#055c</strong> krzesło obrotowe Dyrektor<br><small>70 x 70 x 120 cm</small></div>
+    </div>
+    <div class="card" data-strefa="dyrektor" onclick="openModal('foto/dyrektor_056_60x42x149_regał Dyrektor.jpg','Poz. 056 - regał Dyrektor','60 x 42 x 149 cm','dyrektor')">
+      <img src="foto/dyrektor_056_60x42x149_regał Dyrektor.jpg" alt="regał Dyrektor" loading="lazy">
+      <div class="caption"><span class="badge">dyrektor</span> <strong>#056</strong> regał Dyrektor<br><small>60 x 42 x 149 cm</small></div>
+    </div>
+    <div class="card" data-strefa="dyrektor" onclick="openModal('foto/dyrektor_057_80x42x149_regał Dyrektor.jpg','Poz. 057 - regał Dyrektor','80 x 42 x 149 cm','dyrektor')">
+      <img src="foto/dyrektor_057_80x42x149_regał Dyrektor.jpg" alt="regał Dyrektor" loading="lazy">
+      <div class="caption"><span class="badge">dyrektor</span> <strong>#057</strong> regał Dyrektor<br><small>80 x 42 x 149 cm</small></div>
+    </div>
+    <div class="card" data-strefa="dyrektor" onclick="openModal('foto/dyrektor_058a_60x60x84_fotel na kółkach gabinetowy.jpg','Poz. 058a - fotel na kółkach gabinetowy','60 x 60 x 84 cm','dyrektor')">
+      <img src="foto/dyrektor_058a_60x60x84_fotel na kółkach gabinetowy.jpg" alt="fotel na kółkach gabinetowy" loading="lazy">
+      <div class="caption"><span class="badge">dyrektor</span> <strong>#058a</strong> fotel na kółkach gabinetowy<br><small>60 x 60 x 84 cm</small></div>
+    </div>
+    <div class="card" data-strefa="dyrektor" onclick="openModal('foto/dyrektor_058b_60x60x84_fotel na kółkach gabinetowy.jpg','Poz. 058b - fotel na kółkach gabinetowy','60 x 60 x 84 cm','dyrektor')">
+      <img src="foto/dyrektor_058b_60x60x84_fotel na kółkach gabinetowy.jpg" alt="fotel na kółkach gabinetowy" loading="lazy">
+      <div class="caption"><span class="badge">dyrektor</span> <strong>#058b</strong> fotel na kółkach gabinetowy<br><small>60 x 60 x 84 cm</small></div>
+    </div>
+    <div class="card" data-strefa="dyrektor" onclick="openModal('foto/dyrektor_058c_60x60x84_fotel na kółkach gabinetowy.jpg','Poz. 058c - fotel na kółkach gabinetowy','60 x 60 x 84 cm','dyrektor')">
+      <img src="foto/dyrektor_058c_60x60x84_fotel na kółkach gabinetowy.jpg" alt="fotel na kółkach gabinetowy" loading="lazy">
+      <div class="caption"><span class="badge">dyrektor</span> <strong>#058c</strong> fotel na kółkach gabinetowy<br><small>60 x 60 x 84 cm</small></div>
+    </div>
+    <div class="card" data-strefa="dyrektor" onclick="openModal('foto/dyrektor_058d_60x60x84_fotel na kółkach gabinetowy.jpg','Poz. 058d - fotel na kółkach gabinetowy','60 x 60 x 84 cm','dyrektor')">
+      <img src="foto/dyrektor_058d_60x60x84_fotel na kółkach gabinetowy.jpg" alt="fotel na kółkach gabinetowy" loading="lazy">
+      <div class="caption"><span class="badge">dyrektor</span> <strong>#058d</strong> fotel na kółkach gabinetowy<br><small>60 x 60 x 84 cm</small></div>
+    </div>
+    <div class="card" data-strefa="dyrektor" onclick="openModal('foto/dyrektor_058e_30x30x175_lampa wolnostojąca.jpg','Poz. 058e - lampa wolnostojąca','30 x 30 x 175 cm','dyrektor')">
+      <img src="foto/dyrektor_058e_30x30x175_lampa wolnostojąca.jpg" alt="lampa wolnostojąca" loading="lazy">
+      <div class="caption"><span class="badge">dyrektor</span> <strong>#058e</strong> lampa wolnostojąca<br><small>30 x 30 x 175 cm</small></div>
+    </div>
+    <div class="card" data-strefa="Gosia" onclick="openModal('foto/sekretarka-uczestnicy-Sylwia-Gosia-akta_000_xxx_Open Space.png','Poz. 000 - MAPA: Open Space','0 x 0 x 0 cm','Gosia')">
+      <div class="map-badge">MAPA</div>
+      <img src="foto/sekretarka-uczestnicy-Sylwia-Gosia-akta_000_xxx_Open Space.png" alt="MAPA: Open Space" loading="lazy">
+      <div class="caption"><span class="badge">Gosia</span> <strong>#000</strong> Open Space<br><small>plan</small></div>
+    </div>
+    <div class="card" data-strefa="Gosia" onclick="openModal('foto/Gosia_025_150x70x75_biurko Gosia.jpg','Poz. 025 - biurko Gosia','150 x 70 x 75 cm','Gosia')">
+      <img src="foto/Gosia_025_150x70x75_biurko Gosia.jpg" alt="biurko Gosia" loading="lazy">
+      <div class="caption"><span class="badge">Gosia</span> <strong>#025</strong> biurko Gosia<br><small>150 x 70 x 75 cm</small></div>
+    </div>
+    <div class="card" data-strefa="Gosia" onclick="openModal('foto/Gosia_026_160x70x75_biurko Gosia.jpg','Poz. 026 - biurko Gosia','160 x 70 x 75 cm','Gosia')">
+      <img src="foto/Gosia_026_160x70x75_biurko Gosia.jpg" alt="biurko Gosia" loading="lazy">
+      <div class="caption"><span class="badge">Gosia</span> <strong>#026</strong> biurko Gosia<br><small>160 x 70 x 75 cm</small></div>
+    </div>
+    <div class="card" data-strefa="Gosia" onclick="openModal('foto/Gosia_026a_41x56x56_kontener biurowy Gosia.jpg','Poz. 026a - kontener biurowy Gosia','41 x 56 x 56 cm','Gosia')">
+      <img src="foto/Gosia_026a_41x56x56_kontener biurowy Gosia.jpg" alt="kontener biurowy Gosia" loading="lazy">
+      <div class="caption"><span class="badge">Gosia</span> <strong>#026a</strong> kontener biurowy Gosia<br><small>41 x 56 x 56 cm</small></div>
+    </div>
+    <div class="card" data-strefa="Gosia" onclick="openModal('foto/Gosia_026b_70x70x120_krzesło obrotowe Gosi.JPG','Poz. 026b - krzesło obrotowe Gosi','70 x 70 x 120 cm','Gosia')">
+      <img src="foto/Gosia_026b_70x70x120_krzesło obrotowe Gosi.JPG" alt="krzesło obrotowe Gosi" loading="lazy">
+      <div class="caption"><span class="badge">Gosia</span> <strong>#026b</strong> krzesło obrotowe Gosi<br><small>70 x 70 x 120 cm</small></div>
+    </div>
+    <div class="card" data-strefa="Gosia" onclick="openModal('foto/Gosia_030_90x40x185_szafa Gosia.jpg','Poz. 030 - szafa Gosia','90 x 40 x 185 cm','Gosia')">
+      <img src="foto/Gosia_030_90x40x185_szafa Gosia.jpg" alt="szafa Gosia" loading="lazy">
+      <div class="caption"><span class="badge">Gosia</span> <strong>#030</strong> szafa Gosia<br><small>90 x 40 x 185 cm</small></div>
+    </div>
+    <div class="card" data-strefa="Gosia" onclick="openModal('foto/Gosia_031_80x45x72_szafka.jpg','Poz. 031 - szafka','80 x 45 x 72 cm','Gosia')">
+      <img src="foto/Gosia_031_80x45x72_szafka.jpg" alt="szafka" loading="lazy">
+      <div class="caption"><span class="badge">Gosia</span> <strong>#031</strong> szafka<br><small>80 x 45 x 72 cm</small></div>
+    </div>
+    <div class="card" data-strefa="księgowa" onclick="openModal('foto/księgowa-kuchnia_039_xxx_Rzut gabinetu księgowej, kuchni i schowka na detergenty.png','Poz. 039 - MAPA: Rzut gabinetu księgowej, kuchni i schowka na detergenty','0 x 0 x 0 cm','księgowa')">
+      <div class="map-badge">MAPA</div>
+      <img src="foto/księgowa-kuchnia_039_xxx_Rzut gabinetu księgowej, kuchni i schowka na detergenty.png" alt="MAPA: Rzut gabinetu księgowej, kuchni i schowka na detergenty" loading="lazy">
+      <div class="caption"><span class="badge">księgowa</span> <strong>#039</strong> Rzut gabinetu księgowej, kuchni i schowka na detergenty<br><small>plan</small></div>
+    </div>
+    <div class="card" data-strefa="księgowa" onclick="openModal('foto/księgowa_040_160x90x72_biruko księgowej.jpg','Poz. 040 - biruko księgowej','160 x 90 x 72 cm','księgowa')">
+      <img src="foto/księgowa_040_160x90x72_biruko księgowej.jpg" alt="biruko księgowej" loading="lazy">
+      <div class="caption"><span class="badge">księgowa</span> <strong>#040</strong> biruko księgowej<br><small>160 x 90 x 72 cm</small></div>
+    </div>
+    <div class="card" data-strefa="księgowa" onclick="openModal('foto/księgowa_040a_42x60x58_kontener biurowy księgowa.jpg','Poz. 040a - kontener biurowy księgowa','42 x 60 x 58 cm','księgowa')">
+      <img src="foto/księgowa_040a_42x60x58_kontener biurowy księgowa.jpg" alt="kontener biurowy księgowa" loading="lazy">
+      <div class="caption"><span class="badge">księgowa</span> <strong>#040a</strong> kontener biurowy księgowa<br><small>42 x 60 x 58 cm</small></div>
+    </div>
+    <div class="card" data-strefa="księgowa" onclick="openModal('foto/księgowa_040b_40x48x66_kontener biurowy księgowa.jpg','Poz. 040b - kontener biurowy księgowa','40 x 48 x 66 cm','księgowa')">
+      <img src="foto/księgowa_040b_40x48x66_kontener biurowy księgowa.jpg" alt="kontener biurowy księgowa" loading="lazy">
+      <div class="caption"><span class="badge">księgowa</span> <strong>#040b</strong> kontener biurowy księgowa<br><small>40 x 48 x 66 cm</small></div>
+    </div>
+    <div class="card" data-strefa="księgowa" onclick="openModal('foto/księgowa_040c_40x29x51_niszczarka księgowa.jpg','Poz. 040c - niszczarka księgowa','40 x 29 x 51 cm','księgowa')">
+      <img src="foto/księgowa_040c_40x29x51_niszczarka księgowa.jpg" alt="niszczarka księgowa" loading="lazy">
+      <div class="caption"><span class="badge">księgowa</span> <strong>#040c</strong> niszczarka księgowa<br><small>40 x 29 x 51 cm</small></div>
+    </div>
+    <div class="card" data-strefa="księgowa" onclick="openModal('foto/księgowa_040d_70x70x120_krzesło obrotowe.JPG','Poz. 040d - krzesło obrotowe','70 x 70 x 120 cm','księgowa')">
+      <img src="foto/księgowa_040d_70x70x120_krzesło obrotowe.JPG" alt="krzesło obrotowe" loading="lazy">
+      <div class="caption"><span class="badge">księgowa</span> <strong>#040d</strong> krzesło obrotowe<br><small>70 x 70 x 120 cm</small></div>
+    </div>
+    <div class="card" data-strefa="księgowa" onclick="openModal('foto/księgowa_041_120x60x75_stół księgowa.jpg','Poz. 041 - stół księgowa','120 x 60 x 75 cm','księgowa')">
+      <img src="foto/księgowa_041_120x60x75_stół księgowa.jpg" alt="stół księgowa" loading="lazy">
+      <div class="caption"><span class="badge">księgowa</span> <strong>#041</strong> stół księgowa<br><small>120 x 60 x 75 cm</small></div>
+    </div>
+    <div class="card" data-strefa="księgowa" onclick="openModal('foto/księgowa_042_43x58x57_szafka Księgowa.jpg','Poz. 042 - szafka Księgowa','43 x 58 x 57 cm','księgowa')">
+      <img src="foto/księgowa_042_43x58x57_szafka Księgowa.jpg" alt="szafka Księgowa" loading="lazy">
+      <div class="caption"><span class="badge">księgowa</span> <strong>#042</strong> szafka Księgowa<br><small>43 x 58 x 57 cm</small></div>
+    </div>
+    <div class="card" data-strefa="księgowa" onclick="openModal('foto/księgowa_043_42x64x43_drukarka księgowa.jpg','Poz. 043 - drukarka księgowa','42 x 64 x 43 cm','księgowa')">
+      <img src="foto/księgowa_043_42x64x43_drukarka księgowa.jpg" alt="drukarka księgowa" loading="lazy">
+      <div class="caption"><span class="badge">księgowa</span> <strong>#043</strong> drukarka księgowa<br><small>42 x 64 x 43 cm</small></div>
+    </div>
+    <div class="card" data-strefa="księgowa" onclick="openModal('foto/księgowa_044_90x40x185_szafa księgowa.jpg','Poz. 044 - szafa księgowa','90 x 40 x 185 cm','księgowa')">
+      <img src="foto/księgowa_044_90x40x185_szafa księgowa.jpg" alt="szafa księgowa" loading="lazy">
+      <div class="caption"><span class="badge">księgowa</span> <strong>#044</strong> szafa księgowa<br><small>90 x 40 x 185 cm</small></div>
+    </div>
+    <div class="card" data-strefa="księgowa" onclick="openModal('foto/księgowa_045_90x40x185_szafa księgowa.jpg','Poz. 045 - szafa księgowa','90 x 40 x 185 cm','księgowa')">
+      <img src="foto/księgowa_045_90x40x185_szafa księgowa.jpg" alt="szafa księgowa" loading="lazy">
+      <div class="caption"><span class="badge">księgowa</span> <strong>#045</strong> szafa księgowa<br><small>90 x 40 x 185 cm</small></div>
+    </div>
+    <div class="card" data-strefa="księgowa" onclick="openModal('foto/księgowa_046_60x60x84_fotel na kółkach gabinetowy.jpg','Poz. 046 - fotel na kółkach gabinetowy','60 x 60 x 84 cm','księgowa')">
+      <img src="foto/księgowa_046_60x60x84_fotel na kółkach gabinetowy.jpg" alt="fotel na kółkach gabinetowy" loading="lazy">
+      <div class="caption"><span class="badge">księgowa</span> <strong>#046</strong> fotel na kółkach gabinetowy<br><small>60 x 60 x 84 cm</small></div>
+    </div>
+    <div class="card" data-strefa="kuchania" onclick="openModal('foto/kuchania_071a_180x64x87_blat.jpg','Poz. 071a - blat','180 x 64 x 87 cm','kuchania')">
+      <img src="foto/kuchania_071a_180x64x87_blat.jpg" alt="blat" loading="lazy">
+      <div class="caption"><span class="badge">kuchania</span> <strong>#071a</strong> blat<br><small>180 x 64 x 87 cm</small></div>
+    </div>
+    <div class="card" data-strefa="kuchania" onclick="openModal('foto/kuchania_074_28x50x42_express do kawy.JPG','Poz. 074 - express do kawy','28 x 50 x 42 cm','kuchania')">
+      <img src="foto/kuchania_074_28x50x42_express do kawy.JPG" alt="express do kawy" loading="lazy">
+      <div class="caption"><span class="badge">kuchania</span> <strong>#074</strong> express do kawy<br><small>28 x 50 x 42 cm</small></div>
+    </div>
+    <div class="card" data-strefa="kuchania" onclick="openModal('foto/kuchania_076_15x15x24_czajnik.JPG','Poz. 076 - czajnik','15 x 15 x 24 cm','kuchania')">
+      <img src="foto/kuchania_076_15x15x24_czajnik.JPG" alt="czajnik" loading="lazy">
+      <div class="caption"><span class="badge">kuchania</span> <strong>#076</strong> czajnik<br><small>15 x 15 x 24 cm</small></div>
+    </div>
+    <div class="card" data-strefa="kuchnia" onclick="openModal('foto/księgowa-kuchnia_039_xxx_Rzut gabinetu księgowej, kuchni i schowka na detergenty.png','Poz. 039 - MAPA: Rzut gabinetu księgowej, kuchni i schowka na detergenty','0 x 0 x 0 cm','kuchnia')">
+      <div class="map-badge">MAPA</div>
+      <img src="foto/księgowa-kuchnia_039_xxx_Rzut gabinetu księgowej, kuchni i schowka na detergenty.png" alt="MAPA: Rzut gabinetu księgowej, kuchni i schowka na detergenty" loading="lazy">
+      <div class="caption"><span class="badge">kuchnia</span> <strong>#039</strong> Rzut gabinetu księgowej, kuchni i schowka na detergenty<br><small>plan</small></div>
+    </div>
+    <div class="card" data-strefa="kuchnia" onclick="openModal('foto/kuchnia_024a_60x47x50_szafka RACK internet sieć LAN.JPG','Poz. 024a - szafka RACK internet sieć LAN','60 x 47 x 50 cm','kuchnia')">
+      <img src="foto/kuchnia_024a_60x47x50_szafka RACK internet sieć LAN.JPG" alt="szafka RACK internet sieć LAN" loading="lazy">
+      <div class="caption"><span class="badge">kuchnia</span> <strong>#024a</strong> szafka RACK internet sieć LAN<br><small>60 x 47 x 50 cm</small></div>
+    </div>
+    <div class="card" data-strefa="kuchnia" onclick="openModal('foto/kuchnia_047_60x60x84_fotel na kółkach gabinetowy — kopia.jpg','Poz. 047 - fotel na kółkach gabinetowy — kopia','60 x 60 x 84 cm','kuchnia')">
+      <img src="foto/kuchnia_047_60x60x84_fotel na kółkach gabinetowy — kopia.jpg" alt="fotel na kółkach gabinetowy — kopia" loading="lazy">
+      <div class="caption"><span class="badge">kuchnia</span> <strong>#047</strong> fotel na kółkach gabinetowy — kopia<br><small>60 x 60 x 84 cm</small></div>
+    </div>
+    <div class="card" data-strefa="kuchnia" onclick="openModal('foto/kuchnia_048_74x73x74_stół Kuchnia.jpg','Poz. 048 - stół Kuchnia','74 x 73 x 74 cm','kuchnia')">
+      <img src="foto/kuchnia_048_74x73x74_stół Kuchnia.jpg" alt="stół Kuchnia" loading="lazy">
+      <div class="caption"><span class="badge">kuchnia</span> <strong>#048</strong> stół Kuchnia<br><small>74 x 73 x 74 cm</small></div>
+    </div>
+    <div class="card" data-strefa="kuchnia" onclick="openModal('foto/kuchnia_048a_60x60x30_krzesło.JPG','Poz. 048a - krzesło','60 x 60 x 30 cm','kuchnia')">
+      <img src="foto/kuchnia_048a_60x60x30_krzesło.JPG" alt="krzesło" loading="lazy">
+      <div class="caption"><span class="badge">kuchnia</span> <strong>#048a</strong> krzesło<br><small>60 x 60 x 30 cm</small></div>
+    </div>
+    <div class="card" data-strefa="kuchnia" onclick="openModal('foto/kuchnia_048b_60x60x30_krzesło.JPG','Poz. 048b - krzesło','60 x 60 x 30 cm','kuchnia')">
+      <img src="foto/kuchnia_048b_60x60x30_krzesło.JPG" alt="krzesło" loading="lazy">
+      <div class="caption"><span class="badge">kuchnia</span> <strong>#048b</strong> krzesło<br><small>60 x 60 x 30 cm</small></div>
+    </div>
+    <div class="card" data-strefa="kuchnia" onclick="openModal('foto/kuchnia_048c_60x60x30_krzesło.JPG','Poz. 048c - krzesło','60 x 60 x 30 cm','kuchnia')">
+      <img src="foto/kuchnia_048c_60x60x30_krzesło.JPG" alt="krzesło" loading="lazy">
+      <div class="caption"><span class="badge">kuchnia</span> <strong>#048c</strong> krzesło<br><small>60 x 60 x 30 cm</small></div>
+    </div>
+    <div class="card" data-strefa="kuchnia" onclick="openModal('foto/kuchnia_048d_60x60x30_krzesło.JPG','Poz. 048d - krzesło','60 x 60 x 30 cm','kuchnia')">
+      <img src="foto/kuchnia_048d_60x60x30_krzesło.JPG" alt="krzesło" loading="lazy">
+      <div class="caption"><span class="badge">kuchnia</span> <strong>#048d</strong> krzesło<br><small>60 x 60 x 30 cm</small></div>
+    </div>
+    <div class="card" data-strefa="kuchnia" onclick="openModal('foto/kuchnia_049_120x40x160_szafa.jpg','Poz. 049 - szafa','120 x 40 x 160 cm','kuchnia')">
+      <img src="foto/kuchnia_049_120x40x160_szafa.jpg" alt="szafa" loading="lazy">
+      <div class="caption"><span class="badge">kuchnia</span> <strong>#049</strong> szafa<br><small>120 x 40 x 160 cm</small></div>
+    </div>
+    <div class="card" data-strefa="kuchnia" onclick="openModal('foto/kuchnia_050_120x40x110_szafka do kuchni.jpg','Poz. 050 - szafka do kuchni','120 x 40 x 110 cm','kuchnia')">
+      <img src="foto/kuchnia_050_120x40x110_szafka do kuchni.jpg" alt="szafka do kuchni" loading="lazy">
+      <div class="caption"><span class="badge">kuchnia</span> <strong>#050</strong> szafka do kuchni<br><small>120 x 40 x 110 cm</small></div>
+    </div>
+    <div class="card" data-strefa="kuchnia" onclick="openModal('foto/kuchnia_051_75x30x150_szafeczka na detergenty.jpg','Poz. 051 - szafeczka na detergenty','75 x 30 x 150 cm','kuchnia')">
+      <img src="foto/kuchnia_051_75x30x150_szafeczka na detergenty.jpg" alt="szafeczka na detergenty" loading="lazy">
+      <div class="caption"><span class="badge">kuchnia</span> <strong>#051</strong> szafeczka na detergenty<br><small>75 x 30 x 150 cm</small></div>
+    </div>
+    <div class="card" data-strefa="kuchnia" onclick="openModal('foto/kuchnia_052_75x30x150_szafeczka na detergenty.jpg','Poz. 052 - szafeczka na detergenty','75 x 30 x 150 cm','kuchnia')">
+      <img src="foto/kuchnia_052_75x30x150_szafeczka na detergenty.jpg" alt="szafeczka na detergenty" loading="lazy">
+      <div class="caption"><span class="badge">kuchnia</span> <strong>#052</strong> szafeczka na detergenty<br><small>75 x 30 x 150 cm</small></div>
+    </div>
+    <div class="card" data-strefa="kuchnia" onclick="openModal('foto/kuchnia_053_75x30x150_szafeczka na detergenty.jpg','Poz. 053 - szafeczka na detergenty','75 x 30 x 150 cm','kuchnia')">
+      <img src="foto/kuchnia_053_75x30x150_szafeczka na detergenty.jpg" alt="szafeczka na detergenty" loading="lazy">
+      <div class="caption"><span class="badge">kuchnia</span> <strong>#053</strong> szafeczka na detergenty<br><small>75 x 30 x 150 cm</small></div>
+    </div>
+    <div class="card" data-strefa="kuchnia" onclick="openModal('foto/kuchnia_070_60x50x84_szafka kuchenna.JPG','Poz. 070 - szafka kuchenna','60 x 50 x 84 cm','kuchnia')">
+      <img src="foto/kuchnia_070_60x50x84_szafka kuchenna.JPG" alt="szafka kuchenna" loading="lazy">
+      <div class="caption"><span class="badge">kuchnia</span> <strong>#070</strong> szafka kuchenna<br><small>60 x 50 x 84 cm</small></div>
+    </div>
+    <div class="card" data-strefa="kuchnia" onclick="openModal('foto/kuchnia_071_47x62x84_lodówka.JPG','Poz. 071 - lodówka','47 x 62 x 84 cm','kuchnia')">
+      <img src="foto/kuchnia_071_47x62x84_lodówka.JPG" alt="lodówka" loading="lazy">
+      <div class="caption"><span class="badge">kuchnia</span> <strong>#071</strong> lodówka<br><small>47 x 62 x 84 cm</small></div>
+    </div>
+    <div class="card" data-strefa="kuchnia" onclick="openModal('foto/kuchnia_072_60x50x84_szafka kuchenna.JPG','Poz. 072 - szafka kuchenna','60 x 50 x 84 cm','kuchnia')">
+      <img src="foto/kuchnia_072_60x50x84_szafka kuchenna.JPG" alt="szafka kuchenna" loading="lazy">
+      <div class="caption"><span class="badge">kuchnia</span> <strong>#072</strong> szafka kuchenna<br><small>60 x 50 x 84 cm</small></div>
+    </div>
+    <div class="card" data-strefa="kuchnia" onclick="openModal('foto/kuchnia_073_45x30x26_mikrofala.JPG','Poz. 073 - mikrofala','45 x 30 x 26 cm','kuchnia')">
+      <img src="foto/kuchnia_073_45x30x26_mikrofala.JPG" alt="mikrofala" loading="lazy">
+      <div class="caption"><span class="badge">kuchnia</span> <strong>#073</strong> mikrofala<br><small>45 x 30 x 26 cm</small></div>
+    </div>
+    <div class="card" data-strefa="kuchnia" onclick="openModal('foto/kuchnia_075_30x30x66_dystrybutor wody.JPG','Poz. 075 - dystrybutor wody','30 x 30 x 66 cm','kuchnia')">
+      <img src="foto/kuchnia_075_30x30x66_dystrybutor wody.JPG" alt="dystrybutor wody" loading="lazy">
+      <div class="caption"><span class="badge">kuchnia</span> <strong>#075</strong> dystrybutor wody<br><small>30 x 30 x 66 cm</small></div>
+    </div>
+    <div class="card" data-strefa="łazienka" onclick="openModal('foto/łazienka_077_60x33x123_regał biała szafka .JPG','Poz. 077 - regał biała szafka ','60 x 33 x 123 cm','łazienka')">
+      <img src="foto/łazienka_077_60x33x123_regał biała szafka .JPG" alt="regał biała szafka " loading="lazy">
+      <div class="caption"><span class="badge">łazienka</span> <strong>#077</strong> regał biała szafka <br><small>60 x 33 x 123 cm</small></div>
+    </div>
+    <div class="card" data-strefa="łazienka" onclick="openModal('foto/łazienka_078_51x30x85_regał niebieski na kółkach.JPG','Poz. 078 - regał niebieski na kółkach','51 x 30 x 85 cm','łazienka')">
+      <img src="foto/łazienka_078_51x30x85_regał niebieski na kółkach.JPG" alt="regał niebieski na kółkach" loading="lazy">
+      <div class="caption"><span class="badge">łazienka</span> <strong>#078</strong> regał niebieski na kółkach<br><small>51 x 30 x 85 cm</small></div>
+    </div>
+    <div class="card" data-strefa="Mariusz" onclick="openModal('foto/Mariusz_059_xxx_Plan pokoju Mariusza.png','Poz. 059 - MAPA: Plan pokoju Mariusza','0 x 0 x 0 cm','Mariusz')">
+      <div class="map-badge">MAPA</div>
+      <img src="foto/Mariusz_059_xxx_Plan pokoju Mariusza.png" alt="MAPA: Plan pokoju Mariusza" loading="lazy">
+      <div class="caption"><span class="badge">Mariusz</span> <strong>#059</strong> Plan pokoju Mariusza<br><small>plan</small></div>
+    </div>
+    <div class="card" data-strefa="Mariusz" onclick="openModal('foto/Mariusz_061_120x60x79_stół Mariusz.jpg','Poz. 061 - stół Mariusz','120 x 60 x 79 cm','Mariusz')">
+      <img src="foto/Mariusz_061_120x60x79_stół Mariusz.jpg" alt="stół Mariusz" loading="lazy">
+      <div class="caption"><span class="badge">Mariusz</span> <strong>#061</strong> stół Mariusz<br><small>120 x 60 x 79 cm</small></div>
+    </div>
+    <div class="card" data-strefa="Mariusz" onclick="openModal('foto/Mariusz_061a_50x50x30_drukarka.JPG','Poz. 061a - drukarka','50 x 50 x 30 cm','Mariusz')">
+      <img src="foto/Mariusz_061a_50x50x30_drukarka.JPG" alt="drukarka" loading="lazy">
+      <div class="caption"><span class="badge">Mariusz</span> <strong>#061a</strong> drukarka<br><small>50 x 50 x 30 cm</small></div>
+    </div>
+    <div class="card" data-strefa="Mariusz" onclick="openModal('foto/Mariusz_062_90x40x185_szafa pancerna Mariusza.JPG','Poz. 062 - szafa pancerna Mariusza','90 x 40 x 185 cm','Mariusz')">
+      <img src="foto/Mariusz_062_90x40x185_szafa pancerna Mariusza.JPG" alt="szafa pancerna Mariusza" loading="lazy">
+      <div class="caption"><span class="badge">Mariusz</span> <strong>#062</strong> szafa pancerna Mariusza<br><small>90 x 40 x 185 cm</small></div>
+    </div>
+    <div class="card" data-strefa="Mariusz" onclick="openModal('foto/Mariusz_063_200x100x72_stół Mariusz.jpg','Poz. 063 - stół Mariusz','200 x 100 x 72 cm','Mariusz')">
+      <img src="foto/Mariusz_063_200x100x72_stół Mariusz.jpg" alt="stół Mariusz" loading="lazy">
+      <div class="caption"><span class="badge">Mariusz</span> <strong>#063</strong> stół Mariusz<br><small>200 x 100 x 72 cm</small></div>
+    </div>
+    <div class="card" data-strefa="Mariusz" onclick="openModal('foto/Mariusz_064_169x47x93_szafka Mariusz.jpg','Poz. 064 - szafka Mariusz','169 x 47 x 93 cm','Mariusz')">
+      <img src="foto/Mariusz_064_169x47x93_szafka Mariusz.jpg" alt="szafka Mariusz" loading="lazy">
+      <div class="caption"><span class="badge">Mariusz</span> <strong>#064</strong> szafka Mariusz<br><small>169 x 47 x 93 cm</small></div>
+    </div>
+    <div class="card" data-strefa="Mariusz" onclick="openModal('foto/Mariusz_065_120x46x195_szafa Mariusz.jpg','Poz. 065 - szafa Mariusz','120 x 46 x 195 cm','Mariusz')">
+      <img src="foto/Mariusz_065_120x46x195_szafa Mariusz.jpg" alt="szafa Mariusz" loading="lazy">
+      <div class="caption"><span class="badge">Mariusz</span> <strong>#065</strong> szafa Mariusz<br><small>120 x 46 x 195 cm</small></div>
+    </div>
+    <div class="card" data-strefa="Mariusz" onclick="openModal('foto/Mariusz_066_120x48x195_szafa Mariusz.jpg','Poz. 066 - szafa Mariusz','120 x 48 x 195 cm','Mariusz')">
+      <img src="foto/Mariusz_066_120x48x195_szafa Mariusz.jpg" alt="szafa Mariusz" loading="lazy">
+      <div class="caption"><span class="badge">Mariusz</span> <strong>#066</strong> szafa Mariusz<br><small>120 x 48 x 195 cm</small></div>
+    </div>
+    <div class="card" data-strefa="Mariusz" onclick="openModal('foto/Mariusz_067_100x41x75_stolik Mariusz.jpg','Poz. 067 - stolik Mariusz','100 x 41 x 75 cm','Mariusz')">
+      <img src="foto/Mariusz_067_100x41x75_stolik Mariusz.jpg" alt="stolik Mariusz" loading="lazy">
+      <div class="caption"><span class="badge">Mariusz</span> <strong>#067</strong> stolik Mariusz<br><small>100 x 41 x 75 cm</small></div>
+    </div>
+    <div class="card" data-strefa="Mariusz" onclick="openModal('foto/Mariusz_068_56x56x174_wieszak_.JPG','Poz. 068 - wieszak ','56 x 56 x 174 cm','Mariusz')">
+      <img src="foto/Mariusz_068_56x56x174_wieszak_.JPG" alt="wieszak " loading="lazy">
+      <div class="caption"><span class="badge">Mariusz</span> <strong>#068</strong> wieszak <br><small>56 x 56 x 174 cm</small></div>
+    </div>
+    <div class="card" data-strefa="Mariusz" onclick="openModal('foto/mariusz_335_54x54x80_Poczkalnia u Marisusza.JPG','Poz. 335 - Poczkalnia u Marisusza','54 x 54 x 80 cm','Mariusz')">
+      <img src="foto/mariusz_335_54x54x80_Poczkalnia u Marisusza.JPG" alt="Poczkalnia u Marisusza" loading="lazy">
+      <div class="caption"><span class="badge">Mariusz</span> <strong>#335</strong> Poczkalnia u Marisusza<br><small>54 x 54 x 80 cm</small></div>
+    </div>
+    <div class="card" data-strefa="Mariusz" onclick="openModal('foto/mariusz_336_54x54x80_u Marisusza.JPG','Poz. 336 - u Marisusza','54 x 54 x 80 cm','Mariusz')">
+      <img src="foto/mariusz_336_54x54x80_u Marisusza.JPG" alt="u Marisusza" loading="lazy">
+      <div class="caption"><span class="badge">Mariusz</span> <strong>#336</strong> u Marisusza<br><small>54 x 54 x 80 cm</small></div>
+    </div>
+    <div class="card" data-strefa="Mariusz" onclick="openModal('foto/mariusz_337_54x54x80_u Marisusza.JPG','Poz. 337 - u Marisusza','54 x 54 x 80 cm','Mariusz')">
+      <img src="foto/mariusz_337_54x54x80_u Marisusza.JPG" alt="u Marisusza" loading="lazy">
+      <div class="caption"><span class="badge">Mariusz</span> <strong>#337</strong> u Marisusza<br><small>54 x 54 x 80 cm</small></div>
+    </div>
+    <div class="card" data-strefa="Mariusz" onclick="openModal('foto/mariusz_338_54x54x80_u Marisusza.JPG','Poz. 338 - u Marisusza','54 x 54 x 80 cm','Mariusz')">
+      <img src="foto/mariusz_338_54x54x80_u Marisusza.JPG" alt="u Marisusza" loading="lazy">
+      <div class="caption"><span class="badge">Mariusz</span> <strong>#338</strong> u Marisusza<br><small>54 x 54 x 80 cm</small></div>
+    </div>
+    <div class="card" data-strefa="Mariusz" onclick="openModal('foto/mariusz_339_54x54x80_u Marisusza.JPG','Poz. 339 - u Marisusza','54 x 54 x 80 cm','Mariusz')">
+      <img src="foto/mariusz_339_54x54x80_u Marisusza.JPG" alt="u Marisusza" loading="lazy">
+      <div class="caption"><span class="badge">Mariusz</span> <strong>#339</strong> u Marisusza<br><small>54 x 54 x 80 cm</small></div>
+    </div>
+    <div class="card" data-strefa="Mariusz" onclick="openModal('foto/mariusz_340_54x54x80_u Marisusza.JPG','Poz. 340 - u Marisusza','54 x 54 x 80 cm','Mariusz')">
+      <img src="foto/mariusz_340_54x54x80_u Marisusza.JPG" alt="u Marisusza" loading="lazy">
+      <div class="caption"><span class="badge">Mariusz</span> <strong>#340</strong> u Marisusza<br><small>54 x 54 x 80 cm</small></div>
+    </div>
+    <div class="card" data-strefa="Mariusz" onclick="openModal('foto/mariusz_341_54x54x80_u Marisusz.JPG','Poz. 341 - u Marisusz','54 x 54 x 80 cm','Mariusz')">
+      <img src="foto/mariusz_341_54x54x80_u Marisusz.JPG" alt="u Marisusz" loading="lazy">
+      <div class="caption"><span class="badge">Mariusz</span> <strong>#341</strong> u Marisusz<br><small>54 x 54 x 80 cm</small></div>
+    </div>
+    <div class="card" data-strefa="Mariusz" onclick="openModal('foto/mariusz_342_54x54x80_u Marisusz.JPG','Poz. 342 - u Marisusz','54 x 54 x 80 cm','Mariusz')">
+      <img src="foto/mariusz_342_54x54x80_u Marisusz.JPG" alt="u Marisusz" loading="lazy">
+      <div class="caption"><span class="badge">Mariusz</span> <strong>#342</strong> u Marisusz<br><small>54 x 54 x 80 cm</small></div>
+    </div>
+    <div class="card" data-strefa="Mariusz" onclick="openModal('foto/mariusz_343_54x54x80_u Marisusz — kopia.JPG','Poz. 343 - u Marisusz — kopia','54 x 54 x 80 cm','Mariusz')">
+      <img src="foto/mariusz_343_54x54x80_u Marisusz — kopia.JPG" alt="u Marisusz — kopia" loading="lazy">
+      <div class="caption"><span class="badge">Mariusz</span> <strong>#343</strong> u Marisusz — kopia<br><small>54 x 54 x 80 cm</small></div>
+    </div>
+    <div class="card" data-strefa="obrazek" onclick="openModal('foto/obrazek_300_70x2x50_zegary Dali.jpg','Poz. 300 - zegary Dali','70 x 2 x 50 cm','obrazek')">
+      <img src="foto/obrazek_300_70x2x50_zegary Dali.jpg" alt="zegary Dali" loading="lazy">
+      <div class="caption"><span class="badge">obrazek</span> <strong>#300</strong> zegary Dali<br><small>70 x 2 x 50 cm</small></div>
+    </div>
+    <div class="card" data-strefa="obrazek" onclick="openModal('foto/obrazek_301_65x2x47_kosmos.jpg','Poz. 301 - kosmos','65 x 2 x 47 cm','obrazek')">
+      <img src="foto/obrazek_301_65x2x47_kosmos.jpg" alt="kosmos" loading="lazy">
+      <div class="caption"><span class="badge">obrazek</span> <strong>#301</strong> kosmos<br><small>65 x 2 x 47 cm</small></div>
+    </div>
+    <div class="card" data-strefa="obrazek" onclick="openModal('foto/obrazek_302_22x3x30_Certyfikat potwierdzający gotowość podmiotu.jpg','Poz. 302 - Certyfikat potwierdzający gotowość podmiotu','22 x 3 x 30 cm','obrazek')">
+      <img src="foto/obrazek_302_22x3x30_Certyfikat potwierdzający gotowość podmiotu.jpg" alt="Certyfikat potwierdzający gotowość podmiotu" loading="lazy">
+      <div class="caption"><span class="badge">obrazek</span> <strong>#302</strong> Certyfikat potwierdzający gotowość podmiotu<br><small>22 x 3 x 30 cm</small></div>
+    </div>
+    <div class="card" data-strefa="obrazek" onclick="openModal('foto/obrazek_303_37x2x49_dyplom uznania dla Cis.jpg','Poz. 303 - dyplom uznania dla Cis','37 x 2 x 49 cm','obrazek')">
+      <img src="foto/obrazek_303_37x2x49_dyplom uznania dla Cis.jpg" alt="dyplom uznania dla Cis" loading="lazy">
+      <div class="caption"><span class="badge">obrazek</span> <strong>#303</strong> dyplom uznania dla Cis<br><small>37 x 2 x 49 cm</small></div>
+    </div>
+    <div class="card" data-strefa="obrazek" onclick="openModal('foto/obrazek_304_31x2x22_certyfikat Znaku Jakości Ekonomii Społecznej i Solidarnej 2020 Najlepszy pracowawca.jpg','Poz. 304 - certyfikat Znaku Jakości Ekonomii Społecznej i Solidarnej 2020 Najlepszy pracowawca','31 x 2 x 22 cm','obrazek')">
+      <img src="foto/obrazek_304_31x2x22_certyfikat Znaku Jakości Ekonomii Społecznej i Solidarnej 2020 Najlepszy pracowawca.jpg" alt="certyfikat Znaku Jakości Ekonomii Społecznej i Solidarnej 2020 Najlepszy pracowawca" loading="lazy">
+      <div class="caption"><span class="badge">obrazek</span> <strong>#304</strong> certyfikat Znaku Jakości Ekonomii Społecznej i Solidarnej 2020 Najlepszy pracowawca<br><small>31 x 2 x 22 cm</small></div>
+    </div>
+    <div class="card" data-strefa="obrazek" onclick="openModal('foto/obrazek_305_31x2x22_certyfikat Znaku Jakości Ekonomii Społecznej i Solidarnej 2021 Najlepszy pracowawca.jpg','Poz. 305 - certyfikat Znaku Jakości Ekonomii Społecznej i Solidarnej 2021 Najlepszy pracowawca','31 x 2 x 22 cm','obrazek')">
+      <img src="foto/obrazek_305_31x2x22_certyfikat Znaku Jakości Ekonomii Społecznej i Solidarnej 2021 Najlepszy pracowawca.jpg" alt="certyfikat Znaku Jakości Ekonomii Społecznej i Solidarnej 2021 Najlepszy pracowawca" loading="lazy">
+      <div class="caption"><span class="badge">obrazek</span> <strong>#305</strong> certyfikat Znaku Jakości Ekonomii Społecznej i Solidarnej 2021 Najlepszy pracowawca<br><small>31 x 2 x 22 cm</small></div>
+    </div>
+    <div class="card" data-strefa="obrazek" onclick="openModal('foto/obrazek_306_31x2x22_certyfikat Znaku Jakości Ekonomii Społecznej i Solidarnej 2022 Najlepszy pracowawca.jpg','Poz. 306 - certyfikat Znaku Jakości Ekonomii Społecznej i Solidarnej 2022 Najlepszy pracowawca','31 x 2 x 22 cm','obrazek')">
+      <img src="foto/obrazek_306_31x2x22_certyfikat Znaku Jakości Ekonomii Społecznej i Solidarnej 2022 Najlepszy pracowawca.jpg" alt="certyfikat Znaku Jakości Ekonomii Społecznej i Solidarnej 2022 Najlepszy pracowawca" loading="lazy">
+      <div class="caption"><span class="badge">obrazek</span> <strong>#306</strong> certyfikat Znaku Jakości Ekonomii Społecznej i Solidarnej 2022 Najlepszy pracowawca<br><small>31 x 2 x 22 cm</small></div>
+    </div>
+    <div class="card" data-strefa="obrazek" onclick="openModal('foto/obrazek_307_31x2x22_certyfikat Znaku Jakości Ekonomii Społecznej 2023 Sukces Rynkowy.jpg','Poz. 307 - certyfikat Znaku Jakości Ekonomii Społecznej 2023 Sukces Rynkowy','31 x 2 x 22 cm','obrazek')">
+      <img src="foto/obrazek_307_31x2x22_certyfikat Znaku Jakości Ekonomii Społecznej 2023 Sukces Rynkowy.jpg" alt="certyfikat Znaku Jakości Ekonomii Społecznej 2023 Sukces Rynkowy" loading="lazy">
+      <div class="caption"><span class="badge">obrazek</span> <strong>#307</strong> certyfikat Znaku Jakości Ekonomii Społecznej 2023 Sukces Rynkowy<br><small>31 x 2 x 22 cm</small></div>
+    </div>
+    <div class="card" data-strefa="obrazek" onclick="openModal('foto/obrazek_308_31x2x22_certyfikat Znak Jakości Ekonomii Społecznej 2023 Najlepszy Pracodawca.jpg','Poz. 308 - certyfikat Znak Jakości Ekonomii Społecznej 2023 Najlepszy Pracodawca','31 x 2 x 22 cm','obrazek')">
+      <img src="foto/obrazek_308_31x2x22_certyfikat Znak Jakości Ekonomii Społecznej 2023 Najlepszy Pracodawca.jpg" alt="certyfikat Znak Jakości Ekonomii Społecznej 2023 Najlepszy Pracodawca" loading="lazy">
+      <div class="caption"><span class="badge">obrazek</span> <strong>#308</strong> certyfikat Znak Jakości Ekonomii Społecznej 2023 Najlepszy Pracodawca<br><small>31 x 2 x 22 cm</small></div>
+    </div>
+    <div class="card" data-strefa="obrazek" onclick="openModal('foto/obrazek_309_200x1x80_tablica informacyjna Sylwia.jpg','Poz. 309 - tablica informacyjna Sylwia','200 x 1 x 80 cm','obrazek')">
+      <img src="foto/obrazek_309_200x1x80_tablica informacyjna Sylwia.jpg" alt="tablica informacyjna Sylwia" loading="lazy">
+      <div class="caption"><span class="badge">obrazek</span> <strong>#309</strong> tablica informacyjna Sylwia<br><small>200 x 1 x 80 cm</small></div>
+    </div>
+    <div class="card" data-strefa="obrazek" onclick="openModal('foto/obrazek_309_30x1x60_kalendarz Gosi.jpg','Poz. 309 - kalendarz Gosi','30 x 1 x 60 cm','obrazek')">
+      <img src="foto/obrazek_309_30x1x60_kalendarz Gosi.jpg" alt="kalendarz Gosi" loading="lazy">
+      <div class="caption"><span class="badge">obrazek</span> <strong>#309</strong> kalendarz Gosi<br><small>30 x 1 x 60 cm</small></div>
+    </div>
+    <div class="card" data-strefa="obrazek" onclick="openModal('foto/obrazek_310_27x1x35_Mazowiecka Super Marka Ekonomii społecznej  pudełko zamykane leżące na biruku.jpg','Poz. 310 - Mazowiecka Super Marka Ekonomii społecznej  pudełko zamykane leżące na biruku','27 x 1 x 35 cm','obrazek')">
+      <img src="foto/obrazek_310_27x1x35_Mazowiecka Super Marka Ekonomii społecznej  pudełko zamykane leżące na biruku.jpg" alt="Mazowiecka Super Marka Ekonomii społecznej  pudełko zamykane leżące na biruku" loading="lazy">
+      <div class="caption"><span class="badge">obrazek</span> <strong>#310</strong> Mazowiecka Super Marka Ekonomii społecznej  pudełko zamykane leżące na biruku<br><small>27 x 1 x 35 cm</small></div>
+    </div>
+    <div class="card" data-strefa="obrazek" onclick="openModal('foto/obrazek_311_123x10x71_telewizor wraz z szafką do telewizora z pilotami.jpg','Poz. 311 - telewizor wraz z szafką do telewizora z pilotami','123 x 10 x 71 cm','obrazek')">
+      <img src="foto/obrazek_311_123x10x71_telewizor wraz z szafką do telewizora z pilotami.jpg" alt="telewizor wraz z szafką do telewizora z pilotami" loading="lazy">
+      <div class="caption"><span class="badge">obrazek</span> <strong>#311</strong> telewizor wraz z szafką do telewizora z pilotami<br><small>123 x 10 x 71 cm</small></div>
+    </div>
+    <div class="card" data-strefa="obrazek" onclick="openModal('foto/obrazek_311_123x10x71_Telewizor.jpg','Poz. 311 - Telewizor','123 x 10 x 71 cm','obrazek')">
+      <img src="foto/obrazek_311_123x10x71_Telewizor.jpg" alt="Telewizor" loading="lazy">
+      <div class="caption"><span class="badge">obrazek</span> <strong>#311</strong> Telewizor<br><small>123 x 10 x 71 cm</small></div>
+    </div>
+    <div class="card" data-strefa="obrazek" onclick="openModal('foto/obrazek_312_32x1x23_Certyfikat Znaku Jakości Ekonomicznej i Społecznej 2025.jpg','Poz. 312 - Certyfikat Znaku Jakości Ekonomicznej i Społecznej 2025','32 x 1 x 23 cm','obrazek')">
+      <img src="foto/obrazek_312_32x1x23_Certyfikat Znaku Jakości Ekonomicznej i Społecznej 2025.jpg" alt="Certyfikat Znaku Jakości Ekonomicznej i Społecznej 2025" loading="lazy">
+      <div class="caption"><span class="badge">obrazek</span> <strong>#312</strong> Certyfikat Znaku Jakości Ekonomicznej i Społecznej 2025<br><small>32 x 1 x 23 cm</small></div>
+    </div>
+    <div class="card" data-strefa="obrazek" onclick="openModal('foto/obrazek_313_22x1x30_Podziękowania dla Pani Doroty Wróbel Gróeckiej za owocną współpracę na rzecz Uniwersytetu trzeciego wieku.jpg','Poz. 313 - Podziękowania dla Pani Doroty Wróbel Gróeckiej za owocną współpracę na rzecz Uniwersytetu trzeciego wieku','22 x 1 x 30 cm','obrazek')">
+      <img src="foto/obrazek_313_22x1x30_Podziękowania dla Pani Doroty Wróbel Gróeckiej za owocną współpracę na rzecz Uniwersytetu trzeciego wieku.jpg" alt="Podziękowania dla Pani Doroty Wróbel Gróeckiej za owocną współpracę na rzecz Uniwersytetu trzeciego wieku" loading="lazy">
+      <div class="caption"><span class="badge">obrazek</span> <strong>#313</strong> Podziękowania dla Pani Doroty Wróbel Gróeckiej za owocną współpracę na rzecz Uniwersytetu trzeciego wieku<br><small>22 x 1 x 30 cm</small></div>
+    </div>
+    <div class="card" data-strefa="obrazek" onclick="openModal('foto/obrazek_314_21x1x37_Życzenia i gratulacje dla CIS od dyrektora szkoły podstawowej 2024.jpg','Poz. 314 - Życzenia i gratulacje dla CIS od dyrektora szkoły podstawowej 2024','21 x 1 x 37 cm','obrazek')">
+      <img src="foto/obrazek_314_21x1x37_Życzenia i gratulacje dla CIS od dyrektora szkoły podstawowej 2024.jpg" alt="Życzenia i gratulacje dla CIS od dyrektora szkoły podstawowej 2024" loading="lazy">
+      <div class="caption"><span class="badge">obrazek</span> <strong>#314</strong> Życzenia i gratulacje dla CIS od dyrektora szkoły podstawowej 2024<br><small>21 x 1 x 37 cm</small></div>
+    </div>
+    <div class="card" data-strefa="obrazek" onclick="openModal('foto/obrazek_315_32x1x42_Dyplom dla PCis i podzękowanie od dzieci i dyrektora przedszkola Ooniwerka za 2024.jpg','Poz. 315 - Dyplom dla PCis i podzękowanie od dzieci i dyrektora przedszkola Ooniwerka za 2024','32 x 1 x 42 cm','obrazek')">
+      <img src="foto/obrazek_315_32x1x42_Dyplom dla PCis i podzękowanie od dzieci i dyrektora przedszkola Ooniwerka za 2024.jpg" alt="Dyplom dla PCis i podzękowanie od dzieci i dyrektora przedszkola Ooniwerka za 2024" loading="lazy">
+      <div class="caption"><span class="badge">obrazek</span> <strong>#315</strong> Dyplom dla PCis i podzękowanie od dzieci i dyrektora przedszkola Ooniwerka za 2024<br><small>32 x 1 x 42 cm</small></div>
+    </div>
+    <div class="card" data-strefa="obrazek" onclick="openModal('foto/obrazek_316_25x0x35_Instrukcja BHP przy gaśnicy.jpg','Poz. 316 - Instrukcja BHP przy gaśnicy','25 x 0 x 35 cm','obrazek')">
+      <img src="foto/obrazek_316_25x0x35_Instrukcja BHP przy gaśnicy.jpg" alt="Instrukcja BHP przy gaśnicy" loading="lazy">
+      <div class="caption"><span class="badge">obrazek</span> <strong>#316</strong> Instrukcja BHP przy gaśnicy<br><small>25 x 0 x 35 cm</small></div>
+    </div>
+    <div class="card" data-strefa="obrazek" onclick="openModal('foto/obrazek_317_32x0x57_kalendarz sekretarki.jpg','Poz. 317 - kalendarz sekretarki','32 x 0 x 57 cm','obrazek')">
+      <img src="foto/obrazek_317_32x0x57_kalendarz sekretarki.jpg" alt="kalendarz sekretarki" loading="lazy">
+      <div class="caption"><span class="badge">obrazek</span> <strong>#317</strong> kalendarz sekretarki<br><small>32 x 0 x 57 cm</small></div>
+    </div>
+    <div class="card" data-strefa="obrazek" onclick="openModal('foto/obrazek_318_31x0x80_Kalendarz uczestników.jpg','Poz. 318 - Kalendarz uczestników','31 x 0 x 80 cm','obrazek')">
+      <img src="foto/obrazek_318_31x0x80_Kalendarz uczestników.jpg" alt="Kalendarz uczestników" loading="lazy">
+      <div class="caption"><span class="badge">obrazek</span> <strong>#318</strong> Kalendarz uczestników<br><small>31 x 0 x 80 cm</small></div>
+    </div>
+    <div class="card" data-strefa="obrazek" onclick="openModal('foto/obrazek_319_100x1x80_Tablica u Pani Dyrektor.jpg','Poz. 319 - Tablica u Pani Dyrektor','100 x 1 x 80 cm','obrazek')">
+      <img src="foto/obrazek_319_100x1x80_Tablica u Pani Dyrektor.jpg" alt="Tablica u Pani Dyrektor" loading="lazy">
+      <div class="caption"><span class="badge">obrazek</span> <strong>#319</strong> Tablica u Pani Dyrektor<br><small>100 x 1 x 80 cm</small></div>
+    </div>
+    <div class="card" data-strefa="obrazek" onclick="openModal('foto/obrazek_320_25x0x36_Instrukcja BHP na stanowisku pracy z komputerem i drukarką.jpg','Poz. 320 - Instrukcja BHP na stanowisku pracy z komputerem i drukarką','25 x 0 x 36 cm','obrazek')">
+      <img src="foto/obrazek_320_25x0x36_Instrukcja BHP na stanowisku pracy z komputerem i drukarką.jpg" alt="Instrukcja BHP na stanowisku pracy z komputerem i drukarką" loading="lazy">
+      <div class="caption"><span class="badge">obrazek</span> <strong>#320</strong> Instrukcja BHP na stanowisku pracy z komputerem i drukarką<br><small>25 x 0 x 36 cm</small></div>
+    </div>
+    <div class="card" data-strefa="obrazek" onclick="openModal('foto/obrazek_321_13x6x17_Przyjaciel zatrudnienia Socjalnego.jpg','Poz. 321 - Przyjaciel zatrudnienia Socjalnego','13 x 6 x 17 cm','obrazek')">
+      <img src="foto/obrazek_321_13x6x17_Przyjaciel zatrudnienia Socjalnego.jpg" alt="Przyjaciel zatrudnienia Socjalnego" loading="lazy">
+      <div class="caption"><span class="badge">obrazek</span> <strong>#321</strong> Przyjaciel zatrudnienia Socjalnego<br><small>13 x 6 x 17 cm</small></div>
+    </div>
+    <div class="card" data-strefa="obrazek" onclick="openModal('foto/obrazek_322_24x5x29_Znak Jakości ekonomii spoełecznej Najlepszy pracodwaca Ministerswo Rodziny i Polityki Społecznej.jpg','Poz. 322 - Znak Jakości ekonomii spoełecznej Najlepszy pracodwaca Ministerswo Rodziny i Polityki Społecznej','24 x 5 x 29 cm','obrazek')">
+      <img src="foto/obrazek_322_24x5x29_Znak Jakości ekonomii spoełecznej Najlepszy pracodwaca Ministerswo Rodziny i Polityki Społecznej.jpg" alt="Znak Jakości ekonomii spoełecznej Najlepszy pracodwaca Ministerswo Rodziny i Polityki Społecznej" loading="lazy">
+      <div class="caption"><span class="badge">obrazek</span> <strong>#322</strong> Znak Jakości ekonomii spoełecznej Najlepszy pracodwaca Ministerswo Rodziny i Polityki Społecznej<br><small>24 x 5 x 29 cm</small></div>
+    </div>
+    <div class="card" data-strefa="obrazek" onclick="openModal('foto/obrazek_323_10x12x10_25 lecie powiatu legionowskiego.jpg','Poz. 323 - 25 lecie powiatu legionowskiego','10 x 12 x 10 cm','obrazek')">
+      <img src="foto/obrazek_323_10x12x10_25 lecie powiatu legionowskiego.jpg" alt="25 lecie powiatu legionowskiego" loading="lazy">
+      <div class="caption"><span class="badge">obrazek</span> <strong>#323</strong> 25 lecie powiatu legionowskiego<br><small>10 x 12 x 10 cm</small></div>
+    </div>
+    <div class="card" data-strefa="obrazek" onclick="openModal('foto/obrazek_324_15x6x34_Przyjaciel Powiatowej izby gospodarczej w Legionowie Dorota Wróbel Górecka w podziękowaniu za współpracę i osobiste zaanagażowanie.jpg','Poz. 324 - Przyjaciel Powiatowej izby gospodarczej w Legionowie Dorota Wróbel Górecka w podziękowaniu za współpracę i osobiste zaanagażowanie','15 x 6 x 34 cm','obrazek')">
+      <img src="foto/obrazek_324_15x6x34_Przyjaciel Powiatowej izby gospodarczej w Legionowie Dorota Wróbel Górecka w podziękowaniu za współpracę i osobiste zaanagażowanie.jpg" alt="Przyjaciel Powiatowej izby gospodarczej w Legionowie Dorota Wróbel Górecka w podziękowaniu za współpracę i osobiste zaanagażowanie" loading="lazy">
+      <div class="caption"><span class="badge">obrazek</span> <strong>#324</strong> Przyjaciel Powiatowej izby gospodarczej w Legionowie Dorota Wróbel Górecka w podziękowaniu za współpracę i osobiste zaanagażowanie<br><small>15 x 6 x 34 cm</small></div>
+    </div>
+    <div class="card" data-strefa="obrazek" onclick="openModal('foto/obrazek_325_16x5x27_Wyróżnienie dla Cis w uznaniu osiągnięć z okazji 20 lecia ustawy o zatrudnieniu od Ministerstwa Rodziny i polityki społecznej.jpg','Poz. 325 - Wyróżnienie dla Cis w uznaniu osiągnięć z okazji 20 lecia ustawy o zatrudnieniu od Ministerstwa Rodziny i polityki społecznej','16 x 5 x 27 cm','obrazek')">
+      <img src="foto/obrazek_325_16x5x27_Wyróżnienie dla Cis w uznaniu osiągnięć z okazji 20 lecia ustawy o zatrudnieniu od Ministerstwa Rodziny i polityki społecznej.jpg" alt="Wyróżnienie dla Cis w uznaniu osiągnięć z okazji 20 lecia ustawy o zatrudnieniu od Ministerstwa Rodziny i polityki społecznej" loading="lazy">
+      <div class="caption"><span class="badge">obrazek</span> <strong>#325</strong> Wyróżnienie dla Cis w uznaniu osiągnięć z okazji 20 lecia ustawy o zatrudnieniu od Ministerstwa Rodziny i polityki społecznej<br><small>16 x 5 x 27 cm</small></div>
+    </div>
+    <div class="card" data-strefa="obrazek" onclick="openModal('foto/obrazek_326_30x4x30_zegar sekretarki.jpg','Poz. 326 - zegar sekretarki','30 x 4 x 30 cm','obrazek')">
+      <img src="foto/obrazek_326_30x4x30_zegar sekretarki.jpg" alt="zegar sekretarki" loading="lazy">
+      <div class="caption"><span class="badge">obrazek</span> <strong>#326</strong> zegar sekretarki<br><small>30 x 4 x 30 cm</small></div>
+    </div>
+    <div class="card" data-strefa="obrazek" onclick="openModal('foto/obrazek_327_30x4x30_zegra księgowej.jpg','Poz. 327 - zegra księgowej','30 x 4 x 30 cm','obrazek')">
+      <img src="foto/obrazek_327_30x4x30_zegra księgowej.jpg" alt="zegra księgowej" loading="lazy">
+      <div class="caption"><span class="badge">obrazek</span> <strong>#327</strong> zegra księgowej<br><small>30 x 4 x 30 cm</small></div>
+    </div>
+    <div class="card" data-strefa="obrazek" onclick="openModal('foto/obrazek_328_10x10x38_Pani Dorota Wróbel przyjacielem Izby Gospodarczej 2011.jpg','Poz. 328 - Pani Dorota Wróbel przyjacielem Izby Gospodarczej 2011','10 x 10 x 38 cm','obrazek')">
+      <img src="foto/obrazek_328_10x10x38_Pani Dorota Wróbel przyjacielem Izby Gospodarczej 2011.jpg" alt="Pani Dorota Wróbel przyjacielem Izby Gospodarczej 2011" loading="lazy">
+      <div class="caption"><span class="badge">obrazek</span> <strong>#328</strong> Pani Dorota Wróbel przyjacielem Izby Gospodarczej 2011<br><small>10 x 10 x 38 cm</small></div>
+    </div>
+    <div class="card" data-strefa="obrazek" onclick="openModal('foto/obrazek_329_30x1x40_serdeczne gratulacje dla Cis mz okazji 10 lecia od pracowników Centrum Integracji z Wrocławia .jpg','Poz. 329 - serdeczne gratulacje dla Cis mz okazji 10 lecia od pracowników Centrum Integracji z Wrocławia ','30 x 1 x 40 cm','obrazek')">
+      <img src="foto/obrazek_329_30x1x40_serdeczne gratulacje dla Cis mz okazji 10 lecia od pracowników Centrum Integracji z Wrocławia .jpg" alt="serdeczne gratulacje dla Cis mz okazji 10 lecia od pracowników Centrum Integracji z Wrocławia " loading="lazy">
+      <div class="caption"><span class="badge">obrazek</span> <strong>#329</strong> serdeczne gratulacje dla Cis mz okazji 10 lecia od pracowników Centrum Integracji z Wrocławia <br><small>30 x 1 x 40 cm</small></div>
+    </div>
+    <div class="card" data-strefa="obrazek" onclick="openModal('foto/obrazek_330_22x1x30_dzień notariusz 2025 Cis partnerem fundacji Robimy Lepszy świat.jpg','Poz. 330 - dzień notariusz 2025 Cis partnerem fundacji Robimy Lepszy świat','22 x 1 x 30 cm','obrazek')">
+      <img src="foto/obrazek_330_22x1x30_dzień notariusz 2025 Cis partnerem fundacji Robimy Lepszy świat.jpg" alt="dzień notariusz 2025 Cis partnerem fundacji Robimy Lepszy świat" loading="lazy">
+      <div class="caption"><span class="badge">obrazek</span> <strong>#330</strong> dzień notariusz 2025 Cis partnerem fundacji Robimy Lepszy świat<br><small>22 x 1 x 30 cm</small></div>
+    </div>
+    <div class="card" data-strefa="obrazek" onclick="openModal('foto/obrazek_331_32x4x43_jubileusz 10 lecia   2024.jpg','Poz. 331 - jubileusz 10 lecia   2024','32 x 4 x 43 cm','obrazek')">
+      <img src="foto/obrazek_331_32x4x43_jubileusz 10 lecia   2024.jpg" alt="jubileusz 10 lecia   2024" loading="lazy">
+      <div class="caption"><span class="badge">obrazek</span> <strong>#331</strong> jubileusz 10 lecia   2024<br><small>32 x 4 x 43 cm</small></div>
+    </div>
+    <div class="card" data-strefa="obrazek" onclick="openModal('foto/obrazek_332_32x1x43_Dyplom dla Izabeli Dylakowskiej od przedszkola.jpg','Poz. 332 - Dyplom dla Izabeli Dylakowskiej od przedszkola','32 x 1 x 43 cm','obrazek')">
+      <img src="foto/obrazek_332_32x1x43_Dyplom dla Izabeli Dylakowskiej od przedszkola.jpg" alt="Dyplom dla Izabeli Dylakowskiej od przedszkola" loading="lazy">
+      <div class="caption"><span class="badge">obrazek</span> <strong>#332</strong> Dyplom dla Izabeli Dylakowskiej od przedszkola<br><small>32 x 1 x 43 cm</small></div>
+    </div>
+    <div class="card" data-strefa="obrazek" onclick="openModal('foto/obrazek_333_32x1x43_Serce nieznana okazja.jpg','Poz. 333 - Serce nieznana okazja','32 x 1 x 43 cm','obrazek')">
+      <img src="foto/obrazek_333_32x1x43_Serce nieznana okazja.jpg" alt="Serce nieznana okazja" loading="lazy">
+      <div class="caption"><span class="badge">obrazek</span> <strong>#333</strong> Serce nieznana okazja<br><small>32 x 1 x 43 cm</small></div>
+    </div>
+    <div class="card" data-strefa="obrazek" onclick="openModal('foto/obrazek_334_104x4x39_Leonardo da Vinci szkice u Pani Dyrektor.jpg','Poz. 334 - Leonardo da Vinci szkice u Pani Dyrektor','104 x 4 x 39 cm','obrazek')">
+      <img src="foto/obrazek_334_104x4x39_Leonardo da Vinci szkice u Pani Dyrektor.jpg" alt="Leonardo da Vinci szkice u Pani Dyrektor" loading="lazy">
+      <div class="caption"><span class="badge">obrazek</span> <strong>#334</strong> Leonardo da Vinci szkice u Pani Dyrektor<br><small>104 x 4 x 39 cm</small></div>
+    </div>
+    <div class="card" data-strefa="obrazek" onclick="openModal('foto/obrazek_701_6x6x18_Mazowiecka Marka Ekonomii Społecznej 2025.jpg','Poz. 701 - Mazowiecka Marka Ekonomii Społecznej 2025','6 x 6 x 18 cm','obrazek')">
+      <img src="foto/obrazek_701_6x6x18_Mazowiecka Marka Ekonomii Społecznej 2025.jpg" alt="Mazowiecka Marka Ekonomii Społecznej 2025" loading="lazy">
+      <div class="caption"><span class="badge">obrazek</span> <strong>#701</strong> Mazowiecka Marka Ekonomii Społecznej 2025<br><small>6 x 6 x 18 cm</small></div>
+    </div>
+    <div class="card" data-strefa="obrazek" onclick="openModal('foto/obrazek_702_23x2x32_podziękowania dla Małgorzaty z ojazji jubileuszu 10 lecia.jpg','Poz. 702 - podziękowania dla Małgorzaty z ojazji jubileuszu 10 lecia','23 x 2 x 32 cm','obrazek')">
+      <img src="foto/obrazek_702_23x2x32_podziękowania dla Małgorzaty z ojazji jubileuszu 10 lecia.jpg" alt="podziękowania dla Małgorzaty z ojazji jubileuszu 10 lecia" loading="lazy">
+      <div class="caption"><span class="badge">obrazek</span> <strong>#702</strong> podziękowania dla Małgorzaty z ojazji jubileuszu 10 lecia<br><small>23 x 2 x 32 cm</small></div>
+    </div>
+    <div class="card" data-strefa="sekretarka" onclick="openModal('foto/sekretarka_018_xxx_recepcja plan papierowy str 1.jpg','Poz. 018 - MAPA: recepcja plan papierowy str 1','0 x 0 x 0 cm','sekretarka')">
+      <div class="map-badge">MAPA</div>
+      <img src="foto/sekretarka_018_xxx_recepcja plan papierowy str 1.jpg" alt="MAPA: recepcja plan papierowy str 1" loading="lazy">
+      <div class="caption"><span class="badge">sekretarka</span> <strong>#018</strong> recepcja plan papierowy str 1<br><small>plan</small></div>
+    </div>
+    <div class="card" data-strefa="sekretarka" onclick="openModal('foto/sekretarka_018_xxx_recepcja plan papierowy str 2.jpg','Poz. 018 - MAPA: recepcja plan papierowy str 2','0 x 0 x 0 cm','sekretarka')">
+      <div class="map-badge">MAPA</div>
+      <img src="foto/sekretarka_018_xxx_recepcja plan papierowy str 2.jpg" alt="MAPA: recepcja plan papierowy str 2" loading="lazy">
+      <div class="caption"><span class="badge">sekretarka</span> <strong>#018</strong> recepcja plan papierowy str 2<br><small>plan</small></div>
+    </div>
+    <div class="card" data-strefa="sekretarka" onclick="openModal('foto/sekretarka_018_xxx_recepcja plan papierowy str 3.jpg','Poz. 018 - MAPA: recepcja plan papierowy str 3','0 x 0 x 0 cm','sekretarka')">
+      <div class="map-badge">MAPA</div>
+      <img src="foto/sekretarka_018_xxx_recepcja plan papierowy str 3.jpg" alt="MAPA: recepcja plan papierowy str 3" loading="lazy">
+      <div class="caption"><span class="badge">sekretarka</span> <strong>#018</strong> recepcja plan papierowy str 3<br><small>plan</small></div>
+    </div>
+    <div class="card" data-strefa="sekretarka" onclick="openModal('foto/sekretarka_018_xxx_recepcja plan papierowy str 4.jpg','Poz. 018 - MAPA: recepcja plan papierowy str 4','0 x 0 x 0 cm','sekretarka')">
+      <div class="map-badge">MAPA</div>
+      <img src="foto/sekretarka_018_xxx_recepcja plan papierowy str 4.jpg" alt="MAPA: recepcja plan papierowy str 4" loading="lazy">
+      <div class="caption"><span class="badge">sekretarka</span> <strong>#018</strong> recepcja plan papierowy str 4<br><small>plan</small></div>
+    </div>
+    <div class="card" data-strefa="sekretarka" onclick="openModal('foto/sekretarka_018_xxx_recepcja plan papierowy str 5.jpg','Poz. 018 - MAPA: recepcja plan papierowy str 5','0 x 0 x 0 cm','sekretarka')">
+      <div class="map-badge">MAPA</div>
+      <img src="foto/sekretarka_018_xxx_recepcja plan papierowy str 5.jpg" alt="MAPA: recepcja plan papierowy str 5" loading="lazy">
+      <div class="caption"><span class="badge">sekretarka</span> <strong>#018</strong> recepcja plan papierowy str 5<br><small>plan</small></div>
+    </div>
+    <div class="card" data-strefa="sekretarka" onclick="openModal('foto/sekretarka_018_xxx_recepcja plan papierowy.jpg','Poz. 018 - MAPA: recepcja plan papierowy','0 x 0 x 0 cm','sekretarka')">
+      <div class="map-badge">MAPA</div>
+      <img src="foto/sekretarka_018_xxx_recepcja plan papierowy.jpg" alt="MAPA: recepcja plan papierowy" loading="lazy">
+      <div class="caption"><span class="badge">sekretarka</span> <strong>#018</strong> recepcja plan papierowy<br><small>plan</small></div>
+    </div>
+    <div class="card" data-strefa="sekretarka" onclick="openModal('foto/sekretarka-uczestnicy-Sylwia-Gosia-akta_000_xxx_Open Space.png','Poz. 000 - MAPA: Open Space','0 x 0 x 0 cm','sekretarka')">
+      <div class="map-badge">MAPA</div>
+      <img src="foto/sekretarka-uczestnicy-Sylwia-Gosia-akta_000_xxx_Open Space.png" alt="MAPA: Open Space" loading="lazy">
+      <div class="caption"><span class="badge">sekretarka</span> <strong>#000</strong> Open Space<br><small>plan</small></div>
+    </div>
+    <div class="card" data-strefa="sekretarka" onclick="openModal('foto/sekretarka_001a_54x54x80_krzesło.JPG','Poz. 001a - krzesło','54 x 54 x 80 cm','sekretarka')">
+      <img src="foto/sekretarka_001a_54x54x80_krzesło.JPG" alt="krzesło" loading="lazy">
+      <div class="caption"><span class="badge">sekretarka</span> <strong>#001a</strong> krzesło<br><small>54 x 54 x 80 cm</small></div>
+    </div>
+    <div class="card" data-strefa="sekretarka" onclick="openModal('foto/sekretarka_001b_54x54x80_krzesło.JPG','Poz. 001b - krzesło','54 x 54 x 80 cm','sekretarka')">
+      <img src="foto/sekretarka_001b_54x54x80_krzesło.JPG" alt="krzesło" loading="lazy">
+      <div class="caption"><span class="badge">sekretarka</span> <strong>#001b</strong> krzesło<br><small>54 x 54 x 80 cm</small></div>
+    </div>
+    <div class="card" data-strefa="sekretarka" onclick="openModal('foto/sekretarka_001c_54x54x80_krzesło.JPG','Poz. 001c - krzesło','54 x 54 x 80 cm','sekretarka')">
+      <img src="foto/sekretarka_001c_54x54x80_krzesło.JPG" alt="krzesło" loading="lazy">
+      <div class="caption"><span class="badge">sekretarka</span> <strong>#001c</strong> krzesło<br><small>54 x 54 x 80 cm</small></div>
+    </div>
+    <div class="card" data-strefa="sekretarka" onclick="openModal('foto/sekretarka_001d_54x54x80_krzesło.JPG','Poz. 001d - krzesło','54 x 54 x 80 cm','sekretarka')">
+      <img src="foto/sekretarka_001d_54x54x80_krzesło.JPG" alt="krzesło" loading="lazy">
+      <div class="caption"><span class="badge">sekretarka</span> <strong>#001d</strong> krzesło<br><small>54 x 54 x 80 cm</small></div>
+    </div>
+    <div class="card" data-strefa="sekretarka" onclick="openModal('foto/sekretarka_001e_54x54x80_krzesło.JPG','Poz. 001e - krzesło','54 x 54 x 80 cm','sekretarka')">
+      <img src="foto/sekretarka_001e_54x54x80_krzesło.JPG" alt="krzesło" loading="lazy">
+      <div class="caption"><span class="badge">sekretarka</span> <strong>#001e</strong> krzesło<br><small>54 x 54 x 80 cm</small></div>
+    </div>
+    <div class="card" data-strefa="sekretarka" onclick="openModal('foto/sekretarka_001f_54x54x80_krzesło.JPG','Poz. 001f - krzesło','54 x 54 x 80 cm','sekretarka')">
+      <img src="foto/sekretarka_001f_54x54x80_krzesło.JPG" alt="krzesło" loading="lazy">
+      <div class="caption"><span class="badge">sekretarka</span> <strong>#001f</strong> krzesło<br><small>54 x 54 x 80 cm</small></div>
+    </div>
+    <div class="card" data-strefa="sekretarka" onclick="openModal('foto/sekretarka_001g_54x54x80_krzesło.JPG','Poz. 001g - krzesło','54 x 54 x 80 cm','sekretarka')">
+      <img src="foto/sekretarka_001g_54x54x80_krzesło.JPG" alt="krzesło" loading="lazy">
+      <div class="caption"><span class="badge">sekretarka</span> <strong>#001g</strong> krzesło<br><small>54 x 54 x 80 cm</small></div>
+    </div>
+    <div class="card" data-strefa="sekretarka" onclick="openModal('foto/sekretarka_015_80x50x101_szafka z kopertami.jpg','Poz. 015 - szafka z kopertami','80 x 50 x 101 cm','sekretarka')">
+      <img src="foto/sekretarka_015_80x50x101_szafka z kopertami.jpg" alt="szafka z kopertami" loading="lazy">
+      <div class="caption"><span class="badge">sekretarka</span> <strong>#015</strong> szafka z kopertami<br><small>80 x 50 x 101 cm</small></div>
+    </div>
+    <div class="card" data-strefa="sekretarka" onclick="openModal('foto/sekretarka_016_116x40x186_szafka pancerna.jpg','Poz. 016 - szafka pancerna','116 x 40 x 186 cm','sekretarka')">
+      <img src="foto/sekretarka_016_116x40x186_szafka pancerna.jpg" alt="szafka pancerna" loading="lazy">
+      <div class="caption"><span class="badge">sekretarka</span> <strong>#016</strong> szafka pancerna<br><small>116 x 40 x 186 cm</small></div>
+    </div>
+    <div class="card" data-strefa="sekretarka" onclick="openModal('foto/sekretarka_018_252x125x70_recepcja widok tył.jpg','Poz. 018 - recepcja widok tył','252 x 125 x 70 cm','sekretarka')">
+      <img src="foto/sekretarka_018_252x125x70_recepcja widok tył.jpg" alt="recepcja widok tył" loading="lazy">
+      <div class="caption"><span class="badge">sekretarka</span> <strong>#018</strong> recepcja widok tył<br><small>252 x 125 x 70 cm</small></div>
+    </div>
+    <div class="card" data-strefa="sekretarka" onclick="openModal('foto/sekretarka_018_252x125x70_recepcja widok front.jpg','Poz. 018 - recepcja widok front','252 x 125 x 70 cm','sekretarka')">
+      <img src="foto/sekretarka_018_252x125x70_recepcja widok front.jpg" alt="recepcja widok front" loading="lazy">
+      <div class="caption"><span class="badge">sekretarka</span> <strong>#018</strong> recepcja widok front<br><small>252 x 125 x 70 cm</small></div>
+    </div>
+    <div class="card" data-strefa="sekretarka" onclick="openModal('foto/Sekretarka_018c_70x70x120_krzesło obrotowe sekretarki Martyny.JPG','Poz. 018c - krzesło obrotowe sekretarki Martyny','70 x 70 x 120 cm','sekretarka')">
+      <img src="foto/Sekretarka_018c_70x70x120_krzesło obrotowe sekretarki Martyny.JPG" alt="krzesło obrotowe sekretarki Martyny" loading="lazy">
+      <div class="caption"><span class="badge">sekretarka</span> <strong>#018c</strong> krzesło obrotowe sekretarki Martyny<br><small>70 x 70 x 120 cm</small></div>
+    </div>
+    <div class="card" data-strefa="sekretarka" onclick="openModal('foto/sekretarka_019_37x41x61_niszczarka.jpg','Poz. 019 - niszczarka','37 x 41 x 61 cm','sekretarka')">
+      <img src="foto/sekretarka_019_37x41x61_niszczarka.jpg" alt="niszczarka" loading="lazy">
+      <div class="caption"><span class="badge">sekretarka</span> <strong>#019</strong> niszczarka<br><small>37 x 41 x 61 cm</small></div>
+    </div>
+    <div class="card" data-strefa="sekretarka" onclick="openModal('foto/sekretarka_020_121x47x74_szafka.jpg','Poz. 020 - szafka','121 x 47 x 74 cm','sekretarka')">
+      <img src="foto/sekretarka_020_121x47x74_szafka.jpg" alt="szafka" loading="lazy">
+      <div class="caption"><span class="badge">sekretarka</span> <strong>#020</strong> szafka<br><small>121 x 47 x 74 cm</small></div>
+    </div>
+    <div class="card" data-strefa="sekretarka" onclick="openModal('foto/sekretarka_021_121x47x74_szafka Martyny.jpg','Poz. 021 - szafka Martyny','121 x 47 x 74 cm','sekretarka')">
+      <img src="foto/sekretarka_021_121x47x74_szafka Martyny.jpg" alt="szafka Martyny" loading="lazy">
+      <div class="caption"><span class="badge">sekretarka</span> <strong>#021</strong> szafka Martyny<br><small>121 x 47 x 74 cm</small></div>
+    </div>
+    <div class="card" data-strefa="sekretarka" onclick="openModal('foto/sekretarka_022_151x51x181_tablica.jpg','Poz. 022 - tablica','151 x 51 x 181 cm','sekretarka')">
+      <img src="foto/sekretarka_022_151x51x181_tablica.jpg" alt="tablica" loading="lazy">
+      <div class="caption"><span class="badge">sekretarka</span> <strong>#022</strong> tablica<br><small>151 x 51 x 181 cm</small></div>
+    </div>
+    <div class="card" data-strefa="sekretarka" onclick="openModal('foto/sekretarka_023_177x85x90_kanapa.jpg','Poz. 023 - kanapa','177 x 85 x 90 cm','sekretarka')">
+      <img src="foto/sekretarka_023_177x85x90_kanapa.jpg" alt="kanapa" loading="lazy">
+      <div class="caption"><span class="badge">sekretarka</span> <strong>#023</strong> kanapa<br><small>177 x 85 x 90 cm</small></div>
+    </div>
+    <div class="card" data-strefa="sekretarka" onclick="openModal('foto/sekretarka_024_60x80x86_szafa do serwera.jpg','Poz. 024 - szafa do serwera','60 x 80 x 86 cm','sekretarka')">
+      <img src="foto/sekretarka_024_60x80x86_szafa do serwera.jpg" alt="szafa do serwera" loading="lazy">
+      <div class="caption"><span class="badge">sekretarka</span> <strong>#024</strong> szafa do serwera<br><small>60 x 80 x 86 cm</small></div>
+    </div>
+    <div class="card" data-strefa="sekretarka" onclick="openModal('foto/sekretarka_024a_19x19x50_gaśnica.JPG','Poz. 024a - gaśnica','19 x 19 x 50 cm','sekretarka')">
+      <img src="foto/sekretarka_024a_19x19x50_gaśnica.JPG" alt="gaśnica" loading="lazy">
+      <div class="caption"><span class="badge">sekretarka</span> <strong>#024a</strong> gaśnica<br><small>19 x 19 x 50 cm</small></div>
+    </div>
+    <div class="card" data-strefa="sekretarka" onclick="openModal('foto/sekretarka_025_36x36x36_stołeczek na kwiaty.jpg','Poz. 025 - stołeczek na kwiaty','36 x 36 x 36 cm','sekretarka')">
+      <img src="foto/sekretarka_025_36x36x36_stołeczek na kwiaty.jpg" alt="stołeczek na kwiaty" loading="lazy">
+      <div class="caption"><span class="badge">sekretarka</span> <strong>#025</strong> stołeczek na kwiaty<br><small>36 x 36 x 36 cm</small></div>
+    </div>
+    <div class="card" data-strefa="sekretarka" onclick="openModal('foto/sekretarka_026_62x65x114_xero Sekretarka.jpg','Poz. 026 - xero Sekretarka','62 x 65 x 114 cm','sekretarka')">
+      <img src="foto/sekretarka_026_62x65x114_xero Sekretarka.jpg" alt="xero Sekretarka" loading="lazy">
+      <div class="caption"><span class="badge">sekretarka</span> <strong>#026</strong> xero Sekretarka<br><small>62 x 65 x 114 cm</small></div>
+    </div>
+    <div class="card" data-strefa="sekretarka" onclick="openModal('foto/sekretarka_343_37x37x170_wieszak_.JPG','Poz. 343 - wieszak ','37 x 37 x 170 cm','sekretarka')">
+      <img src="foto/sekretarka_343_37x37x170_wieszak_.JPG" alt="wieszak " loading="lazy">
+      <div class="caption"><span class="badge">sekretarka</span> <strong>#343</strong> wieszak <br><small>37 x 37 x 170 cm</small></div>
+    </div>
+    <div class="card" data-strefa="sekretarka" onclick="openModal('foto/sekretarka_344_37x37x170_wieszak_.JPG','Poz. 344 - wieszak ','37 x 37 x 170 cm','sekretarka')">
+      <img src="foto/sekretarka_344_37x37x170_wieszak_.JPG" alt="wieszak " loading="lazy">
+      <div class="caption"><span class="badge">sekretarka</span> <strong>#344</strong> wieszak <br><small>37 x 37 x 170 cm</small></div>
+    </div>
+    <div class="card" data-strefa="Sylwia" onclick="openModal('foto/Sylwia_032a_xxx_komplet szafek Sylwia.jpg','Poz. 032a - MAPA: komplet szafek Sylwia','0 x 0 x 0 cm','Sylwia')">
+      <div class="map-badge">MAPA</div>
+      <img src="foto/Sylwia_032a_xxx_komplet szafek Sylwia.jpg" alt="MAPA: komplet szafek Sylwia" loading="lazy">
+      <div class="caption"><span class="badge">Sylwia</span> <strong>#032a</strong> komplet szafek Sylwia<br><small>plan</small></div>
+    </div>
+    <div class="card" data-strefa="Sylwia" onclick="openModal('foto/sekretarka-uczestnicy-Sylwia-Gosia-akta_000_xxx_Open Space.png','Poz. 000 - MAPA: Open Space','0 x 0 x 0 cm','Sylwia')">
+      <div class="map-badge">MAPA</div>
+      <img src="foto/sekretarka-uczestnicy-Sylwia-Gosia-akta_000_xxx_Open Space.png" alt="MAPA: Open Space" loading="lazy">
+      <div class="caption"><span class="badge">Sylwia</span> <strong>#000</strong> Open Space<br><small>plan</small></div>
+    </div>
+    <div class="card" data-strefa="Sylwia" onclick="openModal('foto/Sylwia_027_150x70x75_biurko Sylwia.jpg','Poz. 027 - biurko Sylwia','150 x 70 x 75 cm','Sylwia')">
+      <img src="foto/Sylwia_027_150x70x75_biurko Sylwia.jpg" alt="biurko Sylwia" loading="lazy">
+      <div class="caption"><span class="badge">Sylwia</span> <strong>#027</strong> biurko Sylwia<br><small>150 x 70 x 75 cm</small></div>
+    </div>
+    <div class="card" data-strefa="Sylwia" onclick="openModal('foto/Sylwia_028_160x70x75_biurko Sylwia.jpg','Poz. 028 - biurko Sylwia','160 x 70 x 75 cm','Sylwia')">
+      <img src="foto/Sylwia_028_160x70x75_biurko Sylwia.jpg" alt="biurko Sylwia" loading="lazy">
+      <div class="caption"><span class="badge">Sylwia</span> <strong>#028</strong> biurko Sylwia<br><small>160 x 70 x 75 cm</small></div>
+    </div>
+    <div class="card" data-strefa="Sylwia" onclick="openModal('foto/Sylwia_028a_41x56x56_szafka wsuwana pod biurko.jpg','Poz. 028a - szafka wsuwana pod biurko','41 x 56 x 56 cm','Sylwia')">
+      <img src="foto/Sylwia_028a_41x56x56_szafka wsuwana pod biurko.jpg" alt="szafka wsuwana pod biurko" loading="lazy">
+      <div class="caption"><span class="badge">Sylwia</span> <strong>#028a</strong> szafka wsuwana pod biurko<br><small>41 x 56 x 56 cm</small></div>
+    </div>
+    <div class="card" data-strefa="Sylwia" onclick="openModal('foto/Sylwia_028b_70x70x120_krzesło obrotowe Syliwii.JPG','Poz. 028b - krzesło obrotowe Syliwii','70 x 70 x 120 cm','Sylwia')">
+      <img src="foto/Sylwia_028b_70x70x120_krzesło obrotowe Syliwii.JPG" alt="krzesło obrotowe Syliwii" loading="lazy">
+      <div class="caption"><span class="badge">Sylwia</span> <strong>#028b</strong> krzesło obrotowe Syliwii<br><small>70 x 70 x 120 cm</small></div>
+    </div>
+    <div class="card" data-strefa="Sylwia" onclick="openModal('foto/Sylwia_028c_60x60x84_fotel na kółkach gabinetowy u Sylwii.jpg','Poz. 028c - fotel na kółkach gabinetowy u Sylwii','60 x 60 x 84 cm','Sylwia')">
+      <img src="foto/Sylwia_028c_60x60x84_fotel na kółkach gabinetowy u Sylwii.jpg" alt="fotel na kółkach gabinetowy u Sylwii" loading="lazy">
+      <div class="caption"><span class="badge">Sylwia</span> <strong>#028c</strong> fotel na kółkach gabinetowy u Sylwii<br><small>60 x 60 x 84 cm</small></div>
+    </div>
+    <div class="card" data-strefa="Sylwia" onclick="openModal('foto/Sylwia_032_81x46x72_komplet szafek Sylwia — kopia.jpg','Poz. 032 - komplet szafek Sylwia — kopia','81 x 46 x 72 cm','Sylwia')">
+      <img src="foto/Sylwia_032_81x46x72_komplet szafek Sylwia — kopia.jpg" alt="komplet szafek Sylwia — kopia" loading="lazy">
+      <div class="caption"><span class="badge">Sylwia</span> <strong>#032</strong> komplet szafek Sylwia — kopia<br><small>81 x 46 x 72 cm</small></div>
+    </div>
+    <div class="card" data-strefa="Sylwia" onclick="openModal('foto/Sylwia_033_81x46x72_szafka Sylwia.jpg','Poz. 033 - szafka Sylwia','81 x 46 x 72 cm','Sylwia')">
+      <img src="foto/Sylwia_033_81x46x72_szafka Sylwia.jpg" alt="szafka Sylwia" loading="lazy">
+      <div class="caption"><span class="badge">Sylwia</span> <strong>#033</strong> szafka Sylwia<br><small>81 x 46 x 72 cm</small></div>
+    </div>
+    <div class="card" data-strefa="Sylwia" onclick="openModal('foto/Sylwia_034_81x46x72_szafka Sylwia.jpg','Poz. 034 - szafka Sylwia','81 x 46 x 72 cm','Sylwia')">
+      <img src="foto/Sylwia_034_81x46x72_szafka Sylwia.jpg" alt="szafka Sylwia" loading="lazy">
+      <div class="caption"><span class="badge">Sylwia</span> <strong>#034</strong> szafka Sylwia<br><small>81 x 46 x 72 cm</small></div>
+    </div>
+    <div class="card" data-strefa="Sylwia" onclick="openModal('foto/Sylwia_035_80x47x133_szafa Sylwia.jpg','Poz. 035 - szafa Sylwia','80 x 47 x 133 cm','Sylwia')">
+      <img src="foto/Sylwia_035_80x47x133_szafa Sylwia.jpg" alt="szafa Sylwia" loading="lazy">
+      <div class="caption"><span class="badge">Sylwia</span> <strong>#035</strong> szafa Sylwia<br><small>80 x 47 x 133 cm</small></div>
+    </div>
+    <div class="card" data-strefa="uczestnicy" onclick="openModal('foto/uczestnicy_xxx_Ekrany uczestników nie mieszczą się przesunięte przymusowo blaaty i między nimi przerwa_.JPG','MAPA: Ekrany uczestników nie mieszczą się przesunięte przymusowo blaaty i między nimi przerwa ','0 x 0 x 0 cm','uczestnicy')">
+      <div class="map-badge">MAPA</div>
+      <img src="foto/uczestnicy_xxx_Ekrany uczestników nie mieszczą się przesunięte przymusowo blaaty i między nimi przerwa_.JPG" alt="MAPA: Ekrany uczestników nie mieszczą się przesunięte przymusowo blaaty i między nimi przerwa " loading="lazy">
+      <div class="caption"><span class="badge">uczestnicy</span> Ekrany uczestników nie mieszczą się przesunięte przymusowo blaaty i między nimi przerwa <br><small>plan</small></div>
+    </div>
+    <div class="card" data-strefa="uczestnicy" onclick="openModal('foto/sekretarka-uczestnicy-Sylwia-Gosia-akta_000_xxx_Open Space.png','Poz. 000 - MAPA: Open Space','0 x 0 x 0 cm','uczestnicy')">
+      <div class="map-badge">MAPA</div>
+      <img src="foto/sekretarka-uczestnicy-Sylwia-Gosia-akta_000_xxx_Open Space.png" alt="MAPA: Open Space" loading="lazy">
+      <div class="caption"><span class="badge">uczestnicy</span> <strong>#000</strong> Open Space<br><small>plan</small></div>
+    </div>
+    <div class="card" data-strefa="uczestnicy" onclick="openModal('foto/uczestnicy_011_135x50x77_biurko uczestnika widok z góry.jpg','Poz. 011 - biurko uczestnika widok z góry','135 x 50 x 77 cm','uczestnicy')">
+      <img src="foto/uczestnicy_011_135x50x77_biurko uczestnika widok z góry.jpg" alt="biurko uczestnika widok z góry" loading="lazy">
+      <div class="caption"><span class="badge">uczestnicy</span> <strong>#011</strong> biurko uczestnika widok z góry<br><small>135 x 50 x 77 cm</small></div>
+    </div>
+    <div class="card" data-strefa="uczestnicy" onclick="openModal('foto/uczestnicy_011a_70x70x120_krzesło obrotowe zapasowe krzesło dla uczestnika.JPG','Poz. 011a - krzesło obrotowe zapasowe krzesło dla uczestnika','70 x 70 x 120 cm','uczestnicy')">
+      <img src="foto/uczestnicy_011a_70x70x120_krzesło obrotowe zapasowe krzesło dla uczestnika.JPG" alt="krzesło obrotowe zapasowe krzesło dla uczestnika" loading="lazy">
+      <div class="caption"><span class="badge">uczestnicy</span> <strong>#011a</strong> krzesło obrotowe zapasowe krzesło dla uczestnika<br><small>70 x 70 x 120 cm</small></div>
+    </div>
+    <div class="card" data-strefa="uczestnicy" onclick="openModal('foto/uczestnicy_012_135x50x77_biurko uczestnika widok z góry — kopia.jpg','Poz. 012 - biurko uczestnika widok z góry — kopia','135 x 50 x 77 cm','uczestnicy')">
+      <img src="foto/uczestnicy_012_135x50x77_biurko uczestnika widok z góry — kopia.jpg" alt="biurko uczestnika widok z góry — kopia" loading="lazy">
+      <div class="caption"><span class="badge">uczestnicy</span> <strong>#012</strong> biurko uczestnika widok z góry — kopia<br><small>135 x 50 x 77 cm</small></div>
+    </div>
+    <div class="card" data-strefa="uczestnicy" onclick="openModal('foto/uczestnicy_012a_70x70x120_krzesło obrotowe Paweł uczestnik.JPG','Poz. 012a - krzesło obrotowe Paweł uczestnik','70 x 70 x 120 cm','uczestnicy')">
+      <img src="foto/uczestnicy_012a_70x70x120_krzesło obrotowe Paweł uczestnik.JPG" alt="krzesło obrotowe Paweł uczestnik" loading="lazy">
+      <div class="caption"><span class="badge">uczestnicy</span> <strong>#012a</strong> krzesło obrotowe Paweł uczestnik<br><small>70 x 70 x 120 cm</small></div>
+    </div>
+    <div class="card" data-strefa="uczestnicy" onclick="openModal('foto/uczestnicy_013_135x50x77_biurko uczestnika widok z góry — kopia.jpg','Poz. 013 - biurko uczestnika widok z góry — kopia','135 x 50 x 77 cm','uczestnicy')">
+      <img src="foto/uczestnicy_013_135x50x77_biurko uczestnika widok z góry — kopia.jpg" alt="biurko uczestnika widok z góry — kopia" loading="lazy">
+      <div class="caption"><span class="badge">uczestnicy</span> <strong>#013</strong> biurko uczestnika widok z góry — kopia<br><small>135 x 50 x 77 cm</small></div>
+    </div>
+    <div class="card" data-strefa="uczestnicy" onclick="openModal('foto/uczestnicy_013a_70x70x120_krzesło obrotowe Piotra uczestnik.JPG','Poz. 013a - krzesło obrotowe Piotra uczestnik','70 x 70 x 120 cm','uczestnicy')">
+      <img src="foto/uczestnicy_013a_70x70x120_krzesło obrotowe Piotra uczestnik.JPG" alt="krzesło obrotowe Piotra uczestnik" loading="lazy">
+      <div class="caption"><span class="badge">uczestnicy</span> <strong>#013a</strong> krzesło obrotowe Piotra uczestnik<br><small>70 x 70 x 120 cm</small></div>
+    </div>
+    <div class="card" data-strefa="uczestnicy" onclick="openModal('foto/uczestnicy_014_135x50x77_biurko uczestnika widok z góry — kopia (2).jpg','Poz. 014 - biurko uczestnika widok z góry — kopia (2)','135 x 50 x 77 cm','uczestnicy')">
+      <img src="foto/uczestnicy_014_135x50x77_biurko uczestnika widok z góry — kopia (2).jpg" alt="biurko uczestnika widok z góry — kopia (2)" loading="lazy">
+      <div class="caption"><span class="badge">uczestnicy</span> <strong>#014</strong> biurko uczestnika widok z góry — kopia (2)<br><small>135 x 50 x 77 cm</small></div>
+    </div>
+    <div class="card" data-strefa="uczestnicy" onclick="openModal('foto/uczestnicy_014a_70x70x120_krzesło obrotowe Kasia uczestnik.JPG','Poz. 014a - krzesło obrotowe Kasia uczestnik','70 x 70 x 120 cm','uczestnicy')">
+      <img src="foto/uczestnicy_014a_70x70x120_krzesło obrotowe Kasia uczestnik.JPG" alt="krzesło obrotowe Kasia uczestnik" loading="lazy">
+      <div class="caption"><span class="badge">uczestnicy</span> <strong>#014a</strong> krzesło obrotowe Kasia uczestnik<br><small>70 x 70 x 120 cm</small></div>
+    </div>
+</div><div id="modal-overlay" onclick="closeModal(event)"><span id="modal-close" onclick="closeModal()">&times;</span><div id="modal-box"><img id="modal-img" src="" alt=""><div id="modal-info"><span id="modal-badge" class="badge"></span><h2 id="modal-title"></h2><p id="modal-wymiary"></p></div></div></div><script>(function(){var cards=document.querySelectorAll(".card");var strefy=new Set();cards.forEach(function(c){var st=c.dataset.strefa;if(st)strefy.add(st);});var sel=document.getElementById("strefahFilter");Array.from(strefy).sort().forEach(function(s){var o=document.createElement("option");o.value=s;o.textContent=s;sel.appendChild(o);});updateCounter(cards.length);})();function filterCards(){var q=document.getElementById("filterInput").value.toLowerCase();var st=document.getElementById("strefahFilter").value.toLowerCase();var cards=document.querySelectorAll(".card");var n=0;cards.forEach(function(c){var cardSt=(c.dataset.strefa||"").toLowerCase();var match=q===""||c.textContent.toLowerCase().indexOf(q)>=0;var stmatch=st===""||cardSt===st;c.style.display=(match&&stmatch)?"":"none";if(match&&stmatch)n++;});updateCounter(n);}function updateCounter(n){document.getElementById("counter").textContent="Pokazuje: "+n+" pozycji";}function openModal(src,title,wymiary,strefa){document.getElementById("modal-img").src=src;document.getElementById("modal-title").textContent=title;document.getElementById("modal-wymiary").textContent=wymiary;document.getElementById("modal-badge").textContent=strefa;document.getElementById("modal-overlay").classList.add("active");}function closeModal(e){if(!e||e.target===document.getElementById("modal-overlay")||e.target.id==="modal-close"){document.getElementById("modal-overlay").classList.remove("active");document.getElementById("modal-img").src="";}}document.addEventListener("keydown",function(e){if(e.key==="Escape")closeModal();});</script></body></html>
