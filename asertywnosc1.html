@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mówię o tym spokojnie — Test FUO — PCIS</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap');
+
+  :root{
+    --paper:#EEE7D8;
+    --ink:#1E2B2B;
+    --petrol:#20423F;
+    --petrol-dk:#152D2B;
+    --amber:#C6742B;
+    --line:#C9BFA8;
+    --error:#d9534f;
+    --error-bg:#fff0f0;
+    --yellow:#c99a26;
+    --yellow-bg:#fdf6e3;
+    --green-lt:#4f9a5c;
+    --green-lt-bg:#eef8ef;
+    --green-dk:#1f6b3a;
+    --green-dk-bg:#e2f3e6;
+  }
+
+  *{box-sizing:border-box;}
+
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Inter',sans-serif;
+    line-height:1.6;
+    padding-bottom:60px;
+  }
+
+  header.masthead{
+    background:var(--petrol);
+    color:var(--paper);
+    padding:24px 16px;
+    text-align:center;
+    box-shadow:0 2px 10px rgba(0,0,0,.1);
+  }
+
+  .eyebrow{
+    text-transform:uppercase;
+    letter-spacing:.1em;
+    font-size:12px;
+    color:var(--amber);
+    font-weight:600;
+  }
+
+  h1{
+    font-family:'Fraunces',serif;
+    font-size:26px;
+    margin:6px 0 4px;
+  }
+
+  .audience-note{
+    font-size:13px;
+    color:var(--paper);
+    opacity:.85;
+  }
+
+  main{
+    max-width:700px;
+    margin:0 auto;
+    padding:0 16px;
+  }
+
+  section.block{
+    margin:30px 0;
+  }
+
+  .intro-card{
+    background:rgba(255,255,255,0.55);
+    padding:18px;
+    border-radius:10px;
+    border:1px solid var(--line);
+    margin-bottom:18px;
+    font-size:15px;
+  }
+
+  .intro-card h2{
+    font-family:'Fraunces',serif;
+    font-size:19px;
+    margin:0 0 10px;
+    color:var(--petrol-dk);
+  }
+
+  .intro-card h3{
+    font-size:14px;
+    margin:16px 0 6px;
+    color:var(--amber);
+    text-transform:uppercase;
+    letter-spacing:.04em;
+  }
+
+  .formula{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    margin:10px 0;
+  }
+
+  .formula span{
+    background:var(--petrol);
+    color:var(--paper);
+    padding:6px 12px;
+    border-radius:20px;
+    font-size:13px;
+    font-weight:600;
+  }
+
+  .legend{
+    display:grid;
+    grid-template-columns:1fr;
+    gap:8px;
+    margin-top:10px;
+  }
+  .legend-row{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    font-size:13px;
+  }
+  .swatch{
+    width:22px;
+    height:22px;
+    border-radius:6px;
+    flex-shrink:0;
+    border:1px solid rgba(0,0,0,.15);
+  }
+  .sw-red{background:var(--error-bg); border-color:var(--error);}
+  .sw-yellow{background:var(--yellow-bg); border-color:var(--yellow);}
+  .sw-green-lt{background:var(--green-lt-bg); border-color:var(--green-lt);}
+  .sw-green-dk{background:var(--green-dk-bg); border-color:var(--green-dk);}
+
+  .section-title{
+    font-family:'Fraunces',serif;
+    font-size:22px;
+    color:var(--petrol-dk);
+    margin:0 0 4px;
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+  .section-title .num{
+    background:var(--amber);
+    color:#fff;
+    border-radius:50%;
+    width:30px;
+    height:30px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:14px;
+    flex-shrink:0;
+  }
+  .section-sub{
+    font-size:13px;
+    color:var(--petrol);
+    margin-bottom:16px;
+  }
+
+  .card{
+    background:#fff;
+    border-radius:12px;
+    padding:20px;
+    margin-bottom:18px;
+    box-shadow:0 4px 6px rgba(0,0,0,0.05);
+    border:1px solid var(--line);
+    position:relative;
+  }
+
+  .card-num{
+    position:absolute;
+    top:-10px;
+    right:16px;
+    background:var(--petrol);
+    color:#fff;
+    padding:2px 12px;
+    border-radius:20px;
+    font-size:11px;
+    font-weight:700;
+  }
+
+  .sentence-box{
+    font-size:16px;
+    line-height:2;
+  }
+
+  .word-to-fix{
+    display:inline-block;
+    padding:0 6px;
+    background:var(--error-bg);
+    border-bottom:2px solid var(--error);
+    color:var(--error);
+    cursor:pointer;
+    font-weight:600;
+    border-radius:4px;
+    transition:all .15s;
+  }
+  .word-to-fix:hover{ filter:brightness(0.97); }
+  .word-to-fix.tier-yellow{ background:var(--yellow-bg); border-bottom-color:var(--yellow); color:var(--yellow); }
+  .word-to-fix.tier-green{ background:var(--green-lt-bg); border-bottom-color:var(--green-lt); color:var(--green-lt); }
+  .word-to-fix.tier-dark{ background:var(--green-dk-bg); border-bottom-color:var(--green-dk); color:var(--green-dk); }
+
+  .dropdown{
+    position:absolute;
+    background:#fff;
+    border:1px solid var(--line);
+    box-shadow:0 10px 25px rgba(0,0,0,.2);
+    border-radius:8px;
+    z-index:100;
+    display:none;
+    min-width:200px;
+    max-width:90vw;
+    overflow:hidden;
+  }
+  .dropdown button{
+    width:100%;
+    padding:11px 15px;
+    border:none;
+    background:none;
+    border-bottom:1px solid var(--line);
+    text-align:left;
+    font-family:inherit;
+    cursor:pointer;
+    font-size:14px;
+  }
+  .dropdown button:last-child{ border-bottom:none; }
+  .dropdown button:hover{ background:var(--paper); }
+
+  .delicate-toggle{
+    margin-top:14px;
+    background:none;
+    border:1px dashed var(--petrol);
+    color:var(--petrol);
+    border-radius:8px;
+    padding:8px 12px;
+    font-size:13px;
+    font-weight:600;
+    cursor:pointer;
+    width:100%;
+    text-align:left;
+  }
+  .delicate-toggle:hover{ background:var(--paper); }
+  .delicate-box{
+    display:none;
+    margin-top:10px;
+    padding:12px 14px;
+    background:var(--green-dk-bg);
+    border-left:3px solid var(--green-dk);
+    border-radius:0 8px 8px 0;
+    font-size:14px;
+    color:var(--petrol-dk);
+  }
+
+  .btn-check{
+    background:var(--amber);
+    color:#fff;
+    border:none;
+    padding:12px 26px;
+    border-radius:8px;
+    font-weight:700;
+    cursor:pointer;
+    font-size:15px;
+    width:100%;
+    max-width:340px;
+    display:block;
+    margin:14px auto 0;
+  }
+
+  .status-bar{
+    text-align:center;
+    font-weight:600;
+    font-size:14px;
+    margin-top:12px;
+    padding:10px;
+    background:var(--petrol-dk);
+    color:#fff;
+    border-radius:8px;
+  }
+
+  .nav-links{
+    text-align:center;
+    font-size:13px;
+    margin-top:30px;
+  }
+  .nav-links a{
+    color:var(--petrol-dk);
+    font-weight:600;
+    text-decoration:none;
+    border-bottom:1px dashed var(--petrol);
+  }
+
+  @media (max-width:480px){
+    h1{ font-size:22px; }
+    .sentence-box{ font-size:14.5px; line-height:1.9; }
+    .card{ padding:16px; }
+    .btn-check{ font-size:14px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="masthead">
+  <div class="eyebrow">Trening Komunikacji Emocjonalnej — PCIS</div>
+  <h1>Mówię o tym spokojnie</h1>
+  <div class="audience-note">Ćwiczenie dla dziewczynek w wieku ok. 11 lat · Test 1 z 3</div>
+</header>
+
+<main>
+
+  <section class="block">
+    <div class="intro-card">
+      <h2>Zanim zaczniesz</h2>
+      <p>Czasem w szkole ktoś robi coś, co Ci się nie podoba — ciągnie Cię za włosy, bierze Twoje rzeczy bez pytania, śmieje się z Ciebie albo Cię wyklucza. To normalne, że wtedy czujesz złość, smutek albo strach. Masz prawo to powiedzieć na głos! Problem w tym, że kiedy jesteśmy wściekłe, łatwo powiedzieć coś, co jeszcze bardziej pogorszy sprawę — np. nakrzyczeć albo kogoś obrazić. Ten test uczy Cię metody FUO — prostego sposobu, żeby powiedzieć to samo, ale spokojnie i jasno.</p>
+
+      <h3>Metoda FUO</h3>
+      <div class="formula">
+        <span>Fakt</span><span>→</span><span>Ustosunkowanie</span><span>→</span><span>Oczekiwanie</span>
+      </div>
+      <p><strong>Fakt</strong> — mówisz tylko to, co się naprawdę wydarzyło, jak kamera, bez oceniania ("kiedy ciągniesz mnie za włosy").<br>
+      <strong>Ustosunkowanie</strong> — mówisz, co czujesz ("czuję się poirytowana").<br>
+      <strong>Oczekiwanie</strong> — mówisz, czego chcesz ("proszę, przestań").</p>
+
+      <h3>A gdzie NVC?</h3>
+      <p>Przy każdym zdaniu znajdziesz przycisk „Chcę powiedzieć to jeszcze delikatniej” — pokaże Ci, jak to samo zdanie brzmi metodą NVC (Zauważyłam → Czuję → bo potrzebuję → Proszę). Osobny test NVC czeka w pliku <strong>nvc1.html</strong>.</p>
+
+      <h3>Kolory w ćwiczeniach</h3>
+      <p style="margin-bottom:0;">Kliknij czerwone słowo w zdaniu i wybierz lepszą wersję. Po wyborze słowo zmieni kolor:</p>
+      <div class="legend">
+        <div class="legend-row"><span class="swatch sw-red"></span> Czerwony — złe, agresywne słowo (to, co mówimy, gdy jesteśmy wściekłe — może się tam trafić np. "motyla noga" czy "kurczę pióro")</div>
+        <div class="legend-row"><span class="swatch sw-yellow"></span> Żółty — ujdzie, ale jest zbyt ogólne (np. "niekomfortowo" — nie mówi tak naprawdę, co czujesz)</div>
+        <div class="legend-row"><span class="swatch sw-green-lt"></span> Jasnozielony — dobre słowo</div>
+        <div class="legend-row"><span class="swatch sw-green-dk"></span> Ciemnozielony — najlepsze, najbardziej trafne słowo</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TEST 1: FUO -->
+  <section class="block" id="test1">
+    <div class="section-title"><span class="num">1</span>Test — Metoda FUO</div>
+    <div class="section-sub">Kliknij czerwone słowa i wybierz lepszą wersję. Przy każdym zdaniu możesz też sprawdzić, jak brzmiałoby ono metodą NVC.</div>
+    <div id="test1-cards"></div>
+    <button class="btn-check" onclick="checkTest(1)">Sprawdź Test 1</button>
+    <div class="status-bar" id="status1">Uzupełnij zdania, klikając czerwone słowa.</div>
+  </section>
+
+  <div class="nav-links">Kolejny krok: otwórz <strong>nvc1.html</strong> (Test 2 — metoda NVC) lub <strong>nvc3.html</strong> (gra na czas).</div>
+
+</main>
+
+<div class="dropdown" id="globalDropdown"></div>
+
+<script>
+/* ============ DANE: TEST 1 — FUO ============ */
+const fuoItems = [
+  { fakt:"ciągniesz mnie za włosy na przerwie",
+    red_u:"wściekła, że mam ochotę krzyczeć", y_u:"niekomfortowo", g_u:"poirytowana", d_u:["zaniepokojona o siebie","zła"],
+    red_p:"motyla noga, przestań, bo pożałujesz!", y_p:"przestań z tym", g_p:"przestań ciągnąć mnie za włosy", d_p:["pytaj mnie, zanim mnie dotkniesz","nie ciągnij mnie więcej za włosy"],
+    nvc:"Zauważyłam, że ciągniesz mnie za włosy na przerwie. Czuję się zaniepokojona, bo potrzebuję poczucia bezpieczeństwa. Proszę, przestań mnie ciągnąć za włosy." },
+  { fakt:"rozpowiadasz o mnie plotki, których nie powiedziałam",
+    red_u:"zdradzona i wściekła na całe życie", y_u:"źle", g_u:"zawiedziona", d_u:["zraniona","smutna i zła jednocześnie"],
+    red_p:"przestań kłamać, bo cię znienawidzę!", y_p:"przestań to robić", g_p:"mów o mnie prawdę", d_p:["pytaj mnie, zanim coś o mnie powiesz","mów tylko prawdziwe rzeczy o mnie"],
+    nvc:"Zauważyłam, że rozpowiadasz o mnie plotki, których nie powiedziałam. Czuję się zraniona, bo potrzebuję zaufania między nami. Proszę, mów o mnie tylko prawdę." },
+  { fakt:"śmiejesz się z moich okularów przed całą klasą",
+    red_u:"upokorzona i chcę zniknąć", y_u:"niefajnie", g_u:"zawstydzona", d_u:["zraniona","smutna"],
+    red_p:"przestań się wygłupiać, głąbie!", y_p:"przestań się śmiać", g_p:"przestań śmiać się z mojego wyglądu", d_p:["szanuj to, jak wyglądam","nie rób żartów z mojego wyglądu"],
+    nvc:"Zauważyłam, że śmiejesz się z moich okularów przed całą klasą. Czuję się zawstydzona, bo potrzebuję szacunku. Proszę, przestań śmiać się z mojego wyglądu." },
+  { fakt:"bierzesz mój długopis bez pytania",
+    red_u:"kurczę pióro, ale mnie wkurzyłaś", y_u:"niekomfortowo", g_u:"poirytowana", d_u:["zniecierpliwiona","zła"],
+    red_p:"oddawaj natychmiast, złodziejko!", y_p:"oddaj mi to", g_p:"pytaj, zanim coś weźmiesz", d_p:["pytaj o zgodę, zanim coś pożyczysz","oddaj mi długopis i pytaj następnym razem"],
+    nvc:"Zauważyłam, że bierzesz mój długopis bez pytania. Czuję się poirytowana, bo potrzebuję, żeby pytano mnie o zgodę. Proszę, pytaj mnie następnym razem." },
+  { fakt:"wpychasz się przede mnie w kolejce do stołówki",
+    red_u:"wściekła, że aż się trzęsę", y_u:"niedobrze", g_u:"poirytowana", d_u:["zła","sfrustrowana"],
+    red_p:"spadaj na koniec, bez wstydu!", y_p:"nie rób tego", g_p:"stań za mną w kolejce", d_p:["poczekaj na swoją kolej","zapytaj, czy możesz stanąć obok"],
+    nvc:"Zauważyłam, że wpychasz się przede mnie w kolejce do stołówki. Czuję się sfrustrowana, bo potrzebuję, żeby każdy czekał na swoją kolej. Proszę, stań za mną." },
+  { fakt:"nie zapraszacie mnie do zabawy na przerwie",
+    red_u:"beznadziejnie samotna na zawsze", y_u:"niefajnie", g_u:"smutna", d_u:["odrzucona","samotna"],
+    red_p:"musicie się ze mną bawić, bo się obrażę!", y_p:"bawcie się ze mną", g_p:"powiedzcie mi, dlaczego mnie nie zapraszacie", d_p:["pozwólcie mi czasem dołączyć do zabawy","porozmawiajcie ze mną o tym, co się dzieje"],
+    nvc:"Zauważyłam, że nie zapraszacie mnie do zabawy na przerwie. Czuję się odrzucona, bo potrzebuję poczucia przynależności. Proszę, pozwólcie mi czasem dołączyć." },
+  { fakt:"czytasz moje wiadomości w telefonie bez pozwolenia",
+    red_u:"wściekła, że mam ochotę wrzeszczeć", y_u:"źle", g_u:"naruszona", d_u:["zdenerwowana","zła"],
+    red_p:"nie dotykaj mojego telefonu, bo pożałujesz!", y_p:"nie rób tego", g_p:"pytaj, zanim weźmiesz mój telefon", d_p:["szanuj moją prywatność","pytaj o zgodę, zanim spojrzysz na mój telefon"],
+    nvc:"Zauważyłam, że czytasz moje wiadomości bez pozwolenia. Czuję się zdenerwowana, bo potrzebuję prywatności. Proszę, pytaj mnie o zgodę, zanim weźmiesz mój telefon." },
+  { fakt:"nazywasz mnie \u201egrubą\u201d przy innych",
+    red_u:"zdruzgotana na całe życie", y_u:"źle", g_u:"zraniona", d_u:["upokorzona","smutna"],
+    red_p:"przestań, bo się doigrasz!", y_p:"przestań mnie tak nazywać", g_p:"przestań mówić o moim wyglądzie", d_p:["mów do mnie po imieniu","szanuj mnie taką, jaka jestem"],
+    nvc:"Zauważyłam, że nazywasz mnie \u201egrubą\u201d przy innych. Czuję się upokorzona, bo potrzebuję szacunku. Proszę, mów do mnie po imieniu." },
+  { fakt:"ciągle mi przerywasz, kiedy coś mówię",
+    red_u:"wkurzona, że aż mi się gotuje", y_u:"niekomfortowo", g_u:"poirytowana", d_u:["zignorowana","sfrustrowana"],
+    red_p:"zamknij się i słuchaj!", y_p:"przestań mi przerywać", g_p:"poczekaj, aż skończę mówić", d_p:["pozwól mi dokończyć zdanie","wysłuchaj mnie do końca"],
+    nvc:"Zauważyłam, że ciągle mi przerywasz. Czuję się zignorowana, bo potrzebuję, żeby mnie wysłuchano. Proszę, pozwól mi dokończyć." },
+  { fakt:"zrobiłaś mi zdjęcie i wysłałaś je dalej bez pytania",
+    red_u:"przerażona i wściekła jednocześnie", y_u:"źle", g_u:"zdenerwowana", d_u:["naruszona","zraniona"],
+    red_p:"usuń to natychmiast, bo cię zgłoszę!", y_p:"usuń to zdjęcie", g_p:"usuń zdjęcie i pytaj następnym razem", d_p:["szanuj moją zgodę na zdjęcia","pytaj mnie, zanim wyślesz moje zdjęcie dalej"],
+    nvc:"Zauważyłam, że zrobiłaś mi zdjęcie i wysłałaś je dalej bez pytania. Czuję się naruszona, bo potrzebuję, żeby pytano mnie o zgodę. Proszę, usuń to zdjęcie." }
+];
+
+/* ============ RENDEROWANIE ============ */
+function shuffle(arr){
+  const a = arr.slice();
+  for(let i=a.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]] = [a[j],a[i]];
+  }
+  return a;
+}
+
+function renderFUO(){
+  const wrap = document.getElementById('test1-cards');
+  fuoItems.forEach((it, idx) => {
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.innerHTML = `
+      <div class="card-num">Zadanie ${idx+1}</div>
+      <div class="sentence-box">
+        Kiedy ${it.fakt}, czuję <span class="word-to-fix" id="f${idx}u">${it.red_u}</span>. Proszę, <span class="word-to-fix" id="f${idx}p">${it.red_p}</span>.
+      </div>
+      <button class="delicate-toggle" onclick="toggleDelicate(${idx})">💬 Chcę powiedzieć to jeszcze delikatniej (NVC) ▾</button>
+      <div class="delicate-box" id="delicate${idx}">${it.nvc}</div>
+    `;
+    wrap.appendChild(card);
+    attachBlank(document.getElementById(`f${idx}u`), it.y_u, it.g_u, it.d_u, 1);
+    attachBlank(document.getElementById(`f${idx}p`), it.y_p, it.g_p, it.d_p, 1);
+  });
+}
+
+function toggleDelicate(idx){
+  const box = document.getElementById('delicate'+idx);
+  box.style.display = (box.style.display === 'block') ? 'none' : 'block';
+}
+
+/* ============ LOGIKA DYMKÓW WYBORU ============ */
+const dropdown = document.getElementById('globalDropdown');
+let activeSpan = null;
+
+function attachBlank(span, yellowTxt, greenTxt, darkArr, testNum){
+  span.dataset.test = testNum;
+  span.addEventListener('click', (e) => {
+    e.stopPropagation();
+    activeSpan = span;
+    const options = [
+      {text:yellowTxt, tier:'yellow'},
+      {text:greenTxt, tier:'green'},
+      ...darkArr.map(t => ({text:t, tier:'dark'}))
+    ];
+    const shuffled = shuffle(options);
+    dropdown.innerHTML = '';
+    shuffled.forEach(opt => {
+      const btn = document.createElement('button');
+      btn.textContent = opt.text;
+      btn.onclick = () => selectOption(opt);
+      dropdown.appendChild(btn);
+    });
+    dropdown.style.display = 'block';
+    const rect = span.getBoundingClientRect();
+    const top = window.scrollY + rect.bottom + 6;
+    let left = window.scrollX + rect.left;
+    const maxLeft = window.scrollX + document.documentElement.clientWidth - 220;
+    if(left > maxLeft) left = Math.max(10, maxLeft);
+    dropdown.style.top = top + 'px';
+    dropdown.style.left = left + 'px';
+  });
+}
+
+function selectOption(opt){
+  if(!activeSpan) return;
+  activeSpan.textContent = opt.text;
+  activeSpan.classList.remove('tier-yellow','tier-green','tier-dark');
+  activeSpan.classList.add('tier-'+opt.tier);
+  activeSpan.dataset.tier = opt.tier;
+  dropdown.style.display = 'none';
+  updateStatus(activeSpan.dataset.test);
+}
+
+window.addEventListener('click', () => { dropdown.style.display = 'none'; });
+
+function updateStatus(testNum){
+  const container = document.getElementById('test'+testNum+'-cards');
+  const all = container.querySelectorAll('.word-to-fix');
+  const done = container.querySelectorAll('.word-to-fix[data-tier]');
+  document.getElementById('status'+testNum).textContent = `Uzupełniono ${done.length} z ${all.length} miejsc.`;
+}
+
+function checkTest(testNum){
+  const container = document.getElementById('test'+testNum+'-cards');
+  const all = Array.from(container.querySelectorAll('.word-to-fix'));
+  const answered = all.filter(s => s.dataset.tier);
+  const dark = all.filter(s => s.dataset.tier === 'dark');
+  const statusEl = document.getElementById('status'+testNum);
+
+  if(answered.length < all.length){
+    alert('Uzupełnij jeszcze wszystkie czerwone słowa, zanim sprawdzisz zadanie!');
+    statusEl.style.background = 'var(--petrol-dk)';
+    statusEl.textContent = `Zostało jeszcze ${all.length - answered.length} miejsc do uzupełnienia.`;
+    return;
+  }
+
+  const yellow = all.filter(s => s.dataset.tier === 'yellow');
+  const green = all.filter(s => s.dataset.tier === 'green');
+
+  if(dark.length === all.length){
+    alert('Brawo! Wszystkie zdania brzmią teraz naprawdę asertywnie i uprzejmie jednocześnie — to poziom wzorowy.');
+    statusEl.style.background = 'var(--green-dk)';
+    statusEl.textContent = 'Wzorowo! Znalazłaś najtrafniejsze słowa w każdym zdaniu.';
+  } else if(yellow.length > 0){
+    alert(`Uwaga: ${yellow.length} ${yellow.length===1?'miejsce jest':'miejsc jest'} wciąż na żółto — to słowa zbyt ogólne, które tak naprawdę niewiele mówią o Twoich uczuciach czy potrzebach (np. "niekomfortowo"). To nie wystarczy. Wróć do żółtych pól i wybierz coś bardziej konkretnego (zielony lub ciemnozielony), zanim uznasz zadanie za zaliczone.`);
+    statusEl.style.background = 'var(--error)';
+    statusEl.textContent = `Za mało konkretnie: ${yellow.length} miejsc na żółto, ${dark.length} z ${all.length} na najlepszym poziomie. Popraw żółte pola.`;
+  } else {
+    const toImprove = green.length;
+    alert(`Nieźle, ale to jeszcze nie najlepszy wynik. ${dark.length} z ${all.length} miejsc brzmi najtrafniej. ${toImprove} ${toImprove===1?'miejsce jest':'miejsc jest'} tylko "dobre", a nie najlepsze — spróbuj znaleźć jeszcze bardziej precyzyjne słowo, które naprawdę nazywa to, co czujesz albo czego potrzebujesz.`);
+    statusEl.style.background = 'var(--amber)';
+    statusEl.textContent = `${dark.length} z ${all.length} miejsc jest już najlepszych. Spróbuj poprawić resztę, żeby było wzorowo!`;
+  }
+}
+
+renderFUO();
+</script>
+
+</body>
+</html>

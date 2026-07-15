@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mówię o tym spokojnie — Test NVC — PCIS</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap');
+
+  :root{
+    --paper:#EEE7D8;
+    --ink:#1E2B2B;
+    --petrol:#20423F;
+    --petrol-dk:#152D2B;
+    --amber:#C6742B;
+    --line:#C9BFA8;
+    --error:#d9534f;
+    --error-bg:#fff0f0;
+    --yellow:#c99a26;
+    --yellow-bg:#fdf6e3;
+    --green-lt:#4f9a5c;
+    --green-lt-bg:#eef8ef;
+    --green-dk:#1f6b3a;
+    --green-dk-bg:#e2f3e6;
+  }
+
+  *{box-sizing:border-box;}
+
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Inter',sans-serif;
+    line-height:1.6;
+    padding-bottom:60px;
+  }
+
+  header.masthead{
+    background:var(--petrol);
+    color:var(--paper);
+    padding:24px 16px;
+    text-align:center;
+    box-shadow:0 2px 10px rgba(0,0,0,.1);
+  }
+
+  .eyebrow{
+    text-transform:uppercase;
+    letter-spacing:.1em;
+    font-size:12px;
+    color:var(--amber);
+    font-weight:600;
+  }
+
+  h1{
+    font-family:'Fraunces',serif;
+    font-size:26px;
+    margin:6px 0 4px;
+  }
+
+  .audience-note{
+    font-size:13px;
+    color:var(--paper);
+    opacity:.85;
+  }
+
+  main{
+    max-width:700px;
+    margin:0 auto;
+    padding:0 16px;
+  }
+
+  section.block{
+    margin:30px 0;
+  }
+
+  .intro-card{
+    background:rgba(255,255,255,0.55);
+    padding:18px;
+    border-radius:10px;
+    border:1px solid var(--line);
+    margin-bottom:18px;
+    font-size:15px;
+  }
+
+  .intro-card h2{
+    font-family:'Fraunces',serif;
+    font-size:19px;
+    margin:0 0 10px;
+    color:var(--petrol-dk);
+  }
+
+  .intro-card h3{
+    font-size:14px;
+    margin:16px 0 6px;
+    color:var(--amber);
+    text-transform:uppercase;
+    letter-spacing:.04em;
+  }
+
+  .formula{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    margin:10px 0;
+  }
+
+  .formula span{
+    background:var(--petrol);
+    color:var(--paper);
+    padding:6px 12px;
+    border-radius:20px;
+    font-size:13px;
+    font-weight:600;
+  }
+
+  .legend{
+    display:grid;
+    grid-template-columns:1fr;
+    gap:8px;
+    margin-top:10px;
+  }
+  .legend-row{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    font-size:13px;
+  }
+  .swatch{
+    width:22px;
+    height:22px;
+    border-radius:6px;
+    flex-shrink:0;
+    border:1px solid rgba(0,0,0,.15);
+  }
+  .sw-red{background:var(--error-bg); border-color:var(--error);}
+  .sw-yellow{background:var(--yellow-bg); border-color:var(--yellow);}
+  .sw-green-lt{background:var(--green-lt-bg); border-color:var(--green-lt);}
+  .sw-green-dk{background:var(--green-dk-bg); border-color:var(--green-dk);}
+
+  .section-title{
+    font-family:'Fraunces',serif;
+    font-size:22px;
+    color:var(--petrol-dk);
+    margin:0 0 4px;
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+  .section-title .num{
+    background:var(--amber);
+    color:#fff;
+    border-radius:50%;
+    width:30px;
+    height:30px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:14px;
+    flex-shrink:0;
+  }
+  .section-sub{
+    font-size:13px;
+    color:var(--petrol);
+    margin-bottom:16px;
+  }
+
+  .card{
+    background:#fff;
+    border-radius:12px;
+    padding:20px;
+    margin-bottom:18px;
+    box-shadow:0 4px 6px rgba(0,0,0,0.05);
+    border:1px solid var(--line);
+    position:relative;
+  }
+
+  .card-num{
+    position:absolute;
+    top:-10px;
+    right:16px;
+    background:var(--petrol);
+    color:#fff;
+    padding:2px 12px;
+    border-radius:20px;
+    font-size:11px;
+    font-weight:700;
+  }
+
+  .sentence-box{
+    font-size:16px;
+    line-height:2;
+  }
+
+  .word-to-fix{
+    display:inline-block;
+    padding:0 6px;
+    background:var(--error-bg);
+    border-bottom:2px solid var(--error);
+    color:var(--error);
+    cursor:pointer;
+    font-weight:600;
+    border-radius:4px;
+    transition:all .15s;
+  }
+  .word-to-fix:hover{ filter:brightness(0.97); }
+  .word-to-fix.tier-yellow{ background:var(--yellow-bg); border-bottom-color:var(--yellow); color:var(--yellow); }
+  .word-to-fix.tier-green{ background:var(--green-lt-bg); border-bottom-color:var(--green-lt); color:var(--green-lt); }
+  .word-to-fix.tier-dark{ background:var(--green-dk-bg); border-bottom-color:var(--green-dk); color:var(--green-dk); }
+
+  .dropdown{
+    position:absolute;
+    background:#fff;
+    border:1px solid var(--line);
+    box-shadow:0 10px 25px rgba(0,0,0,.2);
+    border-radius:8px;
+    z-index:100;
+    display:none;
+    min-width:200px;
+    max-width:90vw;
+    overflow:hidden;
+  }
+  .dropdown button{
+    width:100%;
+    padding:11px 15px;
+    border:none;
+    background:none;
+    border-bottom:1px solid var(--line);
+    text-align:left;
+    font-family:inherit;
+    cursor:pointer;
+    font-size:14px;
+  }
+  .dropdown button:last-child{ border-bottom:none; }
+  .dropdown button:hover{ background:var(--paper); }
+
+  .btn-check{
+    background:var(--amber);
+    color:#fff;
+    border:none;
+    padding:12px 26px;
+    border-radius:8px;
+    font-weight:700;
+    cursor:pointer;
+    font-size:15px;
+    width:100%;
+    max-width:340px;
+    display:block;
+    margin:14px auto 0;
+  }
+
+  .status-bar{
+    text-align:center;
+    font-weight:600;
+    font-size:14px;
+    margin-top:12px;
+    padding:10px;
+    background:var(--petrol-dk);
+    color:#fff;
+    border-radius:8px;
+  }
+
+  .nav-links{
+    text-align:center;
+    font-size:13px;
+    margin-top:30px;
+  }
+  .nav-links a{
+    color:var(--petrol-dk);
+    font-weight:600;
+    text-decoration:none;
+    border-bottom:1px dashed var(--petrol);
+  }
+
+  @media (max-width:480px){
+    h1{ font-size:22px; }
+    .sentence-box{ font-size:14.5px; line-height:1.9; }
+    .card{ padding:16px; }
+    .btn-check{ font-size:14px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="masthead">
+  <div class="eyebrow">Trening Komunikacji Emocjonalnej — PCIS</div>
+  <h1>Mówię o tym spokojnie</h1>
+  <div class="audience-note">Ćwiczenie dla dziewczynek w wieku ok. 11 lat · Test 2 z 3</div>
+</header>
+
+<main>
+
+  <section class="block">
+    <div class="intro-card">
+      <h2>Zanim zaczniesz</h2>
+      <p>Czasem w szkole ktoś robi coś, co Ci się nie podoba — bierze Twoje rzeczy bez pytania, przezywa Cię, wyklucza z grupy albo narusza Twoją przestrzeń. To normalne, że wtedy czujesz złość, smutek albo strach. Masz prawo to powiedzieć na głos! Ten test uczy Cię metody NVC — sposobu, żeby powiedzieć to, co czujesz, tak żeby druga osoba naprawdę Cię usłyszała, a nie się obraziła.</p>
+
+      <h3>Metoda NVC (porozumienie bez przemocy)</h3>
+      <div class="formula">
+        <span>Zauważyłam</span><span>→</span><span>Czuję</span><span>→</span><span>bo potrzebuję</span><span>→</span><span>Proszę</span>
+      </div>
+      <p><strong>Zauważyłam</strong> — mówisz tylko to, co się naprawdę wydarzyło, jak kamera, bez oceniania ("zauważyłam, że wzięłaś moją bluzę").<br>
+      <strong>Czuję</strong> — nazywasz konkretną emocję, a nie ogólnik ("czuję się poirytowana", a nie "źle mi").<br>
+      <strong>Bo potrzebuję</strong> — mówisz, czego naprawdę potrzebujesz (zgody, szacunku, bezpieczeństwa, zaufania).<br>
+      <strong>Proszę</strong> — mówisz jasno i konkretnie, o co prosisz.</p>
+
+      <h3>Kolory w ćwiczeniach</h3>
+      <p style="margin-bottom:0;">Kliknij czerwone słowo w zdaniu i wybierz lepszą wersję. Po wyborze słowo zmieni kolor:</p>
+      <div class="legend">
+        <div class="legend-row"><span class="swatch sw-red"></span> Czerwony — złe, agresywne słowo (to, co mówimy, gdy jesteśmy wściekłe — może się tam trafić np. "motyla noga" czy "kurczę pióro")</div>
+        <div class="legend-row"><span class="swatch sw-yellow"></span> Żółty — ujdzie, ale jest zbyt ogólne (np. "źle" — nie mówi tak naprawdę, co czujesz)</div>
+        <div class="legend-row"><span class="swatch sw-green-lt"></span> Jasnozielony — dobre słowo</div>
+        <div class="legend-row"><span class="swatch sw-green-dk"></span> Ciemnozielony — najlepsze, najbardziej trafne słowo</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TEST 2: NVC -->
+  <section class="block" id="test2">
+    <div class="section-title"><span class="num">2</span>Test — Metoda NVC</div>
+    <div class="section-sub">Uzupełnij "Czuję..." i "Proszę...", żeby zdanie było spokojne i jasne.</div>
+    <div id="test2-cards"></div>
+    <button class="btn-check" onclick="checkTest(2)">Sprawdź Test 2</button>
+    <div class="status-bar" id="status2">Uzupełnij zdania, klikając czerwone słowa.</div>
+  </section>
+
+  <div class="nav-links">Chcesz zacząć od podstaw? Otwórz <strong>asertywnosc1.html</strong> (Test 1 — metoda FUO) albo spróbuj gry na czas w <strong>nvc3.html</strong>.</div>
+
+</main>
+
+<div class="dropdown" id="globalDropdown"></div>
+
+<script>
+/* ============ DANE: TEST 2 — NVC ============ */
+const nvcItems = [
+  { fakt:"wzięłaś moją bluzę bez pytania", potrzeba:"żeby pytano mnie o zgodę",
+    red_u:"wściekła, że mam ochotę krzyczeć", y_u:"źle", g_u:"poirytowana", d_u:["zła","naruszona"],
+    red_p:"oddawaj to natychmiast, złodziejko!", y_p:"oddaj mi to", g_p:"pytaj, zanim coś pożyczysz", d_p:["oddaj mi bluzę i pytaj następnym razem","szanuj moje rzeczy"] },
+  { fakt:"szepczecie i spoglądacie w moją stronę", potrzeba:"jasności, co się dzieje",
+    red_u:"przerażona, że wszyscy mnie nie lubią", y_u:"dziwnie", g_u:"niepewna", d_u:["zaniepokojona","zawstydzona"],
+    red_p:"przestańcie się gapić, dziwaczki!", y_p:"przestańcie", g_p:"powiedzcie mi wprost, o co chodzi", d_p:["mówcie do mnie otwarcie","powiedzcie mi, jeśli coś jest nie tak"] },
+  { fakt:"nie zaprosiłaś mnie na urodziny, chociaż jesteśmy przyjaciółkami", potrzeba:"poczucia, że jestem dla ciebie ważna",
+    red_u:"zdradzona na całe życie", y_u:"źle", g_u:"zawiedziona", d_u:["smutna","zraniona"],
+    red_p:"musisz mnie teraz zaprosić, bo koniec przyjaźni!", y_p:"zaproś mnie następnym razem", g_p:"powiedz mi, dlaczego mnie nie zaprosiłaś", d_p:["porozmawiaj ze mną o tym szczerze","powiedz mi prawdę, co się stało"] },
+  { fakt:"przezywasz mnie \u201ekujonem\u201d", potrzeba:"szacunku",
+    red_u:"wściekła, że mam ochotę płakać ze złości", y_u:"źle", g_u:"zraniona", d_u:["upokorzona","smutna"],
+    red_p:"przestań, bo pożałujesz!", y_p:"przestań mnie tak nazywać", g_p:"mów do mnie po imieniu", d_p:["szanuj to, że lubię się uczyć","przestań używać przezwisk"] },
+  { fakt:"stoisz bardzo blisko mnie, chociaż prosiłam o odstęp", potrzeba:"przestrzeni osobistej",
+    red_u:"spanikowana, że muszę uciekać", y_u:"niekomfortowo", g_u:"spięta", d_u:["zaniepokojona","zestresowana"],
+    red_p:"odsuń się natychmiast, bez sensu!", y_p:"odsuń się", g_p:"zrób krok do tyłu", d_p:["szanuj moją przestrzeń","pytaj, zanim podejdziesz bliżej"] },
+  { fakt:"śmiejesz się, gdy się pomylę na lekcji", potrzeba:"wsparcia, a nie oceniania",
+    red_u:"upokorzona i chcę zniknąć z klasy", y_u:"źle", g_u:"zawstydzona", d_u:["zraniona","niepewna siebie"],
+    red_p:"przestań się śmiać, głąbie!", y_p:"przestań się śmiać", g_p:"wspieraj mnie zamiast się śmiać", d_p:["szanuj to, że się uczę","pomóż mi zamiast się śmiać"] },
+  { fakt:"zabrałaś moje miejsce w ławce bez pytania", potrzeba:"żeby uzgadniano to ze mną",
+    red_u:"wściekła na maksa", y_u:"źle", g_u:"poirytowana", d_u:["zła","zniecierpliwiona"],
+    red_p:"wstawaj stąd natychmiast!", y_p:"wstań z mojego miejsca", g_p:"zapytaj mnie następnym razem", d_p:["pytaj, zanim usiądziesz w moim miejscu","uzgadniaj ze mną takie rzeczy"] },
+  { fakt:"pokazałaś innym moją wiadomość bez pozwolenia", potrzeba:"zaufania",
+    red_u:"zdradzona na zawsze", y_u:"źle", g_u:"zawiedziona", d_u:["zraniona","naruszona"],
+    red_p:"nigdy więcej się do ciebie nie odezwę!", y_p:"nie rób tego więcej", g_p:"pytaj mnie, zanim komuś coś pokażesz", d_p:["szanuj moje sekrety","zachowaj moje wiadomości dla siebie"] },
+  { fakt:"mówisz do mnie głośno i szybko, kiedy się złościsz", potrzeba:"spokojnej rozmowy",
+    red_u:"przerażona i chcę uciec", y_u:"niedobrze", g_u:"zestresowana", d_u:["spięta","zaniepokojona"],
+    red_p:"przestań na mnie wrzeszczeć!", y_p:"mów ciszej", g_p:"porozmawiajmy spokojnie", d_p:["mów do mnie spokojniejszym głosem","daj mi chwilę, zanim odpowiem"] },
+  { fakt:"nie chcesz mnie słuchać, kiedy próbuję coś wyjaśnić", potrzeba:"żeby mnie wysłuchano",
+    red_u:"wściekła, że nikogo to nie obchodzi", y_u:"źle", g_u:"zignorowana", d_u:["sfrustrowana","samotna w tym"],
+    red_p:"słuchaj mnie, bo się obrażę!", y_p:"słuchaj mnie", g_p:"daj mi dokończyć", d_p:["wysłuchaj mnie do końca","daj mi szansę wyjaśnić"] }
+];
+
+/* ============ RENDEROWANIE ============ */
+function shuffle(arr){
+  const a = arr.slice();
+  for(let i=a.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]] = [a[j],a[i]];
+  }
+  return a;
+}
+
+function renderNVC(){
+  const wrap = document.getElementById('test2-cards');
+  nvcItems.forEach((it, idx) => {
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.innerHTML = `
+      <div class="card-num">Zadanie ${idx+1}</div>
+      <div class="sentence-box">
+        Zauważyłam, że ${it.fakt}. Czuję <span class="word-to-fix" id="n${idx}u">${it.red_u}</span>, bo potrzebuję ${it.potrzeba}. Proszę, <span class="word-to-fix" id="n${idx}p">${it.red_p}</span>.
+      </div>
+    `;
+    wrap.appendChild(card);
+    attachBlank(document.getElementById(`n${idx}u`), it.y_u, it.g_u, it.d_u, 2);
+    attachBlank(document.getElementById(`n${idx}p`), it.y_p, it.g_p, it.d_p, 2);
+  });
+}
+
+/* ============ LOGIKA DYMKÓW WYBORU ============ */
+const dropdown = document.getElementById('globalDropdown');
+let activeSpan = null;
+
+function attachBlank(span, yellowTxt, greenTxt, darkArr, testNum){
+  span.dataset.test = testNum;
+  span.addEventListener('click', (e) => {
+    e.stopPropagation();
+    activeSpan = span;
+    const options = [
+      {text:yellowTxt, tier:'yellow'},
+      {text:greenTxt, tier:'green'},
+      ...darkArr.map(t => ({text:t, tier:'dark'}))
+    ];
+    const shuffled = shuffle(options);
+    dropdown.innerHTML = '';
+    shuffled.forEach(opt => {
+      const btn = document.createElement('button');
+      btn.textContent = opt.text;
+      btn.onclick = () => selectOption(opt);
+      dropdown.appendChild(btn);
+    });
+    dropdown.style.display = 'block';
+    const rect = span.getBoundingClientRect();
+    const top = window.scrollY + rect.bottom + 6;
+    let left = window.scrollX + rect.left;
+    const maxLeft = window.scrollX + document.documentElement.clientWidth - 220;
+    if(left > maxLeft) left = Math.max(10, maxLeft);
+    dropdown.style.top = top + 'px';
+    dropdown.style.left = left + 'px';
+  });
+}
+
+function selectOption(opt){
+  if(!activeSpan) return;
+  activeSpan.textContent = opt.text;
+  activeSpan.classList.remove('tier-yellow','tier-green','tier-dark');
+  activeSpan.classList.add('tier-'+opt.tier);
+  activeSpan.dataset.tier = opt.tier;
+  dropdown.style.display = 'none';
+  updateStatus(activeSpan.dataset.test);
+}
+
+window.addEventListener('click', () => { dropdown.style.display = 'none'; });
+
+function updateStatus(testNum){
+  const container = document.getElementById('test'+testNum+'-cards');
+  const all = container.querySelectorAll('.word-to-fix');
+  const done = container.querySelectorAll('.word-to-fix[data-tier]');
+  document.getElementById('status'+testNum).textContent = `Uzupełniono ${done.length} z ${all.length} miejsc.`;
+}
+
+function checkTest(testNum){
+  const container = document.getElementById('test'+testNum+'-cards');
+  const all = Array.from(container.querySelectorAll('.word-to-fix'));
+  const answered = all.filter(s => s.dataset.tier);
+  const dark = all.filter(s => s.dataset.tier === 'dark');
+  const statusEl = document.getElementById('status'+testNum);
+
+  if(answered.length < all.length){
+    alert('Uzupełnij jeszcze wszystkie czerwone słowa, zanim sprawdzisz zadanie!');
+    statusEl.style.background = 'var(--petrol-dk)';
+    statusEl.textContent = `Zostało jeszcze ${all.length - answered.length} miejsc do uzupełnienia.`;
+    return;
+  }
+
+  const yellow = all.filter(s => s.dataset.tier === 'yellow');
+  const green = all.filter(s => s.dataset.tier === 'green');
+
+  if(dark.length === all.length){
+    alert('Brawo! Wszystkie zdania brzmią teraz naprawdę asertywnie i uprzejmie jednocześnie — to poziom wzorowy.');
+    statusEl.style.background = 'var(--green-dk)';
+    statusEl.textContent = 'Wzorowo! Znalazłaś najtrafniejsze słowa w każdym zdaniu.';
+  } else if(yellow.length > 0){
+    alert(`Uwaga: ${yellow.length} ${yellow.length===1?'miejsce jest':'miejsc jest'} wciąż na żółto — to słowa zbyt ogólne, które tak naprawdę niewiele mówią o Twoich uczuciach czy potrzebach (np. "źle"). To nie wystarczy. Wróć do żółtych pól i wybierz coś bardziej konkretnego (zielony lub ciemnozielony), zanim uznasz zadanie za zaliczone.`);
+    statusEl.style.background = 'var(--error)';
+    statusEl.textContent = `Za mało konkretnie: ${yellow.length} miejsc na żółto, ${dark.length} z ${all.length} na najlepszym poziomie. Popraw żółte pola.`;
+  } else {
+    const toImprove = green.length;
+    alert(`Nieźle, ale to jeszcze nie najlepszy wynik. ${dark.length} z ${all.length} miejsc brzmi najtrafniej. ${toImprove} ${toImprove===1?'miejsce jest':'miejsc jest'} tylko "dobre", a nie najlepsze — spróbuj znaleźć jeszcze bardziej precyzyjne słowo, które naprawdę nazywa to, co czujesz albo czego potrzebujesz.`);
+    statusEl.style.background = 'var(--amber)';
+    statusEl.textContent = `${dark.length} z ${all.length} miejsc jest już najlepszych. Spróbuj poprawić resztę, żeby było wzorowo!`;
+  }
+}
+
+renderNVC();
+</script>
+
+</body>
+</html>

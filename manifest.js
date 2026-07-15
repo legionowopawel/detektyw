@@ -172,5 +172,41 @@ var SPRAWY = [
     "filmyCo": 0,
     "filmKoniec": false,
     "piosenkaKoniec": true
+  },
+  {
+    "file": "asertywnosc1.html",
+    "title": "Test z asertywności",
+    "pytania": 20,
+    "zdjecie": true,
+    "dzwieki": true,
+    "muzyka": false,
+    "filmy": 0,
+    "filmyCo": 0,
+    "filmKoniec": false,
+    "piosenkaKoniec": false
+  },
+  {
+    "file": "nvc1.html",
+    "title": "NVC – dokończ właściwe zdanie",
+    "pytania": 20,
+    "zdjecie": true,
+    "dzwieki": true,
+    "muzyka": false,
+    "filmy": 0,
+    "filmyCo": 0,
+    "filmKoniec": false,
+    "piosenkaKoniec": false
+  },
+  {
+    "file": "nvc3.html",
+    "title": "NVC – gra na czas",
+    "pytania": 20,
+    "zdjecie": true,
+    "dzwieki": true,
+    "muzyka": true,
+    "filmy": 0,
+    "filmyCo": 0,
+    "filmKoniec": false,
+    "piosenkaKoniec": false
   }
 ];

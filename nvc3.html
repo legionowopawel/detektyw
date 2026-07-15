@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mówię o tym spokojnie — Gra na czas — PCIS</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap');
+
+  :root{
+    --paper:#EEE7D8;
+    --ink:#1E2B2B;
+    --petrol:#20423F;
+    --petrol-dk:#152D2B;
+    --amber:#C6742B;
+    --line:#C9BFA8;
+    --error:#d9534f;
+    --error-bg:#fff0f0;
+    --green-dk:#1f6b3a;
+    --green-dk-bg:#e2f3e6;
+    --gray:#9aa39a;
+    --gray-bg:#eef1ec;
+  }
+
+  *{box-sizing:border-box;}
+
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Inter',sans-serif;
+    line-height:1.6;
+    padding-bottom:60px;
+  }
+
+  header.masthead{
+    background:var(--petrol);
+    color:var(--paper);
+    padding:24px 16px;
+    text-align:center;
+    box-shadow:0 2px 10px rgba(0,0,0,.1);
+  }
+
+  .eyebrow{
+    text-transform:uppercase;
+    letter-spacing:.1em;
+    font-size:12px;
+    color:var(--amber);
+    font-weight:600;
+  }
+
+  h1{
+    font-family:'Fraunces',serif;
+    font-size:26px;
+    margin:6px 0 4px;
+  }
+
+  .audience-note{
+    font-size:13px;
+    color:var(--paper);
+    opacity:.85;
+  }
+
+  main{
+    max-width:700px;
+    margin:0 auto;
+    padding:0 16px;
+  }
+
+  section.block{
+    margin:30px 0;
+  }
+
+  .intro-card{
+    background:rgba(255,255,255,0.55);
+    padding:18px;
+    border-radius:10px;
+    border:1px solid var(--line);
+    margin-bottom:18px;
+    font-size:15px;
+  }
+
+  .intro-card h2{
+    font-family:'Fraunces',serif;
+    font-size:19px;
+    margin:0 0 10px;
+    color:var(--petrol-dk);
+  }
+
+  .formula{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    margin:10px 0;
+  }
+
+  .formula span{
+    background:var(--petrol);
+    color:var(--paper);
+    padding:6px 12px;
+    border-radius:20px;
+    font-size:13px;
+    font-weight:600;
+  }
+
+  .section-title{
+    font-family:'Fraunces',serif;
+    font-size:22px;
+    color:var(--petrol-dk);
+    margin:0 0 4px;
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+  .section-title .num{
+    background:var(--amber);
+    color:#fff;
+    border-radius:50%;
+    width:30px;
+    height:30px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:14px;
+    flex-shrink:0;
+  }
+  .section-sub{
+    font-size:13px;
+    color:var(--petrol);
+    margin-bottom:16px;
+  }
+
+  .btn-check{
+    background:var(--amber);
+    color:#fff;
+    border:none;
+    padding:12px 26px;
+    border-radius:8px;
+    font-weight:700;
+    cursor:pointer;
+    font-size:15px;
+    width:100%;
+    max-width:340px;
+    display:block;
+    margin:14px auto 0;
+  }
+
+  .nav-links{
+    text-align:center;
+    font-size:13px;
+    margin-top:30px;
+  }
+  .nav-links a{
+    color:var(--petrol-dk);
+    font-weight:600;
+    text-decoration:none;
+    border-bottom:1px dashed var(--petrol);
+  }
+
+  /* --- GRA NA CZAS --- */
+  .game-wrap{
+    background:#fff;
+    border-radius:12px;
+    padding:20px;
+    border:1px solid var(--line);
+  }
+  .game-context{
+    font-size:14px;
+    background:var(--paper);
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:12px;
+    margin-bottom:14px;
+  }
+  .game-controls{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+    align-items:center;
+    margin-bottom:12px;
+    font-size:13px;
+  }
+  .game-controls label{ font-weight:600; }
+  .game-controls input[type=number]{
+    width:60px;
+    padding:6px;
+    border:1px solid var(--line);
+    border-radius:6px;
+    font-family:'Space Mono', monospace;
+  }
+  .preset-btn{
+    background:var(--paper);
+    border:1px solid var(--line);
+    border-radius:6px;
+    padding:6px 10px;
+    font-size:12px;
+    cursor:pointer;
+    font-weight:600;
+  }
+  .preset-btn:hover{ background:var(--line); }
+
+  .clock-row{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:14px;
+    background:var(--petrol-dk);
+    border-radius:10px;
+    padding:14px;
+    margin-bottom:14px;
+  }
+  #digitalClock{
+    font-family:'Space Mono', monospace;
+    font-size:34px;
+    color:var(--amber);
+    letter-spacing:.05em;
+  }
+  #roundLabel{
+    color:var(--paper);
+    font-size:12px;
+    opacity:.8;
+  }
+
+  .dialog-log{
+    min-height:70px;
+    max-height:220px;
+    overflow-y:auto;
+    background:var(--paper);
+    border-radius:8px;
+    padding:10px;
+    margin-bottom:14px;
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+  }
+  .bubble{
+    padding:8px 12px;
+    border-radius:12px;
+    font-size:13px;
+    max-width:85%;
+  }
+  .bubble.kolezanka{
+    background:#fff;
+    border:1px solid var(--error);
+    color:var(--error);
+    align-self:flex-start;
+  }
+  .bubble.ty{
+    background:var(--green-dk-bg);
+    border:1px solid var(--green-dk);
+    color:var(--green-dk);
+    align-self:flex-end;
+    text-align:right;
+  }
+  .bubble.system{
+    background:var(--petrol);
+    color:var(--paper);
+    align-self:center;
+    font-weight:600;
+    text-align:center;
+  }
+
+  .chunk-area{
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+    margin-bottom:14px;
+  }
+  .chunk-btn{
+    background:var(--gray-bg);
+    color:var(--gray);
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:12px 14px;
+    font-size:14px;
+    text-align:left;
+    cursor:not-allowed;
+    opacity:.7;
+  }
+  .chunk-btn.active{
+    background:#fff;
+    color:var(--ink);
+    border-color:var(--amber);
+    cursor:pointer;
+    opacity:1;
+    box-shadow:0 0 0 2px rgba(198,116,43,.25);
+  }
+  .chunk-btn.active:hover{ background:var(--yellow-bg,#fdf6e3); }
+  .chunk-btn.done{
+    background:var(--green-dk-bg);
+    color:var(--green-dk);
+    border-color:var(--green-dk);
+    opacity:1;
+    cursor:default;
+  }
+
+  #playAgainBtn{ display:none; }
+
+  @media (max-width:480px){
+    h1{ font-size:22px; }
+    #digitalClock{ font-size:28px; }
+    .btn-check{ font-size:14px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="masthead">
+  <div class="eyebrow">Trening Komunikacji Emocjonalnej — PCIS</div>
+  <h1>Mówię o tym spokojnie</h1>
+  <div class="audience-note">Ćwiczenie dla dziewczynek w wieku ok. 11 lat · Test 3 z 3 — gra na czas</div>
+</header>
+
+<main>
+
+  <section class="block">
+    <div class="intro-card">
+      <h2>Zanim zaczniesz</h2>
+      <p>To trzeci, eksperymentalny test — gra na czas! Tu przećwiczysz mówienie zdaniem NVC na głos (a właściwie klikając kolejne jego części), nawet gdy ktoś Ci przerywa i się z Tobą droczy. W prawdziwym życiu koleżanki czasem nie dają dokończyć zdania — ta gra uczy, żeby się tym nie zniechęcać i próbować dalej.</p>
+      <h3 style="font-size:14px; margin:16px 0 6px; color:var(--amber); text-transform:uppercase; letter-spacing:.04em;">Przypomnienie: metoda NVC</h3>
+      <div class="formula">
+        <span>Zauważyłam</span><span>→</span><span>Czuję</span><span>→</span><span>bo potrzebuję</span><span>→</span><span>Proszę</span>
+      </div>
+      <p style="margin-bottom:0;">Musisz zdążyć nacisnąć całe zdanie, część po części, zanim minie czas. Jeśli nie zdążysz, koleżanka wtrąci coś przerywającego, a Ty zaczynasz zdanie od nowa. Nie poddawaj się!</p>
+    </div>
+  </section>
+
+  <!-- TEST 3: GRA NA CZAS -->
+  <section class="block" id="test3">
+    <div class="section-title"><span class="num">3</span>Test eksperymentalny — Gra na czas</div>
+    <div class="section-sub">Powiedz swoje zdanie NVC, zanim koleżanka Ci przerwie i zanim minie czas!</div>
+
+    <div class="game-wrap">
+      <div class="game-context">
+        <strong>Sytuacja:</strong> Stoicie na korytarzu i zastanawiacie się, kto zaniesie pani kwiatki. Proponujesz, żeby zdecydować rzutem kostką — kto wyrzuci więcej, ten idzie. Twoja koleżanka nagle mówi: <em>"Co ty pierdzielisz?"</em> Ty postanawiasz odpowiedzieć jej spokojnie, metodą NVC — zdanie po zdaniu, zanim zabraknie czasu.
+      </div>
+
+      <div class="game-controls">
+        <label for="difficultyInput">Poziom trudności (sekundy):</label>
+        <input type="number" id="difficultyInput" value="20" min="5" max="120">
+        <button class="preset-btn" onclick="setDifficulty(30)">Łatwy · 30s</button>
+        <button class="preset-btn" onclick="setDifficulty(20)">Średni · 20s</button>
+        <button class="preset-btn" onclick="setDifficulty(10)">Trudny · 10s</button>
+      </div>
+
+      <p style="font-size:13px; text-align:center; margin-top:0;">⏱️ Musisz zdążyć nacisnąć całe zdanie, zanim minie czas! Masz <strong id="timeLabel">20</strong> sekund. Czas startuje, gdy naciśniesz pierwszą część zdania ("Zauważyłam...").</p>
+
+      <div class="clock-row">
+        <div id="digitalClock">00:20</div>
+        <div id="roundLabel">Próba: 1</div>
+      </div>
+
+      <div class="dialog-log" id="dialogLog"></div>
+
+      <div class="chunk-area" id="chunkArea"></div>
+
+      <button class="btn-check" id="playAgainBtn" onclick="playAgain()">Zagraj ponownie</button>
+    </div>
+  </section>
+
+  <div class="nav-links">Chcesz najpierw poćwiczyć spokojnie? Otwórz <strong>asertywnosc1.html</strong> (Test 1 — FUO) lub <strong>nvc1.html</strong> (Test 2 — NVC).</div>
+
+</main>
+
+<script>
+/* ============ TEST 3: GRA NA CZAS ============ */
+const chunks = [
+  "Zauważyłam, że rzucacie kostką, żeby wybrać, kto zaniesie kwiaty.",
+  "Czuję się pominięta,",
+  "bo potrzebuję też mieć szansę.",
+  "Proszę,",
+  "pozwólcie mi zagrać kostką razem z wami."
+];
+
+const interruptions = [
+  "Nudy!","Ale przynudzasz...","Eee, nieważne.","Daj spokój.","Szybciej, no!",
+  "Nie mam czasu na to.","Głupoty gadasz.","Weź przestań już.","Ziewam z nudów.",
+  "Kto by tego słuchał.","Skróć to jakoś.","No i co z tego?","Nieważne, chodźmy już.",
+  "Znowu to samo, ojej.","Daruj sobie, serio.","Aha, jasne, jasne.","Serio? Teraz akurat?",
+  "Nie no, bez przesady.","Ok, ok, następny temat.","Meh, nudne to.",
+  "Motyla noga, ale przynudzasz.","Kurczę pióro, skróć to!","Ale nudy, litości.",
+  "Zaraz zasnę z nudów.","No weź, bez dramatu.","Ile jeszcze będziesz gadać?",
+  "Trudno to słuchać, ej.","Idziemy już, no chodź.","Eh, głupoty gadasz.","Co ty pierdzielisz?"
+];
+
+let currentChunk = 0;
+let timeLeft = 20;
+let difficulty = 20;
+let timerId = null;
+let roundNum = 1;
+let gameOver = false;
+
+function setDifficulty(sec){
+  document.getElementById('difficultyInput').value = sec;
+  updateDifficultyFromInput();
+}
+
+function updateDifficultyFromInput(){
+  const val = parseInt(document.getElementById('difficultyInput').value) || 20;
+  difficulty = val;
+  document.getElementById('timeLabel').textContent = difficulty;
+  if(currentChunk === 0 && !timerId){
+    timeLeft = difficulty;
+    updateClock();
+  }
+}
+document.getElementById('difficultyInput').addEventListener('change', updateDifficultyFromInput);
+
+function renderChunks(){
+  const area = document.getElementById('chunkArea');
+  area.innerHTML = '';
+  chunks.forEach((c, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'chunk-btn';
+    btn.textContent = (i+1) + '. ' + c;
+    btn.onclick = () => pressChunk(i);
+    if(i === currentChunk) btn.classList.add('active');
+    if(i < currentChunk) btn.classList.add('done');
+    area.appendChild(btn);
+  });
+}
+
+function addBubble(who, text){
+  const log = document.getElementById('dialogLog');
+  const b = document.createElement('div');
+  b.className = 'bubble ' + who;
+  b.textContent = text;
+  log.appendChild(b);
+  log.scrollTop = log.scrollHeight;
+}
+
+function clearLog(){
+  document.getElementById('dialogLog').innerHTML = '';
+}
+
+function updateClock(){
+  const m = String(Math.max(0, Math.floor(timeLeft/60))).padStart(2,'0');
+  const s = String(Math.max(0, timeLeft%60)).padStart(2,'0');
+  document.getElementById('digitalClock').textContent = m + ':' + s;
+}
+
+function pressChunk(idx){
+  if(gameOver || idx !== currentChunk) return;
+  if(currentChunk === 0 && !timerId){
+    timeLeft = difficulty;
+    updateClock();
+    timerId = setInterval(() => {
+      timeLeft--;
+      updateClock();
+      if(timeLeft <= 0) timeUp();
+    }, 1000);
+  }
+  addBubble('ty', chunks[idx]);
+  currentChunk++;
+  if(currentChunk === 1){
+    setTimeout(() => addBubble('kolezanka', 'Co ty wymyślasz?'), 400);
+  }
+  if(currentChunk >= chunks.length){
+    finishSuccess();
+  } else {
+    renderChunks();
+  }
+}
+
+function timeUp(){
+  clearInterval(timerId);
+  timerId = null;
+  const line = interruptions[Math.floor(Math.random()*interruptions.length)];
+  addBubble('kolezanka', line);
+  addBubble('system', '⏰ Czas minął! Zaczynasz zdanie od nowa.');
+  roundNum++;
+  document.getElementById('roundLabel').textContent = 'Próba: ' + roundNum;
+  currentChunk = 0;
+  timeLeft = difficulty;
+  updateClock();
+  renderChunks();
+}
+
+function finishSuccess(){
+  clearInterval(timerId);
+  timerId = null;
+  gameOver = true;
+  addBubble('system', '🎉 Udało się! Powiedziałaś to spokojnie, mimo przerywania!');
+  document.getElementById('playAgainBtn').style.display = 'block';
+  renderChunks();
+}
+
+function playAgain(){
+  gameOver = false;
+  roundNum = 1;
+  currentChunk = 0;
+  timeLeft = difficulty;
+  clearLog();
+  updateClock();
+  document.getElementById('roundLabel').textContent = 'Próba: 1';
+  document.getElementById('playAgainBtn').style.display = 'none';
+  renderChunks();
+}
+
+updateDifficultyFromInput();
+renderChunks();
+</script>
+
+</body>
+</html>
