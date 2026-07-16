@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mówię o tym spokojnie — Gra na czas — PCIS</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap');
+
+  :root{
+    --paper:#EEE7D8;
+    --ink:#1E2B2B;
+    --petrol:#20423F;
+    --petrol-dk:#152D2B;
+    --amber:#C6742B;
+    --line:#C9BFA8;
+    --error:#d9534f;
+    --error-bg:#fff0f0;
+    --yellow:#c99a26;
+    --yellow-bg:#fdf6e3;
+    --green-lt:#4f9a5c;
+    --green-lt-bg:#eef8ef;
+    --green-dk:#1f6b3a;
+    --green-dk-bg:#e2f3e6;
+    --gray:#9aa39a;
+    --gray-bg:#eef1ec;
+  }
+
+  *{box-sizing:border-box;}
+
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Inter',sans-serif;
+    line-height:1.6;
+    padding-bottom:60px;
+  }
+
+  header.masthead{
+    background:var(--petrol);
+    color:var(--paper);
+    padding:24px 16px;
+    text-align:center;
+    box-shadow:0 2px 10px rgba(0,0,0,.1);
+  }
+
+  .eyebrow{
+    text-transform:uppercase;
+    letter-spacing:.1em;
+    font-size:12px;
+    color:var(--amber);
+    font-weight:600;
+  }
+
+  h1{
+    font-family:'Fraunces',serif;
+    font-size:26px;
+    margin:6px 0 4px;
+  }
+
+  .audience-note{
+    font-size:13px;
+    color:var(--paper);
+    opacity:.85;
+  }
+
+  main{
+    max-width:700px;
+    margin:0 auto;
+    padding:0 16px;
+  }
+
+  section.block{
+    margin:30px 0;
+  }
+
+  .intro-card{
+    background:rgba(255,255,255,0.55);
+    padding:18px;
+    border-radius:10px;
+    border:1px solid var(--line);
+    margin-bottom:18px;
+    font-size:15px;
+  }
+
+  .intro-card h2{
+    font-family:'Fraunces',serif;
+    font-size:19px;
+    margin:0 0 10px;
+    color:var(--petrol-dk);
+  }
+
+  .intro-card h3{
+    font-size:14px;
+    margin:16px 0 6px;
+    color:var(--amber);
+    text-transform:uppercase;
+    letter-spacing:.04em;
+  }
+
+  .formula{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    margin:10px 0;
+  }
+
+  .formula span{
+    background:var(--petrol);
+    color:var(--paper);
+    padding:6px 12px;
+    border-radius:20px;
+    font-size:13px;
+    font-weight:600;
+  }
+
+  .legend{
+    display:grid;
+    grid-template-columns:1fr;
+    gap:8px;
+    margin-top:10px;
+  }
+  .legend-row{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    font-size:13px;
+  }
+  .swatch{
+    width:22px;
+    height:22px;
+    border-radius:6px;
+    flex-shrink:0;
+    border:1px solid rgba(0,0,0,.15);
+  }
+  .sw-red{background:var(--error-bg); border-color:var(--error);}
+  .sw-yellow{background:var(--yellow-bg); border-color:var(--yellow);}
+  .sw-green-lt{background:var(--green-lt-bg); border-color:var(--green-lt);}
+  .sw-green-dk{background:var(--green-dk-bg); border-color:var(--green-dk);}
+
+  .section-title{
+    font-family:'Fraunces',serif;
+    font-size:22px;
+    color:var(--petrol-dk);
+    margin:0 0 4px;
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+  .section-title .num{
+    background:var(--amber);
+    color:#fff;
+    border-radius:50%;
+    width:30px;
+    height:30px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:14px;
+    flex-shrink:0;
+  }
+  .section-sub{
+    font-size:13px;
+    color:var(--petrol);
+    margin-bottom:16px;
+  }
+
+  .nav-links{
+    text-align:center;
+    font-size:13px;
+    margin-top:30px;
+  }
+  .nav-links a{
+    color:var(--petrol-dk);
+    font-weight:600;
+    text-decoration:none;
+    border-bottom:1px dashed var(--petrol);
+  }
+
+  /* --- GRA NA CZAS --- */
+  .game-wrap{
+    background:#fff;
+    border-radius:12px;
+    padding:20px;
+    border:1px solid var(--line);
+  }
+  .game-context{
+    font-size:14px;
+    background:var(--paper);
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:12px;
+    margin-bottom:14px;
+  }
+  .game-controls{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+    align-items:center;
+    margin-bottom:12px;
+    font-size:13px;
+  }
+  .game-controls label{ font-weight:600; }
+  .game-controls input[type=number]{
+    width:60px;
+    padding:6px;
+    border:1px solid var(--line);
+    border-radius:6px;
+    font-family:'Space Mono', monospace;
+  }
+  .preset-btn{
+    background:var(--paper);
+    border:1px solid var(--line);
+    border-radius:6px;
+    padding:6px 10px;
+    font-size:12px;
+    cursor:pointer;
+    font-weight:600;
+  }
+  .preset-btn:hover{ background:var(--line); }
+  .preset-btn.selected{ background:var(--amber); color:#fff; border-color:var(--amber); }
+
+  .hint-line{
+    font-size:13px;
+    text-align:center;
+    margin:0 0 14px;
+    color:var(--petrol);
+  }
+  .hint-line strong{ color:var(--petrol-dk); }
+
+  .clock-row{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:8px;
+    background:var(--petrol-dk);
+    border-radius:10px;
+    padding:14px;
+    margin-bottom:14px;
+  }
+  .clock-top{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:14px;
+  }
+  #digitalClock{
+    font-family:'Space Mono', monospace;
+    font-size:34px;
+    color:var(--amber);
+    letter-spacing:.05em;
+  }
+  #roundLabel{
+    color:var(--paper);
+    font-size:12px;
+    opacity:.8;
+  }
+  .timebar-track{
+    width:100%;
+    height:8px;
+    background:rgba(255,255,255,.15);
+    border-radius:6px;
+    overflow:hidden;
+  }
+  #timebarFill{
+    height:100%;
+    width:100%;
+    background:var(--amber);
+    border-radius:6px;
+    transition:width linear;
+  }
+
+  .round-header{
+    font-size:12px;
+    font-weight:700;
+    text-transform:uppercase;
+    letter-spacing:.04em;
+    color:var(--petrol);
+    margin:16px 0 6px;
+  }
+
+  .attempts-log{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+    margin-bottom:6px;
+    max-height:220px;
+    overflow-y:auto;
+  }
+  .attempt-block{
+    background:var(--paper);
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:12px;
+    font-size:15px;
+    line-height:2;
+  }
+  .attempt-block.success{
+    background:var(--green-dk-bg);
+    border-color:var(--green-dk);
+  }
+
+  .sentence-flow{
+    font-size:16px;
+    line-height:2.4;
+  }
+
+  .word-block{
+    display:inline-block;
+    margin:2px 3px;
+    padding:5px 10px;
+    border-radius:6px;
+    font-size:14px;
+    font-weight:600;
+    border:1px solid var(--line);
+    background:var(--gray-bg);
+    color:var(--gray);
+    opacity:.7;
+    cursor:not-allowed;
+    vertical-align:middle;
+  }
+  .word-block.active{
+    background:#fff;
+    color:var(--ink);
+    border-color:var(--amber);
+    opacity:1;
+    cursor:pointer;
+    box-shadow:0 0 0 2px rgba(198,116,43,.25);
+  }
+  .word-block.active:hover{ background:var(--yellow-bg); }
+  .word-block.done{
+    background:var(--green-dk-bg);
+    color:var(--green-dk);
+    border-color:var(--green-dk);
+    opacity:1;
+    cursor:default;
+  }
+  .word-block.suffix-only{
+    background:none;
+    border:none;
+    padding:0 2px;
+    margin:0;
+    color:var(--ink);
+    opacity:1;
+    font-weight:400;
+  }
+
+  .choice-group{
+    display:inline-flex;
+    flex-wrap:wrap;
+    gap:6px;
+    vertical-align:middle;
+    margin:2px 3px;
+  }
+  .choice-btn{
+    padding:6px 12px;
+    border-radius:6px;
+    font-size:13px;
+    font-weight:600;
+    border:1px solid var(--line);
+    background:#fff;
+    color:var(--ink);
+    cursor:pointer;
+  }
+  .choice-btn:hover{ background:var(--yellow-bg); }
+  .choice-btn.disabled-active{ cursor:default; }
+  .choice-btn.tier-red{
+    background:var(--error-bg);
+    color:var(--error);
+    border-color:var(--error);
+    cursor:default;
+  }
+  .choice-btn.tier-yellow{
+    background:var(--yellow-bg);
+    color:var(--yellow);
+    border-color:var(--yellow);
+    cursor:default;
+  }
+  .choice-btn.tier-green-lt{
+    background:var(--green-lt-bg);
+    color:var(--green-lt);
+    border-color:var(--green-lt);
+    cursor:default;
+  }
+  .choice-btn.tier-green-dk{
+    background:var(--green-dk-bg);
+    color:var(--green-dk);
+    border-color:var(--green-dk);
+    cursor:default;
+  }
+  .choice-resolved{
+    display:inline-block;
+    margin:2px 3px;
+    padding:5px 10px;
+    border-radius:6px;
+    font-size:14px;
+    font-weight:600;
+    border:1px solid;
+    vertical-align:middle;
+  }
+  .choice-resolved.tier-yellow{ background:var(--yellow-bg); color:var(--yellow); border-color:var(--yellow); }
+  .choice-resolved.tier-green-lt{ background:var(--green-lt-bg); color:var(--green-lt); border-color:var(--green-lt); }
+  .choice-resolved.tier-green-dk{ background:var(--green-dk-bg); color:var(--green-dk); border-color:var(--green-dk); }
+
+  .interrupt-inline{
+    display:inline-block;
+    margin:2px 3px;
+    padding:5px 10px;
+    border-radius:6px;
+    font-size:14px;
+    font-weight:700;
+    font-style:italic;
+    background:var(--error-bg);
+    color:var(--error);
+    border:1px solid var(--error);
+  }
+  .interrupt-tag{
+    font-size:12px;
+    font-weight:700;
+    font-style:normal;
+    color:var(--petrol-dk);
+    margin-left:6px;
+  }
+  .faded-rest{
+    color:var(--gray);
+    opacity:.55;
+    font-size:14px;
+  }
+
+  #playAgainBtn{
+    display:none;
+    background:var(--amber);
+    color:#fff;
+    border:none;
+    padding:12px 26px;
+    border-radius:8px;
+    font-weight:700;
+    cursor:pointer;
+    font-size:15px;
+    width:100%;
+    max-width:340px;
+    margin:14px auto 0;
+  }
+
+  @media (max-width:480px){
+    h1{ font-size:22px; }
+    #digitalClock{ font-size:28px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="masthead">
+  <div class="eyebrow">Trening Komunikacji Emocjonalnej — PCIS</div>
+  <h1>Mówię o tym spokojnie</h1>
+  <div class="audience-note">Ćwiczenie dla dziewczynek w wieku ok. 11 lat · Test 3 z 3 — gra na czas</div>
+</header>
+
+<main>
+
+  <section class="block">
+    <div class="intro-card">
+      <h2>Zanim zaczniesz</h2>
+      <p>To trzeci test — gra na czas! Wypowiadasz zdanie NVC słowo po słowie, klikając kolejne bloczki w odpowiedniej kolejności, zanim minie czas. Przy dwóch miejscach w zdaniu ("Czuję..." i "Proszę...") wybierasz jedno z pięciu słów — czasem lepsze, czasem gorsze, a dwa są po prostu złe i agresywne. W prawdziwym życiu koleżanki czasem przerywają — ta gra uczy, żeby się tym nie zniechęcać i próbować dalej.</p>
+      <h3>Metoda NVC</h3>
+      <div class="formula">
+        <span>Zauważyłam</span><span>→</span><span>Czuję</span><span>→</span><span>bo potrzebuję</span><span>→</span><span>Proszę</span>
+      </div>
+      <h3>Kolory bloczków</h3>
+      <div class="legend">
+        <div class="legend-row"><span class="swatch sw-red"></span> Czerwony — złe, agresywne słowo (nie wybieraj go)</div>
+        <div class="legend-row"><span class="swatch sw-yellow"></span> Żółty — ujdzie, ale zbyt ogólne</div>
+        <div class="legend-row"><span class="swatch sw-green-lt"></span> Jasnozielony — dobre słowo, prawie najlepsze</div>
+        <div class="legend-row"><span class="swatch sw-green-dk"></span> Ciemnozielony — najtrafniejsze słowo</div>
+      </div>
+      <p style="margin-bottom:0;">Musisz zdążyć nacisnąć każde kolejne pole, zanim minie czas. Jeśli nie zdążysz, koleżanka wtrąci coś swojego — ale zdanie zostaje tam, gdzie było. Próbujesz nacisnąć to samo pole dalej, a jeśli nadal nic nie klikasz, pojawiają się kolejne wtrącenia. Nie poddawaj się!</p>
+    </div>
+  </section>
+
+  <!-- TEST 3: GRA NA CZAS -->
+  <section class="block" id="test3">
+    <div class="section-title"><span class="num">3</span>Test — Gra na czas</div>
+    <div class="section-sub">Naciskaj kolejne bloczki zdania, zanim koleżanka Ci przerwie!</div>
+
+    <div class="game-wrap">
+      <div class="game-context">
+        <strong>Sytuacja:</strong> Stoicie na korytarzu i zastanawiacie się, kto zaniesie pani kwiatki. Proponujesz, żeby zdecydować rzutem kostką — kto wyrzuci więcej, ten idzie. Twoja koleżanka nagle mówi: <em>"Co ty pierdzielisz?"</em> Ty postanawiasz odpowiedzieć jej spokojnie, metodą NVC — słowo po słowie, zanim zabraknie czasu.
+      </div>
+
+      <div class="game-controls">
+        <label for="difficultyInput">Czas na naciśnięcie jednego pola (sekundy):</label>
+        <input type="number" id="difficultyInput" value="3" min="1" max="30">
+        <button class="preset-btn selected" data-sec="3" onclick="setDifficulty(3)">Domyślny · 3s</button>
+        <button class="preset-btn" data-sec="2" onclick="setDifficulty(2)">Trudny · 2s</button>
+        <button class="preset-btn" data-sec="1" onclick="setDifficulty(1)">Bardzo trudny · 1s</button>
+      </div>
+
+      <p class="hint-line">⏱️ <strong>Naciskaj, zanim minie czas.</strong> Masz <strong id="timeLabel">3</strong> s na każde pole. Jeśli nie zdążysz, koleżanka Ci wtrąci coś swojego — ale zdanie zostaje tam, gdzie było, i próbujesz nacisnąć to samo pole dalej. Czytaj zdanie na głos, klikając bloczki po kolei.</p>
+
+      <div class="clock-row">
+        <div class="clock-top">
+          <div id="digitalClock">00:03</div>
+          <div id="roundLabel">Wtrącenia: 0</div>
+        </div>
+        <div class="timebar-track"><div id="timebarFill"></div></div>
+      </div>
+
+      <div class="attempts-log" id="attemptsLog"></div>
+
+      <div class="round-header" id="currentHeader">Twoje zdanie:</div>
+      <div class="sentence-flow" id="sentenceFlow"></div>
+
+      <button id="playAgainBtn" onclick="playAgain()">Zagraj ponownie</button>
+    </div>
+  </section>
+
+  <div class="nav-links">Chcesz najpierw poćwiczyć spokojnie? Otwórz <strong>asertywnosc1.html</strong> (Test 1 — FUO) lub <strong>nvc1.html</strong> (Test 2 — NVC).</div>
+
+</main>
+
+<script>
+/* ============ TEST 3: GRA NA CZAS — SŁOWO PO SŁOWIE ============ */
+
+/* Każdy element to albo zwykłe słowo do naciśnięcia, albo miejsce wyboru
+   z 5 opcjami (2 złe/czerwone, 1 żółta, 1 jasnozielona, 1 ciemnozielona - najlepsza). */
+const tokens = [
+  { type:'word', text:'Zauważyłam', suffix:',' },
+  { type:'word', text:'że' },
+  { type:'word', text:'rzucacie' },
+  { type:'word', text:'kostką', suffix:',' },
+  { type:'word', text:'żeby' },
+  { type:'word', text:'wybrać', suffix:',' },
+  { type:'word', text:'kto' },
+  { type:'word', text:'zaniesie' },
+  { type:'word', text:'kwiaty', suffix:'.' },
+  { type:'word', text:'Czuję' },
+  { type:'choice', suffix:',', options:[
+      { text:'wściekła, że mnie olewacie', tier:'red' },
+      { text:'wkurzona jak nie wiem co', tier:'red' },
+      { text:'źle', tier:'yellow' },
+      { text:'poirytowana', tier:'green-lt' },
+      { text:'pominięta', tier:'green-dk' }
+    ]},
+  { type:'word', text:'bo' },
+  { type:'word', text:'potrzebuję' },
+  { type:'word', text:'też' },
+  { type:'word', text:'mieć' },
+  { type:'word', text:'szansę', suffix:'.' },
+  { type:'word', text:'Proszę', suffix:',' },
+  { type:'choice', suffix:'.', options:[
+      { text:'dawajcie tu tę kostkę, ale już!', tier:'red' },
+      { text:'no i olewacie mnie, super', tier:'red' },
+      { text:'dajcie mi kostkę', tier:'yellow' },
+      { text:'pozwólcie mi rzucić kostką', tier:'green-lt' },
+      { text:'pozwólcie mi zagrać kostką razem z wami', tier:'green-dk' }
+    ]}
+];
+
+const interruptions = [
+  "Nudy!","Ale przynudzasz...","Eee, nieważne.","Daj spokój.","Szybciej, no!",
+  "Nie mam czasu na to.","Głupoty gadasz.","Weź przestań już.","Ziewam z nudów.",
+  "Kto by tego słuchał.","Skróć to jakoś.","No i co z tego?","Nieważne, chodźmy już.",
+  "Znowu to samo, ojej.","Daruj sobie, serio.","Aha, jasne, jasne.","Serio? Teraz akurat?",
+  "Nie no, bez przesady.","Ok, ok, następny temat.","Meh, nudne to.",
+  "Motyla noga, ale przynudzasz.","Kurczę pióro, skróć to!","Ale nudy, litości.",
+  "Zaraz zasnę z nudów.","No weź, bez dramatu.","Ile jeszcze będziesz gadać?",
+  "Trudno to słuchać, ej.","Idziemy już, no chodź.","Eh, głupoty gadasz.","Co ty pierdzielisz?"
+];
+
+let currentIdx = 0;
+let difficulty = 3;
+let timeLeft = 3;
+let timerId = null;
+let interruptCount = 0;
+let gameOver = false;
+let timerStarted = false; // czas nie leci, dopóki nie naciśniesz pierwszego pola
+let resolvedTexts = []; // { text, cssClass } dla już naciśniętych pól
+
+function shuffle(arr){
+  const a = arr.slice();
+  for(let i=a.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]] = [a[j],a[i]];
+  }
+  return a;
+}
+
+function setDifficulty(sec){
+  document.getElementById('difficultyInput').value = sec;
+  document.querySelectorAll('.preset-btn').forEach(b => {
+    b.classList.toggle('selected', parseInt(b.dataset.sec) === sec);
+  });
+  updateDifficultyFromInput();
+}
+
+function updateDifficultyFromInput(){
+  const val = parseInt(document.getElementById('difficultyInput').value) || 3;
+  difficulty = val;
+  document.getElementById('timeLabel').textContent = difficulty;
+  if(!timerStarted){
+    timeLeft = difficulty;
+    updateClock(true);
+  }
+}
+document.getElementById('difficultyInput').addEventListener('change', updateDifficultyFromInput);
+
+function updateClock(resetBar){
+  const m = String(Math.max(0, Math.floor(timeLeft/60))).padStart(2,'0');
+  const s = String(Math.max(0, timeLeft%60)).padStart(2,'0');
+  document.getElementById('digitalClock').textContent = m + ':' + s;
+  const fill = document.getElementById('timebarFill');
+  if(resetBar){
+    fill.style.transition = 'none';
+    fill.style.width = '100%';
+    // wymuś reflow, żeby kolejne przejście faktycznie wystartowało
+    void fill.offsetWidth;
+    fill.style.transition = 'width ' + difficulty + 's linear';
+    fill.style.width = '0%';
+  }
+}
+
+/* Odliczanie zawsze dotyczy JEDNEGO, aktualnego pola. Gdy czas minie,
+   pole NIE znika i zdanie NIE wraca do początku — pojawia się tylko
+   wtrącenie koleżanki, a zegar startuje od nowa dla tego samego pola. */
+function startTimerForToken(){
+  clearInterval(timerId);
+  timerStarted = true;
+  timeLeft = difficulty;
+  updateClock(true);
+  timerId = setInterval(() => {
+    timeLeft--;
+    updateClock(false);
+    if(timeLeft <= 0) timeUp();
+  }, 1000);
+}
+
+function renderSentence(){
+  const flow = document.getElementById('sentenceFlow');
+  flow.innerHTML = '';
+
+  // już naciśnięte pola
+  resolvedTexts.forEach(r => {
+    const span = document.createElement('span');
+    span.className = r.cssClass;
+    span.textContent = r.text;
+    flow.appendChild(span);
+    if(r.suffix) flow.appendChild(document.createTextNode(r.suffix + ' '));
+  });
+
+  if(gameOver) return;
+
+  const tok = tokens[currentIdx];
+  if(tok.type === 'word'){
+    const btn = document.createElement('button');
+    btn.className = 'word-block active';
+    btn.textContent = tok.text;
+    btn.onclick = () => pressWord();
+    flow.appendChild(btn);
+    if(tok.suffix) flow.appendChild(document.createTextNode(tok.suffix + ' '));
+  } else {
+    const group = document.createElement('span');
+    group.className = 'choice-group';
+    const shuffled = shuffle(tok.options);
+    shuffled.forEach(opt => {
+      const btn = document.createElement('button');
+      btn.className = 'choice-btn';
+      btn.textContent = opt.text;
+      btn.onclick = () => pressChoice(opt, btn, group);
+      group.appendChild(btn);
+    });
+    flow.appendChild(group);
+  }
+
+  // zapowiedź reszty zdania, wygaszona
+  const restWords = tokens.slice(currentIdx+1).map(t => t.type === 'word' ? t.text : '(…wybór…)').join(' ');
+  if(restWords){
+    const rest = document.createElement('span');
+    rest.className = 'faded-rest';
+    rest.textContent = ' ' + restWords;
+    flow.appendChild(rest);
+  }
+}
+
+function pressWord(){
+  if(gameOver) return;
+  const tok = tokens[currentIdx];
+  resolvedTexts.push({ text: tok.text, cssClass: 'word-block done', suffix: tok.suffix || '' });
+  advance();
+}
+
+function pressChoice(opt, btn, group){
+  if(gameOver) return;
+  if(opt.tier === 'red'){
+    btn.classList.add('tier-red','disabled-active');
+    btn.disabled = true;
+    return; // zła odpowiedź: podświetla się na czerwono, nie liczy się jako postęp, zegar leci dalej
+  }
+  // poprawny wybór (żółty / jasnozielony / ciemnozielony) — zdanie idzie dalej
+  Array.from(group.children).forEach(b => b.disabled = true);
+  const tok = tokens[currentIdx];
+  resolvedTexts.push({ text: opt.text, cssClass: 'choice-resolved tier-' + opt.tier, suffix: tok.suffix || '' });
+  advance();
+}
+
+function advance(){
+  currentIdx++;
+  if(currentIdx >= tokens.length){
+    finishSuccess();
+  } else {
+    startTimerForToken();
+    renderSentence();
+  }
+}
+
+function timeUp(){
+  clearInterval(timerId);
+  timerId = null;
+
+  interruptCount++;
+  document.getElementById('roundLabel').textContent = 'Wtrącenia: ' + interruptCount;
+
+  const line = interruptions[Math.floor(Math.random()*interruptions.length)];
+  const bubble = document.createElement('div');
+  bubble.className = 'attempt-block';
+  bubble.innerHTML =
+    '<span class="interrupt-inline">' + line + '</span>' +
+    '<span class="interrupt-tag">(nie zdążyłaś — spróbuj nacisnąć teraz to samo pole!)</span>';
+  const log = document.getElementById('attemptsLog');
+  log.appendChild(bubble);
+  log.scrollTop = log.scrollHeight;
+
+  // zdanie NIE wraca do początku — dalej próbujesz nacisnąć to samo pole,
+  // po prostu odliczanie startuje od nowa
+  startTimerForToken();
+}
+
+function finishSuccess(){
+  clearInterval(timerId);
+  timerId = null;
+  gameOver = true;
+
+  const attemptDiv = document.createElement('div');
+  attemptDiv.className = 'attempt-block success';
+  let html = '';
+  resolvedTexts.forEach(r => {
+    html += '<span class="' + r.cssClass + '">' + r.text + '</span>' + (r.suffix ? r.suffix + ' ' : ' ');
+  });
+  html += '<span class="interrupt-tag" style="color:var(--green-dk);">🎉 Udało się! Powiedziałaś to spokojnie, mimo przerywania!</span>';
+  attemptDiv.innerHTML = html;
+  document.getElementById('attemptsLog').appendChild(attemptDiv);
+
+  document.getElementById('sentenceFlow').innerHTML = '';
+  document.getElementById('currentHeader').textContent = 'Koniec — udało się! (wtrącenia po drodze: ' + interruptCount + ')';
+  document.getElementById('playAgainBtn').style.display = 'block';
+}
+
+function playAgain(){
+  gameOver = false;
+  currentIdx = 0;
+  interruptCount = 0;
+  timerStarted = false;
+  resolvedTexts = [];
+  timeLeft = difficulty;
+  document.getElementById('attemptsLog').innerHTML = '';
+  document.getElementById('roundLabel').textContent = 'Wtrącenia: 0';
+  document.getElementById('currentHeader').textContent = 'Twoje zdanie:';
+  document.getElementById('playAgainBtn').style.display = 'none';
+  updateClock(true);
+  renderSentence();
+}
+
+updateDifficultyFromInput();
+renderSentence();
+</script>
+
+</body>
+</html>

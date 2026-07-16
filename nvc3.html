@@ -2,776 +2,838 @@
 <html lang="pl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mówię o tym spokojnie — Gra na czas — PCIS</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Mówię o tym spokojnie — Trening NVC</title>
+
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap');
+*, *::before, *::after{ box-sizing: border-box; }
 
-  :root{
-    --paper:#EEE7D8;
-    --ink:#1E2B2B;
-    --petrol:#20423F;
-    --petrol-dk:#152D2B;
-    --amber:#C6742B;
-    --line:#C9BFA8;
-    --error:#d9534f;
-    --error-bg:#fff0f0;
-    --yellow:#c99a26;
-    --yellow-bg:#fdf6e3;
-    --green-lt:#4f9a5c;
-    --green-lt-bg:#eef8ef;
-    --green-dk:#1f6b3a;
-    --green-dk-bg:#e2f3e6;
-    --gray:#9aa39a;
-    --gray-bg:#eef1ec;
-  }
+:root{
+  --cream:        #F3EFE3;
+  --white:        #FFFFFF;
+  --green-dark:   #1F3D34;
+  --green-darker: #16302A;
+  --amber:        #C98A3B;
+  --amber-dark:   #B0762C;
+  --text-main:    #223229;
+  --text-soft:    #52645A;
+  --line:         #DCD4BE;
+  --shadow:       rgba(31, 61, 52, 0.12);
+  --done-bg:      #E4EFE7;
+  --done-text:    #1F3D34;
+  --good:         #2E7D32;
+  --bad:          #C62828;
+}
 
-  *{box-sizing:border-box;}
+html, body{
+  margin: 0;
+  padding: 0;
+  min-height: 100%;
+  background: var(--cream);
+  color: var(--text-main);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  line-height: 1.55;
+  -webkit-tap-highlight-color: transparent;
+}
 
-  body{
-    margin:0;
-    background:var(--paper);
-    color:var(--ink);
-    font-family:'Inter',sans-serif;
-    line-height:1.6;
-    padding-bottom:60px;
-  }
+body{
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: 100vh;
+  padding: 24px 12px 48px;
+}
 
-  header.masthead{
-    background:var(--petrol);
-    color:var(--paper);
-    padding:24px 16px;
-    text-align:center;
-    box-shadow:0 2px 10px rgba(0,0,0,.1);
-  }
+.card{
+  width: 100%;
+  max-width: 700px;
+  background: var(--white);
+  border-radius: 20px;
+  box-shadow: 0 10px 30px var(--shadow);
+  overflow: hidden;
+  border: 1px solid var(--line);
+  position: relative;
+}
 
-  .eyebrow{
-    text-transform:uppercase;
-    letter-spacing:.1em;
-    font-size:12px;
-    color:var(--amber);
-    font-weight:600;
-  }
+.screen{ display: none; }
+.screen.active{ display: block; }
 
-  h1{
-    font-family:'Fraunces',serif;
-    font-size:26px;
-    margin:6px 0 4px;
-  }
+/* ---------- Nagłówek (ekran ustawień i odsłuchu) ---------- */
+.header{
+  background: linear-gradient(160deg, var(--green-dark), var(--green-darker));
+  color: var(--cream);
+  padding: 32px 24px 26px;
+  text-align: center;
+  position: relative;
+}
+.header h1{
+  margin: 0 0 6px;
+  font-size: clamp(22px, 5.5vw, 30px);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+.header p{
+  margin: 0;
+  font-size: clamp(14px, 3.2vw, 16px);
+  color: var(--amber);
+  font-weight: 600;
+}
 
-  .audience-note{
-    font-size:13px;
-    color:var(--paper);
-    opacity:.85;
-  }
+.back-link{
+  position: absolute;
+  top: 14px;
+  left: 16px;
+  font-size: 12px;
+  color: var(--cream);
+  opacity: 0.75;
+  text-decoration: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px 6px;
+}
+.back-link:hover{ opacity: 1; text-decoration: underline; }
 
-  main{
-    max-width:700px;
-    margin:0 auto;
-    padding:0 16px;
-  }
+.content{ padding: 24px 24px 8px; }
+.section{ margin-bottom: 28px; }
+.section h2{
+  font-size: 15px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--green-dark);
+  margin: 0 0 12px;
+  font-weight: 700;
+}
 
-  section.block{
-    margin:30px 0;
-  }
+.instruction-box{
+  background: var(--cream);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 18px 18px;
+  font-size: 15px;
+}
+.instruction-box p{ margin: 0 0 12px; }
+.instruction-box p:last-child{ margin-bottom: 0; }
+.instruction-box ul{ margin: 0 0 12px; padding-left: 20px; }
+.instruction-box li{ margin-bottom: 4px; }
+.instruction-box strong{ color: var(--green-dark); }
 
-  .intro-card{
-    background:rgba(255,255,255,0.55);
-    padding:18px;
-    border-radius:10px;
-    border:1px solid var(--line);
-    margin-bottom:18px;
-    font-size:15px;
-  }
+.difficulty-box{
+  background: var(--cream);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 20px 18px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+}
+.difficulty-hint{ font-size: 13px; color: var(--text-soft); text-align: center; margin: 0; }
 
-  .intro-card h2{
-    font-family:'Fraunces',serif;
-    font-size:19px;
-    margin:0 0 10px;
-    color:var(--petrol-dk);
-  }
+.stepper{ display: flex; align-items: center; gap: 18px; }
+.stepper-btn{
+  width: 52px; height: 52px; min-height: 48px;
+  border-radius: 50%; border: none;
+  background: var(--green-dark); color: var(--cream);
+  font-size: 22px; font-weight: 700; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: background-color 0.18s ease, transform 0.12s ease;
+  user-select: none;
+}
+.stepper-btn:hover{ background: var(--green-darker); }
+.stepper-btn:active{ transform: scale(0.92); background: var(--amber-dark); }
+.stepper-btn:focus-visible{ outline: 3px solid var(--amber); outline-offset: 2px; }
+.stepper-btn:disabled{ opacity: 0.35; cursor: not-allowed; transform: none; }
 
-  .intro-card h3{
-    font-size:14px;
-    margin:16px 0 6px;
-    color:var(--amber);
-    text-transform:uppercase;
-    letter-spacing:.04em;
-  }
+.stepper-value{
+  min-width: 90px; text-align: center;
+  font-size: 28px; font-weight: 700; color: var(--green-dark);
+  font-variant-numeric: tabular-nums;
+}
+.stepper-value .unit{ font-size: 16px; font-weight: 600; color: var(--text-soft); margin-left: 4px; }
 
-  .formula{
-    display:flex;
-    flex-wrap:wrap;
-    gap:8px;
-    margin:10px 0;
-  }
+.footer{ padding: 8px 24px 28px; }
 
-  .formula span{
-    background:var(--petrol);
-    color:var(--paper);
-    padding:6px 12px;
-    border-radius:20px;
-    font-size:13px;
-    font-weight:600;
-  }
+.big-btn{
+  width: 100%;
+  min-height: 56px;
+  border: none;
+  border-radius: 14px;
+  background: var(--amber);
+  color: var(--white);
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  cursor: pointer;
+  transition: background-color 0.18s ease, transform 0.12s ease, box-shadow 0.18s ease;
+  box-shadow: 0 6px 16px rgba(201, 138, 59, 0.35);
+}
+.big-btn:hover{ background: var(--amber-dark); }
+.big-btn:active{ transform: scale(0.98); }
+.big-btn:focus-visible{ outline: 3px solid var(--green-dark); outline-offset: 3px; }
+.big-btn:disabled{
+  background: var(--line);
+  color: var(--text-soft);
+  cursor: not-allowed;
+  box-shadow: none;
+}
 
-  .legend{
-    display:grid;
-    grid-template-columns:1fr;
-    gap:8px;
-    margin-top:10px;
-  }
-  .legend-row{
-    display:flex;
-    align-items:center;
-    gap:10px;
-    font-size:13px;
-  }
-  .swatch{
-    width:22px;
-    height:22px;
-    border-radius:6px;
-    flex-shrink:0;
-    border:1px solid rgba(0,0,0,.15);
-  }
-  .sw-red{background:var(--error-bg); border-color:var(--error);}
-  .sw-yellow{background:var(--yellow-bg); border-color:var(--yellow);}
-  .sw-green-lt{background:var(--green-lt-bg); border-color:var(--green-lt);}
-  .sw-green-dk{background:var(--green-dk-bg); border-color:var(--green-dk);}
+/* ---------- Ekran odsłuchu komunikatu (etap 2) ---------- */
+.listen-status{
+  font-size: 13px;
+  color: var(--text-soft);
+  text-align: center;
+  min-height: 18px;
+  margin: 0 0 4px;
+}
+.listen-text-box{
+  display: none;
+  background: var(--cream);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 18px;
+  font-size: 17px;
+  line-height: 1.7;
+  color: var(--text-main);
+}
+.listen-text-box.visible{ display: block; }
+.listen-text-box .label{
+  display: block;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--green-dark);
+  font-weight: 700;
+  margin-bottom: 8px;
+}
 
-  .section-title{
-    font-family:'Fraunces',serif;
-    font-size:22px;
-    color:var(--petrol-dk);
-    margin:0 0 4px;
-    display:flex;
-    align-items:center;
-    gap:10px;
-  }
-  .section-title .num{
-    background:var(--amber);
-    color:#fff;
-    border-radius:50%;
-    width:30px;
-    height:30px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-size:14px;
-    flex-shrink:0;
-  }
-  .section-sub{
-    font-size:13px;
-    color:var(--petrol);
-    margin-bottom:16px;
-  }
+/* ---------- Ekran gry (etap 3) ---------- */
+.clock-zone{
+  background: linear-gradient(160deg, var(--green-dark), var(--green-darker));
+  padding: 22px 20px 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  position: relative;
+}
+#digitalClock{
+  font-variant-numeric: tabular-nums;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--amber);
+  letter-spacing: 0.06em;
+}
+#statusLine{
+  font-size: 13px;
+  color: var(--cream);
+  opacity: 0.85;
+  min-height: 18px;
+  text-align: center;
+}
+.timebar-track{
+  width: 100%; max-width: 420px; height: 4px;
+  background: rgba(255,255,255,0.15);
+  border-radius: 4px; overflow: hidden;
+}
+#timebarFill{
+  height: 100%; width: 100%;
+  background: var(--amber); border-radius: 4px;
+  transition: width linear;
+}
 
-  .nav-links{
-    text-align:center;
-    font-size:13px;
-    margin-top:30px;
-  }
-  .nav-links a{
-    color:var(--petrol-dk);
-    font-weight:600;
-    text-decoration:none;
-    border-bottom:1px dashed var(--petrol);
-  }
+.sentence-zone{
+  padding: 26px 22px 30px;
+  min-height: 220px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.sentence-flow{
+  font-size: clamp(17px, 4.4vw, 20px);
+  line-height: 1.9;
+  text-align: center;
+}
+.word-block{
+  display: inline-block;
+  margin: 3px 4px;
+  padding: 8px 14px;
+  min-height: 48px;
+  border-radius: 10px;
+  border: none;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 0.15s ease, transform 0.1s ease, box-shadow 0.15s ease;
+  vertical-align: middle;
+}
+.word-block.active{ background: var(--amber); color: var(--white); box-shadow: 0 4px 12px rgba(201,138,59,0.35); }
+.word-block.active:hover{ background: var(--amber-dark); }
+.word-block.active:active{ transform: scale(0.94); }
+.word-block.active:focus-visible{ outline: 3px solid var(--green-dark); outline-offset: 2px; }
+.word-block.active:disabled{ opacity: 0.55; cursor: default; }
+.word-block.done{ background: var(--done-bg); color: var(--done-text); cursor: default; }
+.word-block.done.was-incorrect{ box-shadow: inset 0 0 0 2px rgba(198,40,40,0.4); }
+.faded-rest{ color: var(--text-soft); opacity: 0.4; }
 
-  /* --- GRA NA CZAS --- */
-  .game-wrap{
-    background:#fff;
-    border-radius:12px;
-    padding:20px;
-    border:1px solid var(--line);
-  }
-  .game-context{
-    font-size:14px;
-    background:var(--paper);
-    border:1px solid var(--line);
-    border-radius:8px;
-    padding:12px;
-    margin-bottom:14px;
-  }
-  .game-controls{
-    display:flex;
-    flex-wrap:wrap;
-    gap:10px;
-    align-items:center;
-    margin-bottom:12px;
-    font-size:13px;
-  }
-  .game-controls label{ font-weight:600; }
-  .game-controls input[type=number]{
-    width:60px;
-    padding:6px;
-    border:1px solid var(--line);
-    border-radius:6px;
-    font-family:'Space Mono', monospace;
-  }
-  .preset-btn{
-    background:var(--paper);
-    border:1px solid var(--line);
-    border-radius:6px;
-    padding:6px 10px;
-    font-size:12px;
-    cursor:pointer;
-    font-weight:600;
-  }
-  .preset-btn:hover{ background:var(--line); }
-  .preset-btn.selected{ background:var(--amber); color:#fff; border-color:var(--amber); }
+.choice-group{ display: inline-flex; flex-wrap: wrap; gap: 8px; justify-content: center; vertical-align: middle; margin: 4px 2px; }
+.choice-group .word-block{ margin: 3px; }
+.word-block.correct-flash{ background: var(--good) !important; color: #fff !important; box-shadow: 0 4px 12px rgba(46,125,50,0.4); }
+.word-block.incorrect-flash{ background: var(--bad) !important; color: #fff !important; box-shadow: 0 4px 12px rgba(198,40,40,0.4); }
 
-  .hint-line{
-    font-size:13px;
-    text-align:center;
-    margin:0 0 14px;
-    color:var(--petrol);
-  }
-  .hint-line strong{ color:var(--petrol-dk); }
+.success-box{ display: none; flex-direction: column; align-items: center; gap: 14px; text-align: center; padding: 10px 6px 4px; }
+.success-box.visible{ display: flex; }
+.success-box h2{ margin: 0; color: var(--green-dark); font-size: 22px; }
+.success-box p{ margin: 0; color: var(--text-soft); font-size: 14px; }
+.again-btn{
+  min-height: 52px; padding: 0 26px; border: none; border-radius: 12px;
+  background: var(--green-dark); color: var(--cream);
+  font-size: 16px; font-weight: 700; cursor: pointer;
+  transition: background-color 0.18s ease, transform 0.12s ease;
+}
+.again-btn:hover{ background: var(--green-darker); }
+.again-btn:active{ transform: scale(0.97); }
 
-  .clock-row{
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    gap:8px;
-    background:var(--petrol-dk);
-    border-radius:10px;
-    padding:14px;
-    margin-bottom:14px;
-  }
-  .clock-top{
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    gap:14px;
-  }
-  #digitalClock{
-    font-family:'Space Mono', monospace;
-    font-size:34px;
-    color:var(--amber);
-    letter-spacing:.05em;
-  }
-  #roundLabel{
-    color:var(--paper);
-    font-size:12px;
-    opacity:.8;
-  }
-  .timebar-track{
-    width:100%;
-    height:8px;
-    background:rgba(255,255,255,.15);
-    border-radius:6px;
-    overflow:hidden;
-  }
-  #timebarFill{
-    height:100%;
-    width:100%;
-    background:var(--amber);
-    border-radius:6px;
-    transition:width linear;
-  }
-
-  .round-header{
-    font-size:12px;
-    font-weight:700;
-    text-transform:uppercase;
-    letter-spacing:.04em;
-    color:var(--petrol);
-    margin:16px 0 6px;
-  }
-
-  .attempts-log{
-    display:flex;
-    flex-direction:column;
-    gap:10px;
-    margin-bottom:6px;
-    max-height:220px;
-    overflow-y:auto;
-  }
-  .attempt-block{
-    background:var(--paper);
-    border:1px solid var(--line);
-    border-radius:8px;
-    padding:12px;
-    font-size:15px;
-    line-height:2;
-  }
-  .attempt-block.success{
-    background:var(--green-dk-bg);
-    border-color:var(--green-dk);
-  }
-
-  .sentence-flow{
-    font-size:16px;
-    line-height:2.4;
-  }
-
-  .word-block{
-    display:inline-block;
-    margin:2px 3px;
-    padding:5px 10px;
-    border-radius:6px;
-    font-size:14px;
-    font-weight:600;
-    border:1px solid var(--line);
-    background:var(--gray-bg);
-    color:var(--gray);
-    opacity:.7;
-    cursor:not-allowed;
-    vertical-align:middle;
-  }
-  .word-block.active{
-    background:#fff;
-    color:var(--ink);
-    border-color:var(--amber);
-    opacity:1;
-    cursor:pointer;
-    box-shadow:0 0 0 2px rgba(198,116,43,.25);
-  }
-  .word-block.active:hover{ background:var(--yellow-bg); }
-  .word-block.done{
-    background:var(--green-dk-bg);
-    color:var(--green-dk);
-    border-color:var(--green-dk);
-    opacity:1;
-    cursor:default;
-  }
-  .word-block.suffix-only{
-    background:none;
-    border:none;
-    padding:0 2px;
-    margin:0;
-    color:var(--ink);
-    opacity:1;
-    font-weight:400;
-  }
-
-  .choice-group{
-    display:inline-flex;
-    flex-wrap:wrap;
-    gap:6px;
-    vertical-align:middle;
-    margin:2px 3px;
-  }
-  .choice-btn{
-    padding:6px 12px;
-    border-radius:6px;
-    font-size:13px;
-    font-weight:600;
-    border:1px solid var(--line);
-    background:#fff;
-    color:var(--ink);
-    cursor:pointer;
-  }
-  .choice-btn:hover{ background:var(--yellow-bg); }
-  .choice-btn.disabled-active{ cursor:default; }
-  .choice-btn.tier-red{
-    background:var(--error-bg);
-    color:var(--error);
-    border-color:var(--error);
-    cursor:default;
-  }
-  .choice-btn.tier-yellow{
-    background:var(--yellow-bg);
-    color:var(--yellow);
-    border-color:var(--yellow);
-    cursor:default;
-  }
-  .choice-btn.tier-green-lt{
-    background:var(--green-lt-bg);
-    color:var(--green-lt);
-    border-color:var(--green-lt);
-    cursor:default;
-  }
-  .choice-btn.tier-green-dk{
-    background:var(--green-dk-bg);
-    color:var(--green-dk);
-    border-color:var(--green-dk);
-    cursor:default;
-  }
-  .choice-resolved{
-    display:inline-block;
-    margin:2px 3px;
-    padding:5px 10px;
-    border-radius:6px;
-    font-size:14px;
-    font-weight:600;
-    border:1px solid;
-    vertical-align:middle;
-  }
-  .choice-resolved.tier-yellow{ background:var(--yellow-bg); color:var(--yellow); border-color:var(--yellow); }
-  .choice-resolved.tier-green-lt{ background:var(--green-lt-bg); color:var(--green-lt); border-color:var(--green-lt); }
-  .choice-resolved.tier-green-dk{ background:var(--green-dk-bg); color:var(--green-dk); border-color:var(--green-dk); }
-
-  .interrupt-inline{
-    display:inline-block;
-    margin:2px 3px;
-    padding:5px 10px;
-    border-radius:6px;
-    font-size:14px;
-    font-weight:700;
-    font-style:italic;
-    background:var(--error-bg);
-    color:var(--error);
-    border:1px solid var(--error);
-  }
-  .interrupt-tag{
-    font-size:12px;
-    font-weight:700;
-    font-style:normal;
-    color:var(--petrol-dk);
-    margin-left:6px;
-  }
-  .faded-rest{
-    color:var(--gray);
-    opacity:.55;
-    font-size:14px;
-  }
-
-  #playAgainBtn{
-    display:none;
-    background:var(--amber);
-    color:#fff;
-    border:none;
-    padding:12px 26px;
-    border-radius:8px;
-    font-weight:700;
-    cursor:pointer;
-    font-size:15px;
-    width:100%;
-    max-width:340px;
-    margin:14px auto 0;
-  }
-
-  @media (max-width:480px){
-    h1{ font-size:22px; }
-    #digitalClock{ font-size:28px; }
-  }
+@media (max-width: 480px){
+  .card{ border-radius: 16px; }
+  .content{ padding: 20px 16px 4px; }
+  .footer{ padding: 8px 16px 24px; }
+  .header{ padding: 26px 18px 22px; }
+  .clock-zone{ padding: 18px 16px 14px; }
+  .sentence-zone{ padding: 20px 16px 24px; }
+}
 </style>
 </head>
 <body>
 
-<header class="masthead">
-  <div class="eyebrow">Trening Komunikacji Emocjonalnej — PCIS</div>
-  <h1>Mówię o tym spokojnie</h1>
-  <div class="audience-note">Ćwiczenie dla dziewczynek w wieku ok. 11 lat · Test 3 z 3 — gra na czas</div>
-</header>
+<div class="card">
 
-<main>
+  <!-- ============================================================
+       EKRAN 1 — USTAWIENIA
+       ============================================================ -->
+  <div class="screen active" id="screenSettings">
+    <header class="header">
+      <h1>Mówię o tym spokojnie</h1>
+      <p>Trening komunikacji NVC</p>
+    </header>
 
-  <section class="block">
-    <div class="intro-card">
-      <h2>Zanim zaczniesz</h2>
-      <p>To trzeci test — gra na czas! Wypowiadasz zdanie NVC słowo po słowie, klikając kolejne bloczki w odpowiedniej kolejności, zanim minie czas. Przy dwóch miejscach w zdaniu ("Czuję..." i "Proszę...") wybierasz jedno z pięciu słów — czasem lepsze, czasem gorsze, a dwa są po prostu złe i agresywne. W prawdziwym życiu koleżanki czasem przerywają — ta gra uczy, żeby się tym nie zniechęcać i próbować dalej.</p>
-      <h3>Metoda NVC</h3>
-      <div class="formula">
-        <span>Zauważyłam</span><span>→</span><span>Czuję</span><span>→</span><span>bo potrzebuję</span><span>→</span><span>Proszę</span>
-      </div>
-      <h3>Kolory bloczków</h3>
-      <div class="legend">
-        <div class="legend-row"><span class="swatch sw-red"></span> Czerwony — złe, agresywne słowo (nie wybieraj go)</div>
-        <div class="legend-row"><span class="swatch sw-yellow"></span> Żółty — ujdzie, ale zbyt ogólne</div>
-        <div class="legend-row"><span class="swatch sw-green-lt"></span> Jasnozielony — dobre słowo, prawie najlepsze</div>
-        <div class="legend-row"><span class="swatch sw-green-dk"></span> Ciemnozielony — najtrafniejsze słowo</div>
-      </div>
-      <p style="margin-bottom:0;">Musisz zdążyć nacisnąć każde kolejne pole, zanim minie czas. Jeśli nie zdążysz, koleżanka wtrąci coś swojego — ale zdanie zostaje tam, gdzie było. Próbujesz nacisnąć to samo pole dalej, a jeśli nadal nic nie klikasz, pojawiają się kolejne wtrącenia. Nie poddawaj się!</p>
-    </div>
-  </section>
-
-  <!-- TEST 3: GRA NA CZAS -->
-  <section class="block" id="test3">
-    <div class="section-title"><span class="num">3</span>Test — Gra na czas</div>
-    <div class="section-sub">Naciskaj kolejne bloczki zdania, zanim koleżanka Ci przerwie!</div>
-
-    <div class="game-wrap">
-      <div class="game-context">
-        <strong>Sytuacja:</strong> Stoicie na korytarzu i zastanawiacie się, kto zaniesie pani kwiatki. Proponujesz, żeby zdecydować rzutem kostką — kto wyrzuci więcej, ten idzie. Twoja koleżanka nagle mówi: <em>"Co ty pierdzielisz?"</em> Ty postanawiasz odpowiedzieć jej spokojnie, metodą NVC — słowo po słowie, zanim zabraknie czasu.
-      </div>
-
-      <div class="game-controls">
-        <label for="difficultyInput">Czas na naciśnięcie jednego pola (sekundy):</label>
-        <input type="number" id="difficultyInput" value="3" min="1" max="30">
-        <button class="preset-btn selected" data-sec="3" onclick="setDifficulty(3)">Domyślny · 3s</button>
-        <button class="preset-btn" data-sec="2" onclick="setDifficulty(2)">Trudny · 2s</button>
-        <button class="preset-btn" data-sec="1" onclick="setDifficulty(1)">Bardzo trudny · 1s</button>
-      </div>
-
-      <p class="hint-line">⏱️ <strong>Naciskaj, zanim minie czas.</strong> Masz <strong id="timeLabel">3</strong> s na każde pole. Jeśli nie zdążysz, koleżanka Ci wtrąci coś swojego — ale zdanie zostaje tam, gdzie było, i próbujesz nacisnąć to samo pole dalej. Czytaj zdanie na głos, klikając bloczki po kolei.</p>
-
-      <div class="clock-row">
-        <div class="clock-top">
-          <div id="digitalClock">00:03</div>
-          <div id="roundLabel">Wtrącenia: 0</div>
+    <div class="content">
+      <section class="section">
+        <h2>Instrukcja</h2>
+        <div class="instruction-box">
+          <p>Za chwilę usłyszysz osobę, która mówi do Ciebie w nieprzyjemny sposób.</p>
+          <p>Dopóki mówi, nie możesz odpowiedzieć. Po zakończeniu jej wypowiedzi rozpocznie się odliczanie czasu.</p>
+          <p>Musisz wypowiedzieć cały komunikat NVC, klikając kolejne słowa.</p>
+          <p>Jeżeli nie zdążysz kliknąć następnego słowa przed końcem czasu:</p>
+          <ul>
+            <li>rozmówca ponownie Ci przerwie,</li>
+            <li>odtworzony zostanie kolejny komunikat MP3,</li>
+            <li>całe zdanie rozpoczynasz od pierwszego słowa.</li>
+          </ul>
+          <p><strong>Nie odpowiadaj na zaczepki. Nie zmieniaj swojego komunikatu.</strong></p>
+          <p>Za każdym razem spokojnie rozpocznij go od początku. Ćwicz spokojne i konsekwentne mówienie.</p>
         </div>
-        <div class="timebar-track"><div id="timebarFill"></div></div>
-      </div>
+      </section>
 
-      <div class="attempts-log" id="attemptsLog"></div>
+      <section class="section">
+        <h2>Poziom trudności</h2>
+        <div class="difficulty-box">
+          <p class="difficulty-hint">Czas na kliknięcie kolejnego słowa (1–10 sekund).</p>
+          <div class="stepper">
+            <button type="button" id="btnHarder" class="stepper-btn" aria-label="Zmniejsz czas o 1 sekundę (trudniej)" title="Skróć czas (trudniej)">&#9650;</button>
+            <div class="stepper-value" id="difficultyValue" aria-live="polite">3<span class="unit">s</span></div>
+            <button type="button" id="btnEasier" class="stepper-btn" aria-label="Zwiększ czas o 1 sekundę (łatwiej)" title="Wydłuż czas (łatwiej)">&#9660;</button>
+          </div>
+        </div>
+      </section>
+    </div>
 
-      <div class="round-header" id="currentHeader">Twoje zdanie:</div>
+    <div class="footer">
+      <button type="button" id="toListenBtn" class="big-btn">DALEJ</button>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       EKRAN 2 — ODSŁUCH KOMUNIKATU (audio + tekst razem)
+       ============================================================ -->
+  <div class="screen" id="screenListen">
+    <header class="header">
+      <button type="button" class="back-link" id="backToSettings">&larr; ustawienia</button>
+      <h1>Posłuchaj</h1>
+      <p>Zanim zaczniesz</p>
+    </header>
+
+    <div class="content">
+      <section class="section">
+        <div class="instruction-box">
+          <p>Kliknij przycisk, żeby odtworzyć komunikat. Usłyszysz go i jednocześnie przeczytasz na ekranie.</p>
+          <p>Kiedy nagranie się skończy, odblokuje się przycisk START — możesz jeszcze chwilę pomyśleć, zanim klikniesz.</p>
+        </div>
+      </section>
+
+      <section class="section">
+        <p class="listen-status" id="listenStatus">Kliknij, aby odtworzyć.</p>
+        <div class="listen-text-box" id="listenTextBox">
+          <span class="label">Mówi:</span>
+          <span id="listenTextContent"></span>
+        </div>
+      </section>
+    </div>
+
+    <div class="footer">
+      <button type="button" id="playStartBtn" class="big-btn">&#9654; Odtwórz komunikat</button>
+    </div>
+    <div class="footer" style="padding-top:0;">
+      <button type="button" id="beginExerciseBtn" class="big-btn" disabled>START ćwiczenia</button>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       EKRAN 3 — WŁAŚCIWA GRA
+       ============================================================ -->
+  <div class="screen" id="screenGame">
+    <div class="clock-zone">
+      <button type="button" class="back-link" id="backToSettingsFromGame">&larr; ustawienia</button>
+      <div id="digitalClock">00:03</div>
+      <div class="timebar-track"><div id="timebarFill"></div></div>
+      <div id="statusLine" aria-live="polite">Przygotowanie...</div>
+    </div>
+
+    <div class="sentence-zone">
       <div class="sentence-flow" id="sentenceFlow"></div>
 
-      <button id="playAgainBtn" onclick="playAgain()">Zagraj ponownie</button>
+      <div class="success-box" id="successBox">
+        <h2>🎉 Udało się!</h2>
+        <p>Powiedziałaś to spokojnie, mimo przerywania.</p>
+        <button class="again-btn" id="againBtn">Zagraj ponownie</button>
+      </div>
     </div>
-  </section>
+  </div>
 
-  <div class="nav-links">Chcesz najpierw poćwiczyć spokojnie? Otwórz <strong>asertywnosc1.html</strong> (Test 1 — FUO) lub <strong>nvc1.html</strong> (Test 2 — NVC).</div>
-
-</main>
+</div>
 
 <script>
-/* ============ TEST 3: GRA NA CZAS — SŁOWO PO SŁOWIE ============ */
+/* ==========================================================
+   NVC3 — CAŁA GRA W JEDNYM PLIKU
+   Etap 1: ustawienia (poziom trudności)
+   Etap 2: odsłuch komunikatu — gest użytkownika odblokowuje audio
+           na iOS/Android; start.mp3 i tekst na ekranie pojawiają
+           się razem; przycisk "START ćwiczenia" jest zablokowany
+           aż do zdarzenia "ended" pliku start.mp3
+   Etap 3: gra — zegar i słowa NVC (oraz pliki 001–023.mp3)
+           startują WYŁĄCZNIE po kliknięciu "START ćwiczenia",
+           więc start.mp3 fizycznie nie może się z nimi nałożyć —
+           dzieli je świadome kliknięcie, a nie tylko zdarzenie audio.
+   ========================================================== */
+(function () {
+  'use strict';
 
-/* Każdy element to albo zwykłe słowo do naciśnięcia, albo miejsce wyboru
-   z 5 opcjami (2 złe/czerwone, 1 żółta, 1 jasnozielona, 1 ciemnozielona - najlepsza). */
-const tokens = [
-  { type:'word', text:'Zauważyłam', suffix:',' },
-  { type:'word', text:'że' },
-  { type:'word', text:'rzucacie' },
-  { type:'word', text:'kostką', suffix:',' },
-  { type:'word', text:'żeby' },
-  { type:'word', text:'wybrać', suffix:',' },
-  { type:'word', text:'kto' },
-  { type:'word', text:'zaniesie' },
-  { type:'word', text:'kwiaty', suffix:'.' },
-  { type:'word', text:'Czuję' },
-  { type:'choice', suffix:',', options:[
-      { text:'wściekła, że mnie olewacie', tier:'red' },
-      { text:'wkurzona jak nie wiem co', tier:'red' },
-      { text:'źle', tier:'yellow' },
-      { text:'poirytowana', tier:'green-lt' },
-      { text:'pominięta', tier:'green-dk' }
-    ]},
-  { type:'word', text:'bo' },
-  { type:'word', text:'potrzebuję' },
-  { type:'word', text:'też' },
-  { type:'word', text:'mieć' },
-  { type:'word', text:'szansę', suffix:'.' },
-  { type:'word', text:'Proszę', suffix:',' },
-  { type:'choice', suffix:'.', options:[
-      { text:'dawajcie tu tę kostkę, ale już!', tier:'red' },
-      { text:'no i olewacie mnie, super', tier:'red' },
-      { text:'dajcie mi kostkę', tier:'yellow' },
-      { text:'pozwólcie mi rzucić kostką', tier:'green-lt' },
-      { text:'pozwólcie mi zagrać kostką razem z wami', tier:'green-dk' }
-    ]}
-];
+  var STORAGE_KEY   = 'nvc3_difficulty';
+  var MIN_TIME      = 1;
+  var MAX_TIME      = 10;
+  var DEFAULT_TIME  = 3;
+  var AUDIO_DIR     = 'nvc3_audio/';
+  var START_FILE    = AUDIO_DIR + 'start.mp3';
+  var INTERRUPT_COUNT_TOTAL = 23; // 001.mp3 ... 023.mp3
+  var CHOICE_FEEDBACK_MS = 700;
 
-const interruptions = [
-  "Nudy!","Ale przynudzasz...","Eee, nieważne.","Daj spokój.","Szybciej, no!",
-  "Nie mam czasu na to.","Głupoty gadasz.","Weź przestań już.","Ziewam z nudów.",
-  "Kto by tego słuchał.","Skróć to jakoś.","No i co z tego?","Nieważne, chodźmy już.",
-  "Znowu to samo, ojej.","Daruj sobie, serio.","Aha, jasne, jasne.","Serio? Teraz akurat?",
-  "Nie no, bez przesady.","Ok, ok, następny temat.","Meh, nudne to.",
-  "Motyla noga, ale przynudzasz.","Kurczę pióro, skróć to!","Ale nudy, litości.",
-  "Zaraz zasnę z nudów.","No weź, bez dramatu.","Ile jeszcze będziesz gadać?",
-  "Trudno to słuchać, ej.","Idziemy już, no chodź.","Eh, głupoty gadasz.","Co ty pierdzielisz?"
-];
+  // TODO: wpisz tu DOKŁADNĄ treść tego, co mówi lektor w start.mp3 —
+  // ten tekst pojawi się na ekranie równocześnie z odtwarzaniem audio.
+  var START_TEXT = 'Stoicie na korytarzu i zastanawiacie się, kto zaniesie Nauczycielce kwiatki na dzień nauczyciela. Proponujesz, żeby zdecydować rzutem kostką — kto wyrzuci więcej, ten idzie. Twoja koleżanka nagle mówi: "Co ty pierdzielisz?" Ty postanawiasz odpowiedzieć jej spokojnie, metodą NVC — słowo po słowie, zanim zabraknie czasu. Jeśli koleżanka Ci przerwie to musisz zaczynać od początku powiedzenie całego komunikatu do niej. ]';
 
-let currentIdx = 0;
-let difficulty = 3;
-let timeLeft = 3;
-let timerId = null;
-let interruptCount = 0;
-let gameOver = false;
-let timerStarted = false; // czas nie leci, dopóki nie naciśniesz pierwszego pola
-let resolvedTexts = []; // { text, cssClass } dla już naciśniętych pól
+  // ---------- Pełny komunikat NVC, podzielony na słowa ----------
+  var tokens = [
+    { text: 'Zauważyłam', suffix: ',' },
+    { text: 'że' },
+    { text: 'rzucacie' },
+    { text: 'kostką', suffix: ',' },
+    { text: 'żeby' },
+    { text: 'wybrać', suffix: ',' },
+    { text: 'kto' },
+    { text: 'zaniesie' },
+    { text: 'kwiaty', suffix: '.' },
+    { text: 'Czuję' },
+    { text: 'się' },
+    {
+      type: 'choice',
+      suffix: ',',
+      options: [
+        { text: 'pominięta',          correct: true  },
+        { text: 'zignorowana',        correct: false },
+        { text: 'olana',              correct: false },
+        { text: 'mnie nienawidzicie', correct: false }
+      ]
+    },
+    { text: 'bo' },
+    { text: 'potrzebuję' },
+    { text: 'też' },
+    { text: 'mieć' },
+    { text: 'szansę', suffix: '.' },
+    { text: 'Proszę', suffix: ',' },
+    { text: 'pozwólcie' },
+    { text: 'mi' },
+    { text: 'zagrać' },
+    { text: 'kostką' },
+    { text: 'razem' },
+    { text: 'z' },
+    { text: 'wami', suffix: '.' }
+  ];
 
-function shuffle(arr){
-  const a = arr.slice();
-  for(let i=a.length-1;i>0;i--){
-    const j = Math.floor(Math.random()*(i+1));
-    [a[i],a[j]] = [a[j],a[i]];
-  }
-  return a;
-}
+  // ---------- Stan ----------
+  var difficulty    = DEFAULT_TIME;
+  var currentIdx    = 0;
+  var timeLeft      = DEFAULT_TIME;
+  var timerId       = null;
+  var mp3Cursor     = 0;
+  var doneWords     = [];
+  var busyWithAudio = false;
+  var gameFinished  = false;
+  var activeAudio   = null;
 
-function setDifficulty(sec){
-  document.getElementById('difficultyInput').value = sec;
-  document.querySelectorAll('.preset-btn').forEach(b => {
-    b.classList.toggle('selected', parseInt(b.dataset.sec) === sec);
-  });
-  updateDifficultyFromInput();
-}
+  // ---------- Elementy DOM: ekrany ----------
+  var screenSettings = document.getElementById('screenSettings');
+  var screenListen   = document.getElementById('screenListen');
+  var screenGame     = document.getElementById('screenGame');
 
-function updateDifficultyFromInput(){
-  const val = parseInt(document.getElementById('difficultyInput').value) || 3;
-  difficulty = val;
-  document.getElementById('timeLabel').textContent = difficulty;
-  if(!timerStarted){
-    timeLeft = difficulty;
-    updateClock(true);
-  }
-}
-document.getElementById('difficultyInput').addEventListener('change', updateDifficultyFromInput);
-
-function updateClock(resetBar){
-  const m = String(Math.max(0, Math.floor(timeLeft/60))).padStart(2,'0');
-  const s = String(Math.max(0, timeLeft%60)).padStart(2,'0');
-  document.getElementById('digitalClock').textContent = m + ':' + s;
-  const fill = document.getElementById('timebarFill');
-  if(resetBar){
-    fill.style.transition = 'none';
-    fill.style.width = '100%';
-    // wymuś reflow, żeby kolejne przejście faktycznie wystartowało
-    void fill.offsetWidth;
-    fill.style.transition = 'width ' + difficulty + 's linear';
-    fill.style.width = '0%';
-  }
-}
-
-/* Odliczanie zawsze dotyczy JEDNEGO, aktualnego pola. Gdy czas minie,
-   pole NIE znika i zdanie NIE wraca do początku — pojawia się tylko
-   wtrącenie koleżanki, a zegar startuje od nowa dla tego samego pola. */
-function startTimerForToken(){
-  clearInterval(timerId);
-  timerStarted = true;
-  timeLeft = difficulty;
-  updateClock(true);
-  timerId = setInterval(() => {
-    timeLeft--;
-    updateClock(false);
-    if(timeLeft <= 0) timeUp();
-  }, 1000);
-}
-
-function renderSentence(){
-  const flow = document.getElementById('sentenceFlow');
-  flow.innerHTML = '';
-
-  // już naciśnięte pola
-  resolvedTexts.forEach(r => {
-    const span = document.createElement('span');
-    span.className = r.cssClass;
-    span.textContent = r.text;
-    flow.appendChild(span);
-    if(r.suffix) flow.appendChild(document.createTextNode(r.suffix + ' '));
-  });
-
-  if(gameOver) return;
-
-  const tok = tokens[currentIdx];
-  if(tok.type === 'word'){
-    const btn = document.createElement('button');
-    btn.className = 'word-block active';
-    btn.textContent = tok.text;
-    btn.onclick = () => pressWord();
-    flow.appendChild(btn);
-    if(tok.suffix) flow.appendChild(document.createTextNode(tok.suffix + ' '));
-  } else {
-    const group = document.createElement('span');
-    group.className = 'choice-group';
-    const shuffled = shuffle(tok.options);
-    shuffled.forEach(opt => {
-      const btn = document.createElement('button');
-      btn.className = 'choice-btn';
-      btn.textContent = opt.text;
-      btn.onclick = () => pressChoice(opt, btn, group);
-      group.appendChild(btn);
+  function showScreen(el) {
+    [screenSettings, screenListen, screenGame].forEach(function (s) {
+      s.classList.toggle('active', s === el);
     });
-    flow.appendChild(group);
   }
 
-  // zapowiedź reszty zdania, wygaszona
-  const restWords = tokens.slice(currentIdx+1).map(t => t.type === 'word' ? t.text : '(…wybór…)').join(' ');
-  if(restWords){
-    const rest = document.createElement('span');
-    rest.className = 'faded-rest';
-    rest.textContent = ' ' + restWords;
-    flow.appendChild(rest);
+  // ---------- Elementy DOM: ekran 1 ----------
+  var valueEl   = document.getElementById('difficultyValue');
+  var btnHarder = document.getElementById('btnHarder');
+  var btnEasier = document.getElementById('btnEasier');
+  var toListenBtn = document.getElementById('toListenBtn');
+
+  // ---------- Elementy DOM: ekran 2 ----------
+  var playStartBtn      = document.getElementById('playStartBtn');
+  var beginExerciseBtn  = document.getElementById('beginExerciseBtn');
+  var listenStatus      = document.getElementById('listenStatus');
+  var listenTextBox     = document.getElementById('listenTextBox');
+  var listenTextContent = document.getElementById('listenTextContent');
+  var backToSettings    = document.getElementById('backToSettings');
+
+  // ---------- Elementy DOM: ekran 3 ----------
+  var clockEl  = document.getElementById('digitalClock');
+  var fillEl   = document.getElementById('timebarFill');
+  var statusEl = document.getElementById('statusLine');
+  var flowEl   = document.getElementById('sentenceFlow');
+  var successBox = document.getElementById('successBox');
+  var againBtn = document.getElementById('againBtn');
+  var backToSettingsFromGame = document.getElementById('backToSettingsFromGame');
+
+  // ==========================================================
+  // EKRAN 1 — USTAWIENIA
+  // ==========================================================
+  function loadDifficulty() {
+    var saved = localStorage.getItem(STORAGE_KEY);
+    var parsed = parseInt(saved, 10);
+    difficulty = (!isNaN(parsed) && parsed >= MIN_TIME && parsed <= MAX_TIME) ? parsed : DEFAULT_TIME;
   }
-}
-
-function pressWord(){
-  if(gameOver) return;
-  const tok = tokens[currentIdx];
-  resolvedTexts.push({ text: tok.text, cssClass: 'word-block done', suffix: tok.suffix || '' });
-  advance();
-}
-
-function pressChoice(opt, btn, group){
-  if(gameOver) return;
-  if(opt.tier === 'red'){
-    btn.classList.add('tier-red','disabled-active');
-    btn.disabled = true;
-    return; // zła odpowiedź: podświetla się na czerwono, nie liczy się jako postęp, zegar leci dalej
+  function saveDifficulty() {
+    localStorage.setItem(STORAGE_KEY, String(difficulty));
   }
-  // poprawny wybór (żółty / jasnozielony / ciemnozielony) — zdanie idzie dalej
-  Array.from(group.children).forEach(b => b.disabled = true);
-  const tok = tokens[currentIdx];
-  resolvedTexts.push({ text: opt.text, cssClass: 'choice-resolved tier-' + opt.tier, suffix: tok.suffix || '' });
-  advance();
-}
+  function renderDifficulty() {
+    valueEl.innerHTML = difficulty + '<span class="unit">s</span>';
+    btnHarder.disabled = (difficulty <= MIN_TIME);
+    btnEasier.disabled = (difficulty >= MAX_TIME);
+  }
+  function decreaseTime() {
+    if (difficulty > MIN_TIME) { difficulty -= 1; saveDifficulty(); renderDifficulty(); }
+  }
+  function increaseTime() {
+    if (difficulty < MAX_TIME) { difficulty += 1; saveDifficulty(); renderDifficulty(); }
+  }
+  btnHarder.addEventListener('click', decreaseTime);
+  btnEasier.addEventListener('click', increaseTime);
+  [btnHarder, btnEasier].forEach(function (btn) {
+    btn.addEventListener('keydown', function (e) {
+      if (e.key === 'ArrowLeft') decreaseTime();
+      else if (e.key === 'ArrowRight') increaseTime();
+    });
+  });
 
-function advance(){
-  currentIdx++;
-  if(currentIdx >= tokens.length){
-    finishSuccess();
-  } else {
-    startTimerForToken();
+  function resetListenScreen() {
+    playStartBtn.disabled = false;
+    beginExerciseBtn.disabled = true;
+    listenTextBox.classList.remove('visible');
+    listenTextContent.textContent = '';
+    listenStatus.textContent = 'Kliknij, aby odtworzyć.';
+  }
+
+  toListenBtn.addEventListener('click', function () {
+    saveDifficulty();
+    resetListenScreen();
+    showScreen(screenListen);
+  });
+
+  // ==========================================================
+  // AUDIO — wspólna funkcja dla całej aplikacji
+  // Jeden aktywny plik na raz: nowy odtwarzany plik zawsze
+  // najpierw zatrzymuje poprzedni, więc dźwięki nigdy się
+  // fizycznie nie nakładają.
+  // ==========================================================
+  function stopActiveAudio() {
+    if (activeAudio) {
+      try { activeAudio.pause(); } catch (e) { /* ignoruj */ }
+      activeAudio = null;
+    }
+  }
+
+  function playAudio(src, onDone) {
+    stopActiveAudio();
+    var audio = new Audio(src);
+    activeAudio = audio;
+    var finished = false;
+    var fallbackTimer = setTimeout(finish, 20000); // bezpiecznik
+
+    function cleanup() {
+      clearTimeout(fallbackTimer);
+      audio.removeEventListener('ended', onEnded);
+      audio.removeEventListener('error', onError);
+      if (activeAudio === audio) activeAudio = null;
+    }
+    function finish() { if (finished) return; finished = true; cleanup(); onDone(); }
+    function onEnded() { finish(); }
+    function onError() { finish(); }
+
+    audio.addEventListener('ended', onEnded);
+    audio.addEventListener('error', onError);
+
+    var playPromise = audio.play();
+    if (playPromise && typeof playPromise.catch === 'function') {
+      playPromise.catch(function () { finish(); });
+    }
+  }
+
+  // ==========================================================
+  // EKRAN 2 — ODSŁUCH KOMUNIKATU
+  // ==========================================================
+  playStartBtn.addEventListener('click', function () {
+    // gest użytkownika -> odblokowuje audio na iOS/Android dla całej reszty aplikacji
+    playStartBtn.disabled = true;
+    beginExerciseBtn.disabled = true;
+    listenStatus.textContent = 'Odtwarzanie...';
+
+    // tekst pojawia się RÓWNOCZEŚNIE z rozpoczęciem odtwarzania
+    listenTextContent.textContent = START_TEXT;
+    listenTextBox.classList.add('visible');
+
+    playAudio(START_FILE, function () {
+      playStartBtn.disabled = false; // można odsłuchać ponownie
+      beginExerciseBtn.disabled = false; // odblokowanie DOPIERO po "ended"/"error"
+      listenStatus.textContent = 'Możesz kliknąć START, kiedy będziesz gotowa.';
+    });
+  });
+
+  beginExerciseBtn.addEventListener('click', function () {
+    if (beginExerciseBtn.disabled) return;
+    showScreen(screenGame);
+    beginRound();
+  });
+
+  backToSettings.addEventListener('click', function () {
+    stopActiveAudio();
+    showScreen(screenSettings);
+  });
+
+  // ==========================================================
+  // EKRAN 3 — GRA
+  // ==========================================================
+  function nextInterruptFile() {
+    var num = (mp3Cursor % INTERRUPT_COUNT_TOTAL) + 1;
+    mp3Cursor++;
+    var padded = (num < 10 ? '0' + num : '' + num);
+    padded = (num < 100 ? ('0' + padded).slice(-3) : '' + num);
+    return AUDIO_DIR + padded + '.mp3';
+  }
+
+  function renderClock(resetBar) {
+    var s = Math.max(0, timeLeft);
+    clockEl.textContent = '00:' + String(s).padStart(2, '0');
+    if (resetBar) {
+      fillEl.style.transition = 'none';
+      fillEl.style.width = '100%';
+      void fillEl.offsetWidth;
+      fillEl.style.transition = 'width ' + difficulty + 's linear';
+      fillEl.style.width = '0%';
+    }
+  }
+
+  function pauseBar() {
+    var computedWidth = getComputedStyle(fillEl).width;
+    fillEl.style.transition = 'none';
+    fillEl.style.width = computedWidth;
+  }
+
+  function startTimerForCurrentWord() {
+    clearInterval(timerId);
+    timeLeft = difficulty;
+    renderClock(true);
+    timerId = setInterval(function () {
+      timeLeft--;
+      renderClock(false);
+      if (timeLeft <= 0) onTimeUp();
+    }, 1000);
+  }
+
+  function renderSentence() {
+    flowEl.innerHTML = '';
+
+    doneWords.forEach(function (w) {
+      var span = document.createElement('button');
+      span.className = 'word-block done' + (w.wasIncorrect ? ' was-incorrect' : '');
+      span.disabled = true;
+      span.textContent = w.text + (w.suffix || '');
+      flowEl.appendChild(span);
+    });
+
+    if (gameFinished) return;
+
+    var tok = tokens[currentIdx];
+
+    if (tok.type === 'choice') {
+      var group = document.createElement('div');
+      group.className = 'choice-group';
+      tok.options.forEach(function (opt) {
+        var obtn = document.createElement('button');
+        obtn.className = 'word-block active choice-option';
+        obtn.type = 'button';
+        obtn.textContent = opt.text + (tok.suffix || '');
+        obtn.disabled = busyWithAudio;
+        obtn.addEventListener('click', function () { onChoiceClick(tok, opt, obtn, group); });
+        group.appendChild(obtn);
+      });
+      flowEl.appendChild(group);
+    } else {
+      var btn = document.createElement('button');
+      btn.className = 'word-block active';
+      btn.type = 'button';
+      btn.textContent = tok.text + (tok.suffix || '');
+      btn.disabled = busyWithAudio;
+      btn.addEventListener('click', onWordClick);
+      flowEl.appendChild(btn);
+    }
+
+    var restTokens = tokens.slice(currentIdx + 1);
+    var restText = restTokens.map(function (t) {
+      if (t.type === 'choice') {
+        var correctOpt = t.options.filter(function (o) { return o.correct; })[0];
+        return (correctOpt ? correctOpt.text : '…') + (t.suffix || '');
+      }
+      return t.text + (t.suffix || '');
+    }).join(' ');
+
+    if (restText) {
+      var restSpan = document.createElement('span');
+      restSpan.className = 'faded-rest';
+      restSpan.textContent = ' ' + restText;
+      flowEl.appendChild(restSpan);
+    }
+  }
+
+  function onWordClick() {
+    if (busyWithAudio || gameFinished) return;
+    clearInterval(timerId);
+    var tok = tokens[currentIdx];
+    doneWords.push({ text: tok.text, suffix: tok.suffix });
+    currentIdx++;
+    advanceAfterWord();
+  }
+
+  function onChoiceClick(tok, opt, btnEl, groupEl) {
+    if (busyWithAudio || gameFinished) return;
+    clearInterval(timerId);
+    busyWithAudio = true;
+
+    var allBtns = groupEl.querySelectorAll('.choice-option');
+    allBtns.forEach(function (b) { b.disabled = true; });
+    btnEl.classList.add(opt.correct ? 'correct-flash' : 'incorrect-flash');
+
+    statusEl.textContent = opt.correct
+      ? '✓ Słowo bez oceniania — dobrze.'
+      : '✗ To słowo zawiera ocenę — ale mów dalej.';
+
+    setTimeout(function () {
+      doneWords.push({ text: opt.text, suffix: tok.suffix, wasIncorrect: !opt.correct });
+      currentIdx++;
+      busyWithAudio = false;
+      advanceAfterWord();
+    }, CHOICE_FEEDBACK_MS);
+  }
+
+  function advanceAfterWord() {
+    if (currentIdx >= tokens.length) {
+      finishSuccess();
+    } else {
+      statusEl.textContent = 'Twoja kolej — mów spokojnie.';
+      startTimerForCurrentWord();
+      renderSentence();
+    }
+  }
+
+  function onTimeUp() {
+    clearInterval(timerId);
+    timerId = null;
+    pauseBar();
+    busyWithAudio = true;
+    statusEl.textContent = '🗣️ Zostajesz przerwana...';
+    renderSentence();
+
+    var file = nextInterruptFile();
+    playAudio(file, function () {
+      doneWords = [];
+      currentIdx = 0;
+      busyWithAudio = false;
+      statusEl.textContent = 'Mów dalej spokojnie — zacznij od nowa.';
+      startTimerForCurrentWord();
+      renderSentence();
+    });
+  }
+
+  function finishSuccess() {
+    gameFinished = true;
+    busyWithAudio = true;
+    statusEl.textContent = 'Powiedziane do końca!';
+    pauseBar();
+    renderSentence();
+    successBox.classList.add('visible');
+  }
+
+  // Start rundy: WYŁĄCZNIE zegar + pierwsze słowo.
+  // start.mp3 zostało już odtworzone na ekranie 2 — tutaj się
+  // NIE odtwarza ponownie, więc nie ma mowy o nakładaniu się dźwięków.
+  function beginRound() {
+    gameFinished = false;
+    busyWithAudio = false;
+    doneWords = [];
+    currentIdx = 0;
+    mp3Cursor = 0;
+    successBox.classList.remove('visible');
+    statusEl.textContent = 'Twoja kolej — mów spokojnie.';
+    startTimerForCurrentWord();
     renderSentence();
   }
-}
 
-function timeUp(){
-  clearInterval(timerId);
-  timerId = null;
-
-  interruptCount++;
-  document.getElementById('roundLabel').textContent = 'Wtrącenia: ' + interruptCount;
-
-  const line = interruptions[Math.floor(Math.random()*interruptions.length)];
-  const bubble = document.createElement('div');
-  bubble.className = 'attempt-block';
-  bubble.innerHTML =
-    '<span class="interrupt-inline">' + line + '</span>' +
-    '<span class="interrupt-tag">(nie zdążyłaś — spróbuj nacisnąć teraz to samo pole!)</span>';
-  const log = document.getElementById('attemptsLog');
-  log.appendChild(bubble);
-  log.scrollTop = log.scrollHeight;
-
-  // zdanie NIE wraca do początku — dalej próbujesz nacisnąć to samo pole,
-  // po prostu odliczanie startuje od nowa
-  startTimerForToken();
-}
-
-function finishSuccess(){
-  clearInterval(timerId);
-  timerId = null;
-  gameOver = true;
-
-  const attemptDiv = document.createElement('div');
-  attemptDiv.className = 'attempt-block success';
-  let html = '';
-  resolvedTexts.forEach(r => {
-    html += '<span class="' + r.cssClass + '">' + r.text + '</span>' + (r.suffix ? r.suffix + ' ' : ' ');
+  againBtn.addEventListener('click', function () {
+    // to kliknięcie to również gest użytkownika, więc audio 001–023 zagra bez problemu
+    beginRound();
   });
-  html += '<span class="interrupt-tag" style="color:var(--green-dk);">🎉 Udało się! Powiedziałaś to spokojnie, mimo przerywania!</span>';
-  attemptDiv.innerHTML = html;
-  document.getElementById('attemptsLog').appendChild(attemptDiv);
 
-  document.getElementById('sentenceFlow').innerHTML = '';
-  document.getElementById('currentHeader').textContent = 'Koniec — udało się! (wtrącenia po drodze: ' + interruptCount + ')';
-  document.getElementById('playAgainBtn').style.display = 'block';
-}
+  backToSettingsFromGame.addEventListener('click', function () {
+    clearInterval(timerId);
+    stopActiveAudio();
+    showScreen(screenSettings);
+  });
 
-function playAgain(){
-  gameOver = false;
-  currentIdx = 0;
-  interruptCount = 0;
-  timerStarted = false;
-  resolvedTexts = [];
-  timeLeft = difficulty;
-  document.getElementById('attemptsLog').innerHTML = '';
-  document.getElementById('roundLabel').textContent = 'Wtrącenia: 0';
-  document.getElementById('currentHeader').textContent = 'Twoje zdanie:';
-  document.getElementById('playAgainBtn').style.display = 'none';
-  updateClock(true);
-  renderSentence();
-}
+  // ---------- Inicjalizacja ----------
+  loadDifficulty();
+  renderDifficulty();
+  renderClock(false);
 
-updateDifficultyFromInput();
-renderSentence();
+})();
 </script>
 
 </body>
