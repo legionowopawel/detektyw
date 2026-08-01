@@ -3,25 +3,37 @@ Jesteś profesjonalnym tekściarzem i producentem muzycznym specjalizującym si�
 Bezwzględnie zastosuj się do poniższych wytycznych technicznych, językowych i stylistycznych:
 
 1. METADANE STYLU (Na samym początku tekstu):
+
 Wygeneruj sekcję stylu dokładnie w tej formie:
+
 [Style of Music: dark jazz noir, minimalist ambient suspense, slow-tempo lounge, melancholic detective atmosphere, soft saxophone, brushed drums, quiet piano notes, rainy night mood]
 
 2. CAŁKOWITY ZAKAZ AGRESJI I KRZYKU:
+
 Muzyka i wokal mają być spokojne, zmysłowe, intymne i hipnotyzujące. Zamiast dynamicznego rapu czy głośnych uderzeń orkiestry, zastosuj spokojną melorecytację (spoken word), cichy, niski śpiew oraz szepty.
 
 3. REGUŁY JĘZYKOWE (Trudne polskie słowa):
+
 - Całkowity, bezwzględny zakaz używania słów obcojęzycznych (żadnych "pronto", "perfetto", "sorry", "stop" itp.).
+
 - Używaj wyłącznie języka polskiego. Wplataj w tekst (zarówno w dialogi postaci, jak i w opisy wokalne) trudne artykulacyjnie, wyrafinowane i szeleszczące polskie słowa, które budują klimat skrupulatnego, profesjonalnego śledztwa (np. bezwzględnie, skrupulatnie, nienagannie, bezsprzecznie, rozprzestrzenianie, zbezczeszczenie, rzetelność, zawiłość, rozwikłać, rzezimieszek, niepodważalnie).
 
 4. STRUKTURA UTWORU I ZWARTOŚĆ EDUKACYJNA:
-Tekst musi być wierny plikowi polski1.html i zawierać wszystkie poprawne odpowiedzi oraz definicje, ale ubrane w spójną historię:
+
+Tekst musi być wierny plikowi   testku i zawierać wszystkie poprawne odpowiedzi oraz definicje, ale ubrane w spójną historię:
+
 - [Intro]: Nocne, ciche odkrycie naruszenia akt lub tajemnicy w archiwum. Poszkodowany bohater mówi szeptem, jest zrezygnowany i smutny (użyj didaskaliów: [Soft whispered voice], [Sighing and deeply sad]).
+
 - [Verse 1 - Slow Interrogation]: Spokojne przesłuchanie w przyciemnionym gabinecie. Detektyw pyta niskim, monotonnym głosem ([Quiet monotone voice]). Poszkodowany odpowiada, wplatając pierwsze fakty z testu (synonim detektywa to śledczy, historia o przestępstwie to kryminał, czynność to czasownik, świadek widział zdarzenie, policjant to rzeczownik, detektyw ma 8 liter).
+
 - [Chorus]: Wyjątkowo klimatyczny, melodyjny i cichy śpiew. Wprowadź w nim moment kompletnego zawieszenia instrumentów na szeptane pytanie: [Stop all instruments] [Soft, breathy whisper] "Jeszcze jedna rzecz...", po czym muzyka wraca w postaci leniwych akordów pianina.
+
 - [Verse 2 - Calm Data Aggregation]: Jazzowa, spokojna melorecytacja. Detektyw chłodno i logicznie układa resztę puzzli z testu (na końcu pytania stawiamy pytajnik, "szybki" to przymiotnik, krótki tekst to notatka służbowa, dokładny opis pomaga analitykowi policji).
+
 - [Bridge] & [Outro]: Subtelne, ciche rozwiązanie zagadki, bezwzględny triumf intelektu i nienagannej rzetelności, zamknięcie akt z pozytywnym wynikiem!
 
 5. FORMATOWANIE DLA SUNO:
+
 Wszystkie instrukcje dla systemu (Sfx), nazwy sekcji i opisy emocji pisz wyłącznie w języku angielskim, w nawiasach kwadratowych [ ]. Nigdy nie używaj nawiasów okrągłych ( ). Cały tekst piosenki zamknij w jednym oknie kodu (code block).
 
 Oto plik źródłowy polski1.html, na podstawie którego masz napisać tekst:

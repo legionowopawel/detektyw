@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mandolina — Wielki Test dla Grających</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui,sans-serif;background:#f3e6c8;color:#2a1f0e;min-height:100vh}
+#app{padding:1rem;max-width:480px;margin:0 auto}
+.hero{text-align:center;padding:1.5rem 0 1rem}
+.hero img{width:160px;height:160px;object-fit:cover;border-radius:50%;border:3px solid #5c3710}
+.fallback-icon{width:160px;height:160px;border-radius:50%;background:#f0e0b8;border:3px solid #5c3710;margin:0 auto;display:flex;align-items:center;justify-content:center;font-size:72px}
+.hero h1{font-size:22px;font-weight:600;color:#3d2005;margin:.75rem 0 .5rem}
+.hero p{font-size:14px;color:#6b4a1b;line-height:1.6;margin:0 .5rem}
+.progress-label{font-size:12px;color:#6b4a1b;margin-bottom:.5rem}
+.progress-bar{background:#d9c69a;border-radius:99px;height:6px;margin:0 0 1rem}
+.progress-fill{background:#5c3710;height:6px;border-radius:99px;transition:width .4s}
+.question-card{background:#fff8ec;border:1px solid #c9a970;border-radius:14px;padding:1.25rem;margin-bottom:1rem}
+.ep-badge{display:inline-block;font-size:11px;color:#5c3710;background:#f0e0b8;padding:3px 10px;border-radius:99px;margin-bottom:.5rem;font-weight:600}
+.ep-row{margin-bottom:.75rem}
+.q-text{font-size:15px;font-weight:600;color:#2a1f0e;line-height:1.5;margin-bottom:1rem}
+.q-img{width:100%;border-radius:10px;margin-bottom:1rem;border:1px solid #c9a970;background:#fff}
+.q-symbol{font-size:48px;text-align:center;background:#f7efdc;border:1px solid #c9a970;border-radius:10px;padding:1.25rem;margin-bottom:1rem;font-weight:700;color:#5c3710;font-family:Georgia,serif}
+.q-symbol.sym-italic{font-style:italic}
+.q-symbol.sym-underline{text-decoration:underline}
+.option{display:flex;align-items:flex-start;gap:10px;padding:.75rem 1rem;border:1px solid #c9a970;border-radius:10px;margin-bottom:.5rem;cursor:pointer;transition:background .15s,border-color .15s;font-size:14px;color:#2a1f0e;line-height:1.5;background:#fff}
+.option:hover{background:#f1e6c8;border-color:#a9884f}
+.option .badge{flex-shrink:0;width:26px;height:26px;border-radius:50%;background:#f1e6c8;border:1px solid #a9884f;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;color:#6b4a1b}
+.option.correct{background:#eaf3de;border-color:#3B6D11}
+.option.correct .badge{background:#3B6D11;color:#eaf3de;border-color:#3B6D11}
+.option.wrong{background:#fcebeb;border-color:#A32D2D}
+.option.wrong .badge{background:#A32D2D;color:#fcebeb;border-color:#A32D2D}
+.option.disabled{cursor:default;pointer-events:none}
+.explanation{margin-top:.75rem;padding:.75rem;background:#f1e6c8;border-radius:8px;font-size:13px;color:#4a3a1e;line-height:1.6;display:none;border-left:3px solid #5c3710}
+.praise{margin-top:.75rem;padding:.75rem;background:#eaf3de;border-radius:8px;font-size:13px;color:#2c4a13;line-height:1.6;display:none;border-left:3px solid #3B6D11;font-weight:600}
+.hint-btn{display:none;font-size:12px;color:#5c3710;background:#f0e0b8;border:1px solid #a9884f;padding:6px 12px;border-radius:99px;cursor:pointer;margin-bottom:.75rem;font-weight:600}
+.hint-btn:hover{background:#e4d19c}
+.hint-box{display:none;margin-bottom:.75rem;padding:.75rem;background:#FFF8E1;border-radius:8px;font-size:13px;color:#5a4a14;line-height:1.6;border-left:3px solid #C9A227}
+.nav-btn{width:100%;padding:.75rem;border-radius:10px;border:1px solid #a9884f;background:#fff;font-size:15px;font-weight:600;color:#2a1f0e;cursor:pointer;margin-top:.5rem;display:none}
+.nav-btn:hover{background:#f1e6c8}
+.nav-btn.primary{background:#5c3710;color:#fff;border-color:#5c3710}
+.nav-btn.primary:hover{background:#3d2005}
+.nav-btn.shown{display:block}
+#name-input{width:100%;padding:.85rem 1rem;border-radius:10px;border:1px solid #a9884f;font-size:16px;margin-bottom:.85rem;font-family:inherit}
+#name-input:focus{outline:2px solid #5c3710;border-color:#5c3710}
+#name-screen .question-card{text-align:center}
+.sound-toggle{font-size:12px;color:#6b4a1b;background:#fff;border:1px solid #c9a970;padding:6px 12px;border-radius:99px;cursor:pointer;margin-bottom:.85rem;display:inline-block}
+.sound-toggle.is-muted{opacity:.55}
+#result-screen{display:none;text-align:center;padding:1rem}
+.result-icon{font-size:64px;margin:.5rem 0}
+.result-score{font-size:42px;font-weight:700;color:#5c3710;margin:.5rem 0}
+.result-msg{font-size:15px;color:#6b4a1b;line-height:1.6;margin:.75rem 0 1.5rem;background:#f0e0b8;padding:1rem;border-radius:12px}
+.result-bars{text-align:left;margin:1rem 0;background:#fff;border:1px solid #c9a970;border-radius:12px;padding:1rem}
+.r-bar-row{display:flex;align-items:center;gap:8px;margin-bottom:10px;font-size:13px}
+.r-bar-row:last-child{margin-bottom:0}
+.r-bar-label{width:120px;color:#6b4a1b;flex-shrink:0}
+.r-bar-bg{flex:1;background:#f1e6c8;border-radius:99px;height:10px}
+.r-bar-fill{height:10px;border-radius:99px;background:#5c3710;transition:width .6s}
+.r-bar-score{min-width:32px;text-align:right;font-weight:600;color:#5c3710}
+.restart-btn{width:100%;padding:.85rem;border-radius:10px;background:#5c3710;color:#fff;border:none;font-size:15px;font-weight:600;cursor:pointer;margin-top:1rem}
+.restart-btn:hover{background:#3d2005}
+.song-box{margin-top:1.25rem;background:#fff;border:1px solid #c9a970;border-radius:14px;padding:1.25rem}
+.song-box h3{font-size:16px;color:#3d2005;margin-bottom:.5rem}
+.song-box p{font-size:13px;color:#6b4a1b;margin-bottom:.5rem;line-height:1.5}
+.song-toggle{padding:.6rem 1rem;border-radius:10px;background:#5c3710;color:#fff;border:none;font-size:14px;font-weight:600;cursor:pointer}
+.song-toggle:hover{background:#3d2005}
+</style>
+</head>
+<body>
+<div id="app">
+
+  <div id="name-screen">
+    <div class="hero">
+      <div class="fallback-icon" id="fallback-icon-name">🪕</div>
+      <h1>Mandolina — Wielki Test</h1>
+      <p>Zanim zaczniemy, jak się nazywasz, młody wirtuozie? Czeka na Ciebie 21 pytań — o budowie, technice gry i historii mandoliny.</p>
+    </div>
+    <div class="question-card">
+      <input id="name-input" type="text" placeholder="Wpisz swoje imię..." maxlength="20" onkeydown="if(event.key==='Enter')startQuiz()">
+      <button class="nav-btn primary shown" onclick="startQuiz()">Zaczynamy 🪕</button>
+    </div>
+  </div>
+
+  <div id="quiz-screen" style="display:none">
+    <div class="hero" id="quiz-hero">
+      <div class="fallback-icon" id="fallback-icon">🪕</div>
+      <h1 id="hero-title">Mandolina — Wielki Test</h1>
+      <p id="hero-text"></p>
+    </div>
+
+    <button class="sound-toggle" id="sound-toggle-btn" onclick="toggleSounds()">🔊 Dźwięki włączone</button>
+
+    <div class="progress-label" id="prog-label">Pytanie 1 z 21</div>
+    <div class="progress-bar"><div class="progress-fill" id="prog-fill" style="width:5%"></div></div>
+
+    <div class="question-card" id="q-card">
+      <div class="ep-row">
+        <span class="ep-badge" id="ep-badge"></span>
+      </div>
+      <img id="q-img" class="q-img" style="display:none">
+      <div id="q-symbol" class="q-symbol" style="display:none"></div>
+      <div class="q-text" id="q-text"></div>
+      <button class="hint-btn" id="hint-btn" onclick="toggleHint()">💡 Pokaż podpowiedź</button>
+      <div class="hint-box" id="hint-box"></div>
+      <div id="options-container"></div>
+      <div class="praise" id="praise"></div>
+      <div class="explanation" id="explanation"></div>
+    </div>
+    <button class="nav-btn primary" id="next-btn" onclick="nextQ()">Następne pytanie →</button>
+  </div>
+
+  <div id="result-screen">
+    <div class="result-icon" id="res-icon"></div>
+    <div style="font-size:22px;font-weight:600;color:#3d2005;margin:.5rem 0">Test zakończony!</div>
+    <div class="result-score" id="res-score"></div>
+    <div class="result-msg" id="res-msg"></div>
+    <div class="result-bars">
+      <div class="r-bar-row"><span class="r-bar-label">Budowa (1–7)</span><div class="r-bar-bg"><div class="r-bar-fill" id="bar1"></div></div><span class="r-bar-score" id="score1-txt"></span></div>
+      <div class="r-bar-row"><span class="r-bar-label">Technika (8–14)</span><div class="r-bar-bg"><div class="r-bar-fill" id="bar2"></div></div><span class="r-bar-score" id="score2-txt"></span></div>
+      <div class="r-bar-row"><span class="r-bar-label">Historia (15–21)</span><div class="r-bar-bg"><div class="r-bar-fill" id="bar3"></div></div><span class="r-bar-score" id="score3-txt"></span></div>
+    </div>
+    <div class="song-box">
+      <h3 id="song-title">Piosenka dla Ciebie!</h3>
+      <p>Twoja nagroda gra automatycznie 🎵</p>
+      <button class="song-toggle" id="song-toggle-btn" onclick="toggleSong()">⏸️ Wstrzymaj piosenkę</button>
+    </div>
+    <button class="restart-btn" onclick="restart()">Zagraj jeszcze raz 🔄</button>
+  </div>
+
+</div>
+
+<audio id="snd-good" src="audio/mandolina_dobrze.mp3" preload="auto"></audio>
+<audio id="snd-bad" src="audio/mandolina_zle.mp3" preload="auto"></audio>
+<audio id="snd-song" src="mp3/mandolina1.mp3" preload="auto" loop></audio>
+
+<script>
+const questions = [
+  {ep:"Budowa mandoliny",hint:"Pomyśl o parach, {name} — struny nie są samotne, chodzą w duetach.",q:"{name}, ile strun ma prawdziwa mandolina i jak są ułożone?",opts:["8 strun w 4 parach — stąd ten charakterystyczny, „lśniący” dźwięk","6 pojedynczych strun, jak w gitarze","12 strun, po jednej na każdy miesiąc roku","4 struny, tak jak w skrzypcach, tylko grubsze"],ans:0,exp:"Mandolina ma 8 strun ułożonych w 4 pary, strojone tak samo, co daje jej charakterystyczne, iskrzące brzmienie."},
+  {ep:"Budowa mandoliny",hint:"Skup się na częściach instrumentu strunowego, {name}, nie samochodu ani ptaka.",q:"{name}, jak nazywają się główne części mandoliny?",opts:["Silnik, kierownica, bagażnik i zderzak","Główka, mechanika, gryf, pudło rezonansowe, mostek i strunnik","Dziób, skrzydła, ogon i pazury","Klawiatura, monitor, myszka i głośniki"],ans:1,exp:"Do najważniejszych części mandoliny należą: główka, mechanika (stroiki), gryf z progami, pudło rezonansowe, otwór rezonansowy, strunnik, mostek i struny."},
+  {ep:"Budowa mandoliny",hint:"Pomyśl, {name}, z czego robi się większość instrumentów akustycznych od wieków.",q:"{name}, z jakiego materiału najczęściej wykonuje się pudło rezonansowe mandoliny?",opts:["Z aluminium, żeby było lekkie jak puszka po napoju","Z kartonu po pudełku na pizzę","Z drewna, np. świerku, cedru lub palisandru — mają dobre właściwości akustyczne","Ze szkła, żeby ładnie błyszczało na scenie"],ans:2,exp:"Najczęściej używa się drewna – np. świerku, cedru lub palisandru, bo dobrze rezonują i wzmacniają dźwięk."},
+  {ep:"Budowa mandoliny",hint:"Spójrz na skrzypce i gitarę, {name} — mandolina łączy oba te światy.",q:"{name}, jakie kształty mogą mieć otwory rezonansowe w mandolinie?",opts:["Zawsze kwadratowe, jak okienko w domku","W kształcie serca, bo mandolina to instrument miłości","Trójkątne, żeby przypominały kawałek sera","Okrągłe (jak w gitarze) lub w kształcie litery „f” (jak w skrzypcach)"],ans:3,exp:"Otwory rezonansowe bywają okrągłe, jak w gitarze, albo w kształcie litery „f”, tak jak w skrzypcach."},
+  {ep:"Budowa mandoliny",hint:"Chodzi o to, {name}, jak dobrze dany materiał przenosi drgania.",q:"{name}, czy mandolina mogłaby być wykonana z plastiku?",opts:["Tak, ale dźwięk byłby „płaski” i mniej przyjemny, bo plastik gorzej rezonuje niż drewno","Nie, plastik natychmiast eksploduje pod naciskiem strun","Tak, i brzmiałaby dokładnie tak samo jak drewniana","Nie, bo plastik jest nielegalny w produkcji instrumentów"],ans:0,exp:"Teoretycznie tak, ale plastik nie rezonuje tak dobrze jak drewno, więc dźwięk byłby mniej bogaty i naturalny."},
+  {ep:"Budowa mandoliny",hint:"Pomyśl o pudle jak o głośniku, {name}, który wzmacnia cichy dźwięk struny.",q:"{name}, dlaczego mandolina ma pudło rezonansowe?",opts:["Żeby było gdzie schować zapasowe struny","Żeby wzmacniać drgania strun dzięki zjawisku rezonansu akustycznego — stąd głośniejszy, bogatszy dźwięk","Bo tak wygląda ładniej i nic więcej","Żeby mandolina lepiej pływała, gdyby wpadła do jeziora"],ans:1,exp:"Pudło rezonansowe wzmacnia drgania strun dzięki zjawisku rezonansu akustycznego, przez co dźwięk jest głośniejszy i pełniejszy."},
+  {ep:"Budowa mandoliny",hint:"To niemała rozpiętość, {name} — prawie trzy oktawy.",q:"{name}, jaki jest zakres dźwięków (skala) mandoliny?",opts:["Tylko jeden dźwięk, zawsze to samo „dzyń”","Od C do C, dokładnie jedna oktawa i ani trochę więcej","Od g do fis³ — czyli prawie trzy oktawy","Cały zakres fortepianu, od najniższego do najwyższego dźwięku"],ans:2,exp:"Zakres dźwięków mandoliny to od g do fis³, czyli prawie trzy oktawy."},
+  {ep:"Gra i technika",hint:"To ten sam strój, {name}, co skrzypce.",q:"{name}, w jakich interwałach nastrojona jest mandolina?",opts:["W sekundach, tak jak pianino","Losowo, każdy muzyk stroi ją inaczej","Wyłącznie w Antarktydzie, wśród naukowców","W kwintach, tak jak skrzypce: G–D–A–E"],ans:3,exp:"Mandolinę stroi się w kwintach, tak jak skrzypce: od najgrubszej pary strun G–D–A–E."},
+  {ep:"Gra i technika",hint:"To technika dająca charakterystyczne „drżące” brzmienie, {name}.",q:"{name}, jaką technikę gry najczęściej stosuje się na mandolinie?",opts:["Tremolo — bardzo szybkie powtarzanie tego samego dźwięku","Slap bass, czyli klepanie strun dłonią","Gwizdanie zamiast szarpania strun","Uderzanie w pudło jak w bęben, struny zostawiamy w spokoju"],ans:0,exp:"Najpopularniejsza technika to tremolo, czyli bardzo szybkie powtarzanie tego samego dźwięku."},
+  {ep:"Gra i technika",hint:"To słowo brzmi trochę jak „drżenie”, {name} — i nieprzypadkowo.",q:"{name}, co dokładnie oznacza termin muzyczny „tremolo”?",opts:["Nagłe zatrzymanie utworu w połowie","Bardzo szybkie, drżące powtarzanie tego samego dźwięku","Grę na mandolinie w rękawiczkach","Strojenie instrumentu przed koncertem"],ans:1,exp:"Tremolo to szybkie powtarzanie tego samego dźwięku, które nadaje utworom emocjonalny, „drżący” wyraz."},
+  {ep:"Gra i technika",hint:"Dwie struny grające razem brzmią mocniej niż jedna, {name}.",q:"{name}, dlaczego struny mandoliny są ułożone w pary?",opts:["Żeby zaoszczędzić miejsce na gryfie","To tylko tradycja, nie ma to wpływu na dźwięk","Bo dwie struny strojone tak samo drgają jednocześnie, wzmacniając i „iskrząc” dźwięk","Żeby łatwiej było je pomylić podczas stroienia"],ans:2,exp:"Struny w parach drgają jednocześnie, co zwiększa natężenie dźwięku i nadaje mu charakterystyczne, iskrzące brzmienie."},
+  {ep:"Gra i technika",hint:"To ten sam mechanizm co w gitarze czy skrzypcach, {name} — drgania struny.",q:"{name}, jakie zjawisko fizyczne odpowiada za powstawanie dźwięku w mandolinie?",opts:["Parowanie wody z pudła rezonansowego","Tarcie palców o metalowe progi na gryfie","Elektryczność statyczna gromadząca się na strunach","Drgania strun przenoszone przez mostek do pudła rezonansowego, a stamtąd do powietrza jako fale dźwiękowe"],ans:3,exp:"Dźwięk powstaje dzięki drganiom strun, przenoszonym przez mostek na pudło rezonansowe, a stamtąd do powietrza jako fale dźwiękowe."},
+  {ep:"Gra i technika",hint:"To instrument wszechstronny, {name} — od folku po rocka.",q:"{name}, w jakich gatunkach muzyki używa się mandoliny?",opts:["W muzyce ludowej, klasycznej, bluegrass, country, a nawet rockowej","Wyłącznie w muzyce techno na dyskotekach","Tylko w operze, i nigdzie indziej","Jedynie w hymnach narodowych"],ans:0,exp:"Mandolina pojawia się w muzyce ludowej, klasycznej (np. u Vivaldiego), bluegrass, country, a nawet rockowej."},
+  {ep:"Gra i technika",hint:"Pomyśl, {name}, o klasykach rocka, którzy lubili nietypowe instrumenty akustyczne.",q:"{name}, muzycy jakich zespołów rockowych grali na mandolinie?",opts:["Wyłącznie zespoły disco lat 70.","Led Zeppelin, The Hooters i R.E.M.","Żadnych — mandolina nigdy nie trafiła do rocka","Tylko orkiestry symfoniczne, nigdy zespoły rockowe"],ans:1,exp:"Na mandolinie grali muzycy takich zespołów jak Led Zeppelin, The Hooters, R.E.M., a także Rod Stewart w swoich balladach."},
+  {ep:"Historia mandoliny",hint:"Trop prowadzi przez lutnię i języki Bliskiego Wschodu, {name}.",q:"{name}, skąd pochodzi nazwa „mandolina”?",opts:["Od imienia włoskiego króla Mandolino I","Od francuskiego słowa oznaczającego „pomarańcza”","Od słowa „mandora” (rodzaj lutni), wywodzącego się prawdopodobnie z perskiego „pandura” i arabskiego „dambura”","Od nazwy miasta Mandolinia we Włoszech"],ans:2,exp:"Nazwa wywodzi się od słowa „mandora” (rodzaj lutni), a ono prawdopodobnie od perskiego „pandura” i arabskiego „dambura”."},
+  {ep:"Historia mandoliny",hint:"To nie starożytność ani średniowiecze, {name} — trochę później.",q:"{name}, kiedy po raz pierwszy pojawiło się słowo „mandolina”?",opts:["W starożytnym Rzymie","Dopiero w XX wieku, razem z radiem","W średniowieczu, w czasach rycerzy","W XVII wieku"],ans:3,exp:"Po raz pierwszy termin „mandolina” pojawił się w XVII wieku."},
+  {ep:"Historia mandoliny",hint:"To instrument, który miał wiele strun i piękny, okrągły korpus, {name} — dużo większy od mandoliny.",q:"{name}, z jakiego instrumentu wywodzi się mandolina?",opts:["Z lutni, zminiaturyzowanej dla potrzeb wędrownych muzyków","Z fortepianu, który z czasem się skurczył","Z bębna, po dodaniu do niego strun","Z fletu, po zamianie dziurek na struny"],ans:0,exp:"Mandolina pochodzi od lutni, którą zminiaturyzowano dla potrzeb wędrownych muzyków."},
+  {ep:"Historia mandoliny",hint:"Jedno nazwisko brzmi włosko, {name}, drugie — jak marka gitar.",q:"{name}, kto udoskonalił mandolinę w XIX wieku i opatentował jej nowoczesną budowę?",opts:["Wolfgang Amadeusz Mozart","Rodzina Vinaccia, a później Orville Gibson (patent w 1898 roku)","Thomas Edison, przy okazji wynajdowania żarówki","Antonio Stradivari, twórca skrzypiec"],ans:1,exp:"Mandolinę udoskonaliła włoska rodzina Vinaccia, a później amerykański konstruktor Orville Gibson, który w 1898 roku opatentował jej nowoczesną budowę."},
+  {ep:"Historia mandoliny",hint:"Zacznij od Włoch i Europy Wschodniej, {name}, a skończ za oceanem.",q:"{name}, gdzie mandolina była popularna najpierw, a gdzie zyskała popularność później?",opts:["Najpierw w Australii, potem w Afryce","Najpierw w Japonii, potem w Kanadzie","Najpierw w Europie Południowej i Wschodniej, potem w USA, w muzyce bluegrass, country i folk","Wyłącznie w Antarktydzie, wśród naukowców"],ans:2,exp:"Mandolina była popularna najpierw w Europie Południowej i Wschodniej, a potem w USA, gdzie stała się ważnym instrumentem muzyki bluegrass, country i folk."},
+  {ep:"Historia mandoliny",hint:"Pomyśl, {name}, o falach emigracji i nowym gatunku muzycznym, który się wtedy narodził.",q:"{name}, jakie wydarzenie historyczne sprawiło, że mandolina stała się popularna w USA?",opts:["Wygrana mandoliny w loterii telewizyjnej","Zakaz gry na gitarze wprowadzony w 1920 roku","Odkrycie Ameryki przez Krzysztofa Kolumba","Masowa emigracja Europejczyków do USA w XIX i XX wieku oraz rozwój muzyki bluegrass"],ans:3,exp:"Masowa emigracja Europejczyków do USA oraz rozwój muzyki bluegrass (m.in. z Billem Monroe) sprawiły, że mandolina zyskała popularność za oceanem."},
+  {ep:"Historia mandoliny",hint:"Włochy to dobry punkt startowy, {name}.",q:"{name}, z jakiego kontynentu pochodzi mandolina i gdzie się później rozprzestrzeniła?",opts:["Z Europy (głównie Włoch), a potem rozprzestrzeniła się w Ameryce Północnej, zwłaszcza w USA","Z Ameryki Południowej, a potem trafiła do Azji","Z Afryki, a potem do Australii","Z Antarktydy, a potem nigdzie się nie rozprzestrzeniła"],ans:0,exp:"Mandolina wywodzi się z Europy (głównie Włoch), ale rozprzestrzeniła się też w Ameryce Północnej, szczególnie w USA."}
+];
+
+const SEGMENT_SIZE = 7;
+const NUM_SEGMENTS = 3;
+
+const praises=[
+  "Brawo, {name}! Grasz na mandolinie i znasz się na niej równie dobrze.",
+  "Świetnie, {name}! Rodzina Vinaccia byłaby dumna.",
+  "Trafna odpowiedź! Twoje tremolo wiedzy jest bez zarzutu.",
+  "Dobry refleks, {name}! Mandolina nie ma przed Tobą tajemnic.",
+  "Brawo! Krok po kroku stajesz się mistrzem mandoliny."
+];
+
+let userName="Muzyku";
+let current=0,score=0,scores=[0,0,0],answered=false,soundsEnabled=true;
+
+const sndGood=document.getElementById('snd-good');
+const sndBad=document.getElementById('snd-bad');
+const sndSong=document.getElementById('snd-song');
+let songPlaying=false;
+
+function toggleSounds(){
+  soundsEnabled=!soundsEnabled;
+  const btn=document.getElementById('sound-toggle-btn');
+  if(soundsEnabled){btn.textContent='🔊 Dźwięki włączone';btn.classList.remove('is-muted');}
+  else{btn.textContent='🔇 Dźwięki wyłączone';btn.classList.add('is-muted');}
+}
+
+function playGood(){
+  if(!soundsEnabled)return;
+  try{ sndGood.currentTime=0; sndGood.play().catch(()=>{}); }catch(e){}
+}
+function playBad(){
+  if(!soundsEnabled)return;
+  try{ sndBad.currentTime=0; sndBad.play().catch(()=>{}); }catch(e){}
+}
+
+function startQuiz(){
+  const v=document.getElementById('name-input').value.trim();
+  userName=v?v:"Muzyku";
+  document.getElementById('name-screen').style.display='none';
+  document.getElementById('quiz-screen').style.display='block';
+  document.getElementById('hero-text').textContent="Witaj, "+userName+"! Czeka na Ciebie 21 pytań o mandolinie — budowa, technika gry i historia. Kilka pytań ma obrazki. Powodzenia!";
+  render();
+}
+
+function fillName(str){return str.replace(/\{name\}/g,userName);}
+
+function render(){
+  const q=questions[current];
+  document.getElementById('quiz-hero').style.display=current===0?'block':'none';
+  document.getElementById('prog-label').textContent='Pytanie '+(current+1)+' z '+questions.length;
+  document.getElementById('prog-fill').style.width=(((current+1)/questions.length)*100)+'%';
+  document.getElementById('ep-badge').textContent=q.ep;
+  document.getElementById('q-text').textContent=fillName(q.q);
+
+  const img=document.getElementById('q-img');
+  if(q.img){img.src=q.img;img.style.display='block';img.alt=q.ep;}
+  else{img.style.display='none';img.removeAttribute('src');}
+
+  const sym=document.getElementById('q-symbol');
+  sym.classList.remove('sym-italic','sym-underline');
+  if(q.symbol){
+    sym.textContent=q.symbol;
+    sym.style.display='block';
+    if(q.symbolStyle==='italic')sym.classList.add('sym-italic');
+    if(q.symbolStyle==='underline')sym.classList.add('sym-underline');
+  } else {
+    sym.style.display='none';
+    sym.textContent='';
+  }
+
+  const hintBtn=document.getElementById('hint-btn');
+  const hintBox=document.getElementById('hint-box');
+  hintBox.style.display='none';
+  hintBox.textContent=q.hint?fillName(q.hint):'';
+  hintBtn.style.display=q.hint?'inline-block':'none';
+  hintBtn.textContent='💡 Pokaż podpowiedź';
+
+  const praise=document.getElementById('praise');
+  praise.style.display='none';
+  const exp=document.getElementById('explanation');
+  exp.style.display='none';
+  exp.textContent=q.exp;
+  document.getElementById('next-btn').classList.remove('shown');
+  answered=false;
+
+  const c=document.getElementById('options-container');
+  c.innerHTML='';
+  c.style.display='block';
+  const labels=['A','B','C','D'];
+  q.opts.forEach(function(o,i){
+    const d=document.createElement('div');
+    d.className='option';
+    d.innerHTML='<span class="badge">'+labels[i]+'</span><span>'+o+'</span>';
+    d.onclick=function(){selectOption(i,d);};
+    c.appendChild(d);
+  });
+}
+
+function toggleHint(){
+  const box=document.getElementById('hint-box');
+  const btn=document.getElementById('hint-btn');
+  if(box.style.display==='none'){box.style.display='block';btn.textContent='💡 Ukryj podpowiedź';}
+  else{box.style.display='none';btn.textContent='💡 Pokaż podpowiedź';}
+}
+
+function segmentIndex(i){return Math.min(Math.floor(i/SEGMENT_SIZE),NUM_SEGMENTS-1);}
+
+function finishAnswer(isCorrect){
+  if(isCorrect){
+    score++;
+    scores[segmentIndex(current)]++;
+    playGood();
+    const p=document.getElementById('praise');
+    p.textContent=fillName(praises[Math.floor(Math.random()*praises.length)]);
+    p.style.display='block';
+  } else {
+    playBad();
+    document.getElementById('explanation').style.display='block';
+  }
+  const nb=document.getElementById('next-btn');
+  nb.classList.add('shown');
+  nb.textContent=current<questions.length-1?'Następne pytanie →':'Zobacz wynik 🏁';
+}
+
+function selectOption(i,el){
+  if(answered)return;
+  answered=true;
+  const q=questions[current];
+  const opts=document.querySelectorAll('.option');
+  opts.forEach(function(o){o.classList.add('disabled');});
+  const isCorrect=(i===q.ans);
+  if(isCorrect){el.classList.add('correct');}
+  else{el.classList.add('wrong');opts[q.ans].classList.add('correct');}
+  finishAnswer(isCorrect);
+}
+
+function nextQ(){
+  const next=current+1;
+  if(next>=questions.length){showResult();return;}
+  current=next;
+  render();
+}
+
+function toggleSong(){
+  const btn=document.getElementById('song-toggle-btn');
+  if(songPlaying){sndSong.pause();songPlaying=false;btn.textContent='▶️ Odtwórz piosenkę';}
+  else{sndSong.play().catch(()=>{});songPlaying=true;btn.textContent='⏸️ Wstrzymaj piosenkę';}
+}
+
+function showResult(){
+  document.getElementById('quiz-screen').style.display='none';
+  const rs=document.getElementById('result-screen');
+  rs.style.display='block';
+  const pct=Math.round((score/questions.length)*100);
+  let icon='🪕',msg='';
+  if(pct>=90){icon='🏆';msg=userName+', niesamowite! Mandolina nie ma przed Tobą żadnych tajemnic — czas na kolejną część!';}
+  else if(pct>=70){icon='🌟';msg='Świetnie, '+userName+'! Masz ucho do detali i pewną rękę do gryfu.';}
+  else if(pct>=50){icon='🔎';msg='Dobry wynik, '+userName+'! Zaczynasz rozumieć, jak działa mandolina.';}
+  else{icon='📖';msg='Niezła robota, '+userName+', ale jeszcze nie wszystko jest jasne — może warto jeszcze raz przejrzeć materiał? Spróbuj ponownie!';}
+  document.getElementById('res-icon').textContent=icon;
+  document.getElementById('res-score').textContent=score+' / '+questions.length;
+  document.getElementById('res-msg').textContent=msg;
+  for(let s=0;s<NUM_SEGMENTS;s++){
+    document.getElementById('bar'+(s+1)).style.width=(scores[s]/SEGMENT_SIZE*100)+'%';
+    document.getElementById('score'+(s+1)+'-txt').textContent=scores[s]+'/'+SEGMENT_SIZE;
+  }
+  document.getElementById('song-title').textContent="Piosenka dla Ciebie, "+userName;
+
+  sndSong.currentTime=0;
+  sndSong.play().then(()=>{
+    songPlaying=true;
+    document.getElementById('song-toggle-btn').textContent='⏸️ Wstrzymaj piosenkę';
+  }).catch(()=>{
+    songPlaying=false;
+    document.getElementById('song-toggle-btn').textContent='▶️ Odtwórz piosenkę';
+  });
+}
+
+function restart(){
+  current=0;score=0;scores=[0,0,0];answered=false;
+  sndSong.pause();sndSong.currentTime=0;songPlaying=false;
+  document.getElementById('result-screen').style.display='none';
+  document.getElementById('name-screen').style.display='block';
+  document.getElementById('name-input').value='';
+}
+</script>
+</body>
+</html>

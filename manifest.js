@@ -208,5 +208,20 @@ var SPRAWY = [
     "filmyCo": 0,
     "filmKoniec": false,
     "piosenkaKoniec": false
+  },
+  {
+    "file": "mandolina1.html",
+    "title": "Czy znasz Mandolinę?",
+    "pytania": 21,
+    "zdjecie": true,
+    "dzwieki": true,
+    "muzyka": true,
+    "filmy": 0,
+    "filmyCo": 0,
+    "filmKoniec": false,
+    "piosenkaKoniec": false
   }
+
+
+
 ];
